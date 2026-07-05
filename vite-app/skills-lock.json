@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "notion-ui-skills": {
+      "source": "ihlamury/design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/notion/SKILL.md",
+      "computedHash": "c5fd708f48ca93c87235621da3f28b49058365e9a36db7ee22b58bfdb27088f4"
+    }
+  }
+}
