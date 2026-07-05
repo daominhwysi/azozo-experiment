@@ -75,7 +75,7 @@ export async function parseExamFromPdfOrText(
 }
 
 export interface StreamProgressEvent {
-  type: "ocr_start" | "ocr_complete" | "annotate_start" | "annotate_progress" | "complete" | "error";
+  type: "ocr_start" | "ocr_progress" | "ocr_complete" | "annotate_start" | "annotate_progress" | "complete" | "error";
   step: number;
   step_name: string;
   progress: number;

@@ -97,6 +97,7 @@ class PDFOCRConverter:
         batch_size: Optional[int] = None,
         concurrency: Optional[int] = None,
         use_fallback: bool = True,
+        progress_callback: Optional[Any] = None,
     ) -> str:
         pdf_path = Path(pdf_path)
         if not pdf_path.exists():
@@ -113,6 +114,9 @@ class PDFOCRConverter:
         total_pages = len(doc)
         print(f"Opening PDF '{pdf_path.name}' ({total_pages} page(s))...")
         print(f"  [OCR Settings] Batch Size: {effective_batch_size} image(s)/batch, Concurrency: {effective_concurrency} parallel worker(s)")
+
+        if progress_callback:
+            progress_callback(0, total_pages, f"Đang render {total_pages} trang PDF...")
 
         # Render all page images upfront into base64 and extract raw text for fallback
         page_images: List[str] = []
@@ -186,9 +190,18 @@ class PDFOCRConverter:
                     desc="[OCR Batches]",
                     unit="batch"
                 )
+                completed_batches = 0
                 for future in pbar:
                     b_id, batch_text = future.result()
                     results[b_id] = batch_text
+                    completed_batches += 1
+                    if progress_callback:
+                        completed_pages = min(total_pages, completed_batches * effective_batch_size)
+                        progress_callback(
+                            completed_pages,
+                            total_pages,
+                            f"Đang bóc tách OCR trang {completed_pages}/{total_pages}..."
+                        )
 
         final_text = "\n\n".join(filter(None, results)).strip()
 

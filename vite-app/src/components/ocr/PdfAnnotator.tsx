@@ -97,7 +97,7 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
         ocrInputMode === "pdf" ? pdfFile : null,
         ocrInputMode === "text" ? importText : "",
         (evt) => {
-          if (evt.type === "ocr_start" || evt.type === "ocr_complete") {
+          if (evt.type === "ocr_start" || evt.type === "ocr_progress" || evt.type === "ocr_complete") {
             setCurrentStageIndex(0);
             setOcrProgress(evt.progress);
             setOcrStatusText(evt.message);

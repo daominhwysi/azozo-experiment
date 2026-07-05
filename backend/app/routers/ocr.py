@@ -144,22 +144,41 @@ async def parse_exam_from_pdf_or_text_stream(
         # --- STAGE 1: OCR ---
         yield f"data: {json.dumps({'type': 'ocr_start', 'step': 1, 'step_name': 'OCR', 'progress': 10, 'message': 'Đang bóc tách văn bản OCR từ PDF...'}, ensure_ascii=False)}\n\n"
 
+        queue = asyncio.Queue()
+        loop = asyncio.get_event_loop()
+
+        def ocr_progress_callback(completed, total, msg):
+            calc_prog = 10 + int((completed / max(1, total)) * 39)
+            loop.call_soon_threadsafe(queue.put_nowait, ("ocr_progress", calc_prog, msg))
+
         if file and file_name and file_name.lower().endswith(".pdf"):
             temp_pdf_path = TMP_DIR / f"upload_{uuid.uuid4().hex[:8]}.pdf"
             temp_pdf_path.parent.mkdir(parents=True, exist_ok=True)
             with open(temp_pdf_path, "wb") as f:
                 f.write(file_bytes)
 
-            try:
-                converter = PDFOCRConverter(
-                    model=OCR_MODEL,
-                    batch_size=OCR_BATCH_SIZE,
-                    concurrency=OCR_CONCURRENCY,
-                )
-                ocr_text = converter.convert_pdf(temp_pdf_path)
-            finally:
-                if temp_pdf_path.exists():
-                    temp_pdf_path.unlink()
+            def run_pdf_ocr():
+                nonlocal ocr_text
+                try:
+                    converter = PDFOCRConverter(
+                        model=OCR_MODEL,
+                        batch_size=OCR_BATCH_SIZE,
+                        concurrency=OCR_CONCURRENCY,
+                    )
+                    ocr_text = converter.convert_pdf(temp_pdf_path, progress_callback=ocr_progress_callback)
+                finally:
+                    if temp_pdf_path.exists():
+                        temp_pdf_path.unlink()
+                    loop.call_soon_threadsafe(queue.put_nowait, None)
+
+            ocr_task = loop.run_in_executor(None, run_pdf_ocr)
+            while True:
+                item = await queue.get()
+                if item is None:
+                    break
+                kind, prog, msg = item
+                yield f"data: {json.dumps({'type': 'ocr_progress', 'step': 1, 'step_name': 'OCR', 'progress': prog, 'message': msg}, ensure_ascii=False)}\n\n"
+            await ocr_task
         elif raw_text:
             ocr_text = raw_text
         else:
