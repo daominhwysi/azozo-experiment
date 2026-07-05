@@ -527,8 +527,8 @@ class OCRAnnotator:
         self.client, self.model_name = get_client_and_model(
             model, self.deepseek_key, self.llm_key, provider=provider
         )
-        self.few_shot_messages = load_few_shot_messages(script_dir / "example", prefix="in_")
-        self.anchor_few_shot_messages = load_few_shot_messages(script_dir / "example", prefix="anchor_in_")
+        self.few_shot_messages = load_few_shot_messages(script_dir / "examples", prefix="in_")
+        self.anchor_few_shot_messages = load_few_shot_messages(script_dir / "examples", prefix="anchor_in_")
 
     def annotate_text(self, raw_ocr_text: str) -> Dict[str, Any]:
         """
