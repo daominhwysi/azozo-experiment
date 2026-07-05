@@ -69,7 +69,12 @@ async def parse_exam_from_pdf_or_text(
 
     try:
         annotator = OCRAnnotator(model=PARSER_MODEL)
-        annotation_res = annotator.annotate_text_anchor(ocr_text)
+        try:
+            annotation_res = annotator.annotate_text(ocr_text)
+        except Exception as err:
+            print(f"[Anchor Fallback] Full text tagging failed ({err}), trying anchor parser.")
+            annotation_res = annotator.annotate_text_anchor(ocr_text)
+
         structured_questions = parse_spans_into_structured_questions(
             annotation_res["raw_text"], annotation_res["spans"]
         )
@@ -116,7 +121,7 @@ async def parse_exam_from_pdf_or_text(
 async def parse_exam_from_pdf_or_text_stream(
     file: Optional[UploadFile] = File(None),
     raw_text: Optional[str] = Form(None),
-    mode: Optional[str] = Form("anchor")
+    mode: Optional[str] = Form("full")
 ):
     """
     Azota OCR & Exam Importer API with real-time SSE streaming.
