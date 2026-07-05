@@ -95,22 +95,41 @@ ANCHOR_SYSTEM_PROMPT = """# [System Config] Mô tả vai trò & trách nhiệm
 Role: You are an expert NLP data annotator for Vietnamese educational exam papers.
 Your task is to extract the structure of an exam paper using CONCISE ANCHOR TAGS instead of retyping full text verbatim.
 
-Instructions:
-For every entity (stimulus, question, stem, option_label, option_text, explanation), output an XML element with 'start' and 'end' attributes containing the FIRST 3-6 words and LAST 3-6 words verbatim from the input OCR text.
+## Output Format (REQUIRED - Nested XML structure):
+```xml
+<exam>
+  <section start="header text..." end="...last words"/>        <!-- for headers/footers/metadata ONLY -->
+  <stimulus id="stim_1" start="First 4 words..." end="...last 4 words"/>
+  <question id="q1" stimulus_id="stim_1">
+    <question_label start="Câu 1." end="Câu 1."/>
+    <stem start="First 4 words of stem..." end="...last 4 words"/>
+    <options>
+      <option>
+        <option_label start="A." end="A."/>
+        <option_text start="first words" end="last words"/>
+      </option>
+    </options>
+  </question>
+</exam>
+```
 
-Entity Tags:
-1. <stimulus id="stim_1" start="Exact first 4 words..." end="Exact last 4 words..."/>
-2. <question id="q1" stimulus_id="stim_1" start="Question label prefix..." end="Last words of question block..."/>
-3. <question_label start="Câu 1:" end="Câu 1:"/> (for short label text under 6 words, start and end are identical)
-4. <stem start="First 4 words of stem..." end="Last 4 words of stem..."/>
-5. <option_label start="A." end="A."/>
-6. <option_text start="First 3 words of option..." end="Last 3 words of option..."/>
-7. <explanation start="First 3 words..." end="Last 3 words..."/>
+## Entity Tags:
+1. `<section>` — Headers, footers, page numbers, school names, watermarks. NOT for questions.
+2. `<stimulus>` — Reading passage / context paragraph before questions.
+3. `<question>` — Container for one question (MUST be nested, NOT self-closing).
+4. `<question_label>` — The question number label (e.g. "Câu 1.", "Question 1.").
+5. `<stem>` — The question stem/body text (excluding options).
+6. `<option_label>` — The option letter (A., B., C., D.).
+7. `<option_text>` — The option body text.
+8. `<explanation>` — Solution/explanation block.
 
-CRITICAL RULES:
-- 'start' and 'end' attribute values MUST be EXACT substrings verbatim from the input text (including punctuation/LaTeX if present).
-- Do NOT retype the full body text inside the tags. Use self-closing tags like `<tag start="..." end="..."/>` or `<tag start="...">...</tag>`.
-- Preserves exact linear sequence order of the input document.
+## CRITICAL RULES:
+- **NESTED STRUCTURE IS MANDATORY**: `<option_label>` and `<option_text>` MUST be inside `<question>`, never flat at root level.
+- **SELF-CLOSING ANCHORS**: All leaf tags use self-closing format: `<tag_name start="..." end="..."/>`.
+- **CONTAINER TAGS**: `<question>`, `<options>`, `<option>` are containers — use open/close: `<question>...</question>`.
+- **EXACT VERBATIM**: start/end values MUST be exact substrings from the input text.
+- **NO MARKDOWN CODEBLOCKS**: Output raw XML only, no ```xml wrapper.
+- **DO NOT** output flat `<option_label>` or `<option_text>` at root level outside of `<question>` blocks.
 """
 
 
