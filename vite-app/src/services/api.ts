@@ -88,11 +88,13 @@ export interface StreamProgressEvent {
 export async function parseExamFromPdfOrTextStream(
   file: File | null,
   rawText: string,
-  onProgress: (event: StreamProgressEvent) => void
+  onProgress: (event: StreamProgressEvent) => void,
+  mode: "anchor" | "full" = "full"
 ): Promise<ParseExamResponse> {
   const formData = new FormData();
   if (file) formData.append("file", file);
   if (rawText) formData.append("raw_text", rawText);
+  formData.append("mode", mode);
 
   topLoader.start();
   try {

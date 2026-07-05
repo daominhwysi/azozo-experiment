@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { UploadCloud, FileCode, Sliders, Check } from "lucide-react";
+import { UploadCloud, FileCode, Sliders, Check, Zap } from "lucide-react";
 import { QuestionPreviewCard } from "./QuestionPreviewCard";
 import { StagedProgressLoader, type ProgressStage } from "@/components/ui/staged-progress-loader";
 
@@ -30,6 +30,7 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [importText, setImportText] = useState("");
   const [ocrInputMode, setOcrInputMode] = useState<"pdf" | "text">("pdf");
+  const [parserMode, setParserMode] = useState<"full" | "anchor">("full");
   const [isParsingOCR, setIsParsingOCR] = useState(false);
   const [ocrProgress, setOcrProgress] = useState(0);
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
@@ -114,7 +115,8 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
             setOcrProgress(100);
             setOcrStatusText("Trích xuất câu hỏi hoàn tất!");
           }
-        }
+        },
+        parserMode
       );
 
       setExtractedRawText(res.raw_text || "");
@@ -189,6 +191,38 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
             >
               Dán Văn Bản Thô
             </button>
+          </div>
+
+          {/* LLM Parser Mode Switcher */}
+          <div className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-card/60">
+            <div className="flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <span className="text-xs font-semibold text-foreground">Chế độ LLM:</span>
+            </div>
+            <div className="flex items-center gap-1 bg-muted p-1 rounded-md border border-border text-[11px] font-medium">
+              <button
+                type="button"
+                onClick={() => setParserMode("full")}
+                className={`px-2 py-0.5 rounded transition-colors ${
+                  parserMode === "full"
+                    ? "bg-background text-foreground shadow-sm font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                🎯 Full (100% Chuẩn)
+              </button>
+              <button
+                type="button"
+                onClick={() => setParserMode("anchor")}
+                className={`px-2 py-0.5 rounded transition-colors ${
+                  parserMode === "anchor"
+                    ? "bg-background text-foreground shadow-sm font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                ⚡ Anchor (Siêu Tốc)
+              </button>
+            </div>
           </div>
 
           {ocrInputMode === "pdf" ? (
