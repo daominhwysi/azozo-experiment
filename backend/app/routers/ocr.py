@@ -115,17 +115,16 @@ async def parse_exam_from_pdf_or_text(
 @router.post("/parse-exam-stream")
 async def parse_exam_from_pdf_or_text_stream(
     file: Optional[UploadFile] = File(None),
-    raw_text: Optional[str] = Form(None)
+    raw_text: Optional[str] = Form(None),
+    mode: Optional[str] = Form("anchor")
 ):
     """
     Azota OCR & Exam Importer API with real-time SSE streaming.
     Streams 2 main stages:
       1. OCR (PyMuPDF layout & text extraction)
       2. Annotate (Token streaming sequence labeling & question structuring)
+    Supports mode="anchor" (Fast Anchor Shortcut method) or mode="full" (Full text tagging).
     """
-    import asyncio
-    from fastapi.responses import StreamingResponse
-
     start_time = time.time()
     file_bytes = None
     file_name = file.filename if file else None
@@ -163,12 +162,13 @@ async def parse_exam_from_pdf_or_text_stream(
             return
 
         words_count = len(ocr_text.split())
-        estimated_tokens = max(50, int(words_count * 1.3) + 20)
+        estimated_tokens = max(40, int(words_count * (0.35 if mode == "anchor" else 1.3)) + 20)
 
         yield f"data: {json.dumps({'type': 'ocr_complete', 'step': 1, 'step_name': 'OCR', 'progress': 50, 'raw_text_length': len(ocr_text), 'estimated_tokens': estimated_tokens, 'message': f'Hoàn tất OCR ({len(ocr_text)} ký tự, ~{estimated_tokens} tokens dự kiến)'}, ensure_ascii=False)}\n\n"
 
         # --- STAGE 2: ANNOTATE ---
-        yield f"data: {json.dumps({'type': 'annotate_start', 'step': 2, 'step_name': 'Annotate', 'progress': 50, 'streamed_tokens': 0, 'estimated_tokens': estimated_tokens, 'message': 'Bắt đầu gán nhãn LLM Sequence Labeling...'}, ensure_ascii=False)}\n\n"
+        mode_label = "Anchor Shortcut" if mode == "anchor" else "Full Text"
+        yield f"data: {json.dumps({'type': 'annotate_start', 'step': 2, 'step_name': 'Annotate', 'progress': 50, 'streamed_tokens': 0, 'estimated_tokens': estimated_tokens, 'message': f'Bắt đầu gán nhãn LLM ({mode_label})...'}, ensure_ascii=False)}\n\n"
 
         annotation_res = None
         structured_questions = []
@@ -182,7 +182,10 @@ async def parse_exam_from_pdf_or_text_stream(
             nonlocal annotation_res, structured_questions
             try:
                 annotator = OCRAnnotator(model=PARSER_MODEL)
-                annotation_res = annotator.annotate_text_stream(ocr_text, callback=token_callback)
+                if mode == "anchor":
+                    annotation_res = annotator.annotate_text_anchor(ocr_text, callback=token_callback)
+                else:
+                    annotation_res = annotator.annotate_text_stream(ocr_text, callback=token_callback)
                 structured_questions = parse_spans_into_structured_questions(
                     annotation_res["raw_text"], annotation_res["spans"]
                 )
