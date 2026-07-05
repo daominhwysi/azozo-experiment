@@ -30,7 +30,7 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [importText, setImportText] = useState("");
   const [ocrInputMode, setOcrInputMode] = useState<"pdf" | "text">("pdf");
-  const [parserMode, setParserMode] = useState<"full" | "anchor">("full");
+  const [parserMode, setParserMode] = useState<"anchor" | "full">("anchor");
   const [isParsingOCR, setIsParsingOCR] = useState(false);
   const [ocrProgress, setOcrProgress] = useState(0);
   const [currentStageIndex, setCurrentStageIndex] = useState(0);

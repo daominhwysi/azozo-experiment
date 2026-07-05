@@ -121,7 +121,7 @@ async def parse_exam_from_pdf_or_text(
 async def parse_exam_from_pdf_or_text_stream(
     file: Optional[UploadFile] = File(None),
     raw_text: Optional[str] = Form(None),
-    mode: Optional[str] = Form("full")
+    mode: Optional[str] = Form("anchor")
 ):
     """
     Azota OCR & Exam Importer API with real-time SSE streaming.
