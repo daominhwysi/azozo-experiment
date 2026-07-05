@@ -1,15 +1,17 @@
 import re
 import uuid
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 
-def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], Dict[str, str]]:
     """
-    Converts sequence labelling character spans into structured question & options objects for Azota editor.
-    Supports question params including referencing stimulus_id.
+    Converts sequence labelling character spans into structured question & options objects.
+    Returns (questions, stimuli) where stimuli maps stimulus_id -> passage text.
     """
-    questions = []
+    questions: List[Dict[str, Any]] = []
     current_q = None
     active_stimulus_id = None
+    stimuli: Dict[str, str] = {}
+    current_section = ""
 
     sorted_spans = sorted(spans, key=lambda s: (s["start"], -s["end"]))
 
@@ -18,9 +20,14 @@ def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, A
         text = span["text"].strip()
         params = span.get("params", {})
 
-        if label == "stimulus":
-            if "id" in params:
-                active_stimulus_id = params["id"]
+        if label == "section":
+            current_section = text
+            active_stimulus_id = None
+
+        elif label == "stimulus":
+            stim_id = params.get("id", f"stim_{len(stimuli) + 1}")
+            active_stimulus_id = stim_id
+            stimuli[stim_id] = text
 
         elif label == "question":
             if current_q and (current_q["stem"] or current_q["options"]):
@@ -30,7 +37,6 @@ def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, A
                 params.get("stimulus_id")
                 or params.get("refer_to_stimulus")
                 or params.get("stimulus_ref")
-                or active_stimulus_id
             )
             current_q = {
                 "id": params.get("id") or f"q_{len(questions) + 1}_{uuid.uuid4().hex[:6]}",
@@ -40,6 +46,8 @@ def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, A
                 "correct_answer": params.get("correct_answer", "A"),
                 "explanation": "",
                 "stimulus_id": stim_id,
+                "stimulus_text": stimuli.get(stim_id, "") if stim_id else "",
+                "section": current_section,
             }
 
         elif label == "question_label":
@@ -53,13 +61,11 @@ def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, A
                 current_q["question_number"] = text
                 if stim_id:
                     current_q["stimulus_id"] = stim_id
-                elif not current_q.get("stimulus_id") and active_stimulus_id:
-                    current_q["stimulus_id"] = active_stimulus_id
+                    current_q["stimulus_text"] = stimuli.get(stim_id, "")
             else:
                 if current_q and (current_q["stem"] or current_q["options"]):
                     questions.append(current_q)
 
-                final_stim_id = stim_id or active_stimulus_id
                 current_q = {
                     "id": params.get("id") or f"q_{len(questions) + 1}_{uuid.uuid4().hex[:6]}",
                     "question_number": text,
@@ -67,12 +73,14 @@ def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, A
                     "options": [],
                     "correct_answer": params.get("correct_answer", "A"),
                     "explanation": "",
-                    "stimulus_id": final_stim_id,
+                    "stimulus_id": stim_id,
+                    "stimulus_text": stimuli.get(stim_id, "") if stim_id else "",
+                    "section": current_section,
                 }
 
         elif label == "stem":
             if not current_q:
-                stim_id = params.get("stimulus_id") or active_stimulus_id
+                stim_id = params.get("stimulus_id")
                 current_q = {
                     "id": params.get("id") or f"q_1_{uuid.uuid4().hex[:6]}",
                     "question_number": "Câu 1",
@@ -81,11 +89,14 @@ def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, A
                     "correct_answer": "A",
                     "explanation": "",
                     "stimulus_id": stim_id,
+                    "stimulus_text": stimuli.get(stim_id, "") if stim_id else "",
+                    "section": current_section,
                 }
             else:
                 current_q["stem"] = (current_q["stem"] + " " + text).strip()
                 if params.get("stimulus_id"):
                     current_q["stimulus_id"] = params["stimulus_id"]
+                    current_q["stimulus_text"] = stimuli.get(params["stimulus_id"], "")
 
         elif label == "option_label":
             if current_q:
@@ -113,7 +124,7 @@ def parse_spans_into_structured_questions(raw_text: str, spans: List[Dict[str, A
                 {"label": "D", "text": "Phương án D"},
             ]
 
-    return questions
+    return questions, stimuli
 
 def regex_parse_questions(raw_text: str) -> List[Dict[str, Any]]:
     """

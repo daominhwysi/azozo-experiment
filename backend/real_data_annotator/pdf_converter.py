@@ -31,7 +31,10 @@ SYSTEM_PROMPTS = [
         "**...** for bold text, and *...* for italicized text. "
         "Separate each page using the delimiter '<|page|>' followed by the page indicator 'Page X'. "
         "For example:\n"
-        "<|page|>Content of page 1<|page|>Content of page 2"
+        "<|page|>Content of page 1<|page|>Content of page 2\n\n"
+        "Important Layout & Formatting Rules:\n"
+        "1. If the input page has multiple columns (e.g. two-column exam layout), you MUST convert and merge them into a single column following the logical reading order. Do NOT attempt to reconstruct columns side-by-side.\n"
+        "2. Format the output so it is clean, structured, and easy for readers and students to work with. Do NOT attempt to visually replicate the exact physical spacing or layout of the original document/image if it makes the output look cluttered or hard to read. Prioritize logical flow and standard spacing."
     ),
     (
         "You are an expert OCR assistant. Perform precise OCR on the provided pages. "
@@ -42,7 +45,10 @@ SYSTEM_PROMPTS = [
         "use <u>...</u> to mark underlined text, <mark>...</mark> to represent highlighted/marked text. "
         "Separate each page using the delimiter '<|page|>' followed by the page indicator 'Page X'. "
         "For example:\n"
-        "<|page|>Content of page 1<|page|>Content of page 2"
+        "<|page|>Content of page 1<|page|>Content of page 2\n\n"
+        "Important Layout & Formatting Rules:\n"
+        "1. If the input page has multiple columns (e.g. two-column exam layout), you MUST convert and merge them into a single column following the logical reading order. Do NOT attempt to reconstruct columns side-by-side.\n"
+        "2. Format the output so it is clean, structured, and easy for readers and students to work with. Do NOT attempt to visually replicate the exact physical spacing or layout of the original document/image if it makes the output look cluttered or hard to read. Prioritize logical flow and standard spacing."
     ),
 ]
 
@@ -53,6 +59,39 @@ def prune_think_tags(text: str) -> str:
     cleaned = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
     cleaned = re.sub(r"<think>.*", "", cleaned, flags=re.DOTALL)
     return cleaned.strip()
+
+
+def load_few_shot_messages(example_dir: Path) -> List[Dict[str, Any]]:
+    messages = []
+    if not example_dir.exists():
+        return messages
+
+    i = 1
+    while True:
+        in_file = example_dir / f"in_{i}.png"
+        out_file = example_dir / f"out_{i}.md"
+        if not (in_file.exists() and out_file.exists()):
+            break
+        try:
+            with open(in_file, "rb") as f_in:
+                img_base64 = base64.b64encode(f_in.read()).decode("utf-8")
+            with open(out_file, "r", encoding="utf-8") as f_out:
+                out_content = f_out.read()
+            messages.append({
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "Extract all text from this exam page image."},
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_base64}"}},
+                ],
+            })
+            messages.append({"role": "assistant", "content": out_content})
+        except Exception as e:
+            print(f"  [Warning] Failed to load OCR few-shot pair {i}: {e}")
+        i += 1
+
+    if messages:
+        print(f"  Loaded {len(messages) // 2} few-shot OCR example pair(s).")
+    return messages
 
 
 class PDFOCRConverter:
@@ -69,6 +108,7 @@ class PDFOCRConverter:
         model: str = "mn/Minimax-M3",
         batch_size: int = 3,
         concurrency: int = 5,
+        examples_dir: Optional[Union[str, Path]] = None,
     ):
         self.api_key = api_key or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
         self.base_url = base_url
@@ -78,6 +118,11 @@ class PDFOCRConverter:
         self.client = None
         if self.api_key:
             self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+
+        # Load few-shot examples
+        script_dir = Path(__file__).resolve().parent
+        ocr_examples_dir = Path(examples_dir) if examples_dir else script_dir / "examples" / "ocr"
+        self.few_shot_messages = load_few_shot_messages(ocr_examples_dir)
 
     def extract_text_pymupdf_fallback(self, doc: fitz.Document, start_idx: int, end_idx: int) -> str:
         """Fallback local text extraction using PyMuPDF if API is unavailable or fails."""
@@ -158,9 +203,10 @@ class PDFOCRConverter:
                             }
                         )
 
+                    messages = self.few_shot_messages + [{"role": "user", "content": content_parts}]
                     response = self.client.chat.completions.create(
                         model=self.model,
-                        messages=[{"role": "user", "content": content_parts}],
+                        messages=messages,
                     )
                     raw_result = response.choices[0].message.content
                     batch_result = prune_think_tags(raw_result)

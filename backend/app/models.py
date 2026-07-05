@@ -13,6 +13,8 @@ class ExamQuestion(BaseModel):
     correct_answer: Optional[str] = "A"
     explanation: Optional[str] = ""
     stimulus_id: Optional[str] = None
+    stimulus_text: Optional[str] = ""
+    section: Optional[str] = ""
 
 class CreateExamRequest(BaseModel):
     title: str

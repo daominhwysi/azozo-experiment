@@ -89,12 +89,10 @@ export async function parseExamFromPdfOrTextStream(
   file: File | null,
   rawText: string,
   onProgress: (event: StreamProgressEvent) => void,
-  mode: "anchor" | "full" = "full"
 ): Promise<ParseExamResponse> {
   const formData = new FormData();
   if (file) formData.append("file", file);
   if (rawText) formData.append("raw_text", rawText);
-  formData.append("mode", mode);
 
   topLoader.start();
   try {
@@ -147,6 +145,21 @@ export async function parseExamFromPdfOrTextStream(
     }
 
     return finalResult;
+  } finally {
+    topLoader.done();
+  }
+}
+
+export async function deleteExam(examId: string): Promise<void> {
+  topLoader.start();
+  try {
+    const res = await fetch(`${API_BASE}/exams/${examId}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      if (res.status === 404) throw new Error("Exam not found");
+      throw new Error(`Failed to delete exam: ${res.statusText}`);
+    }
   } finally {
     topLoader.done();
   }

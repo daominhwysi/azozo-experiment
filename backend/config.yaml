@@ -11,6 +11,7 @@ models:
   parser:
     model_name: "op/deepseek/deepseek-v4-pro"
     provider: "vilao"
+    thinking: disabled
     description: "Sequence labeling LLM model for question stem and option annotation"
 
 logging:

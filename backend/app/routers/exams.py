@@ -92,3 +92,17 @@ def submit_exam(exam_id: str, req: StudentSubmissionRequest):
     save_db(db)
 
     return submission_record
+
+@router.delete("/{exam_id}")
+def delete_exam(exam_id: str):
+    db = load_db()
+    exams = db.get("exams", [])
+    for idx, e in enumerate(exams):
+        if e["id"] == exam_id:
+            del exams[idx]
+            # Clean up related submissions
+            submissions = db.get("submissions", [])
+            db["submissions"] = [s for s in submissions if s.get("exam_id") != exam_id]
+            save_db(db)
+            return {"detail": "Exam deleted"}
+    raise HTTPException(status_code=404, detail="Exam not found")

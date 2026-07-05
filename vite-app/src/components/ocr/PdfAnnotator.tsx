@@ -5,20 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { UploadCloud, FileCode, Sliders, Check, Zap } from "lucide-react";
+import { UploadCloud, FileCode, Sliders, Check } from "lucide-react";
 import { QuestionPreviewCard } from "./QuestionPreviewCard";
 import { StagedProgressLoader, type ProgressStage } from "@/components/ui/staged-progress-loader";
 
 const OCR_STAGES: ProgressStage[] = [
   {
     id: "ocr",
-    label: "1. OCR (Bóc tách văn bản PDF)",
-    description: "Khởi tạo PyMuPDF Text Extractor & Render trang PDF",
+    label: "OCR",
+    description: "Turn image to text",
   },
   {
     id: "annotate",
-    label: "2. Annotate (Gán nhãn XML bằng LLM)",
-    description: "Nhận dạng nhãn BIO & Token streaming câu hỏi",
+    label: "Annotate",
+    description: "Sequence labelling",
   },
 ];
 
@@ -30,7 +30,7 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [importText, setImportText] = useState("");
   const [ocrInputMode, setOcrInputMode] = useState<"pdf" | "text">("pdf");
-  const [parserMode, setParserMode] = useState<"anchor" | "full">("anchor");
+
   const [isParsingOCR, setIsParsingOCR] = useState(false);
   const [ocrProgress, setOcrProgress] = useState(0);
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
@@ -116,14 +116,13 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
             setOcrStatusText("Trích xuất câu hỏi hoàn tất!");
           }
         },
-        parserMode
       );
 
       setExtractedRawText(res.raw_text || "");
       setImportedQuestions(res.questions || []);
     } catch (err: any) {
       console.error(err);
-      setOcrError(err?.message || "Lỗi khi bóc tách OCR. Vui lòng kiểm tra lại backend!");
+      setOcrError(err?.message || "Lỗi khi OCR. Vui lòng kiểm tra lại backend!");
     } finally {
       setTimeout(() => {
         setIsParsingOCR(false);
@@ -159,7 +158,7 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
       {/* Page Header */}
       <div className="space-y-1">
         <h1 className="text-xl font-bold tracking-tight text-foreground">
-          Bóc Tách & Nhận Dạng Đề Thi (Azota OCR Engine)
+          OCR Engine
         </h1>
         <p className="text-xs text-muted-foreground">
           Trích xuất tự động danh sách câu hỏi và các phương án từ file PDF đề thi thực tế.
@@ -173,56 +172,22 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
           <div className="flex bg-muted p-1 rounded-lg gap-1 border border-border">
             <button
               onClick={() => setOcrInputMode("pdf")}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                ocrInputMode === "pdf"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${ocrInputMode === "pdf"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               Tải File PDF
             </button>
             <button
               onClick={() => setOcrInputMode("text")}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                ocrInputMode === "text"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${ocrInputMode === "text"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               Dán Văn Bản Thô
             </button>
-          </div>
-
-          {/* LLM Parser Mode Switcher */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-card/60">
-            <div className="flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-500" />
-              <span className="text-xs font-semibold text-foreground">Chế độ LLM:</span>
-            </div>
-            <div className="flex items-center gap-1 bg-muted p-1 rounded-md border border-border text-[11px] font-medium">
-              <button
-                type="button"
-                onClick={() => setParserMode("full")}
-                className={`px-2 py-0.5 rounded transition-colors ${
-                  parserMode === "full"
-                    ? "bg-background text-foreground shadow-sm font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                🎯 Full (100% Chuẩn)
-              </button>
-              <button
-                type="button"
-                onClick={() => setParserMode("anchor")}
-                className={`px-2 py-0.5 rounded transition-colors ${
-                  parserMode === "anchor"
-                    ? "bg-background text-foreground shadow-sm font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                ⚡ Anchor (Siêu Tốc)
-              </button>
-            </div>
           </div>
 
           {ocrInputMode === "pdf" ? (
@@ -308,10 +273,10 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
                 className="w-full gap-1.5 h-9 text-xs"
               >
                 {isParsingOCR ? (
-                  "Đang Bóc Tách OCR..."
+                  "Đang OCR..."
                 ) : (
                   <>
-                    <FileCode className="h-4 w-4" /> Bắt Đầu Bóc Tách OCR
+                    <FileCode className="h-4 w-4" /> Bắt Đầu OCR
                   </>
                 )}
               </Button>
@@ -319,8 +284,8 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
               {isParsingOCR && (
                 <div className="pt-2">
                   <StagedProgressLoader
-                    title="Bóc Tách & Nhận Dạng OCR"
-                    subtitle="Quy trình bóc tách tự động Azota"
+                    title="OCR"
+                    subtitle="Quy trình OCR"
                     stages={OCR_STAGES}
                     currentStageIndex={currentStageIndex}
                     progress={ocrProgress}
@@ -337,7 +302,7 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
         <div className="lg:col-span-7 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-foreground">
-              Kết Quả Bóc Tách ({importedQuestions.length} câu)
+              Kết Quả OCR({importedQuestions.length} câu)
             </h2>
             {importedQuestions.length > 0 && (
               <div className="flex items-center gap-2">
@@ -373,8 +338,8 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
             {importedQuestions.length === 0 ? (
               <div className="p-12 text-center text-xs text-muted-foreground border border-dashed rounded-xl space-y-2">
                 <FileCode className="h-8 w-8 mx-auto opacity-40" />
-                <p>Chưa có dữ liệu bóc tách.</p>
-                <p className="text-[11px]">Tải file PDF hoặc dán text và nhấn "Bắt Đầu Bóc Tách OCR".</p>
+                <p>Chưa có dữ liệu OCR.</p>
+                <p className="text-[11px]">Tải file PDF hoặc dán text và nhấn "Bắt Đầu OCR".</p>
               </div>
             ) : (
               importedQuestions.map((q, idx) => (

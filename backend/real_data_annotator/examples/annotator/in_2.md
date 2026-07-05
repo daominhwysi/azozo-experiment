@@ -12,7 +12,6 @@ _(p. 76, Friends Global 12)_
 Question 1. A. a B. an C. the D. Ø
 Question 2. A. a B. an C. the D. Ø
 
-**2.** To build a healthy lifestyle, people need **(3)** **\_\_\_** balanced diet and an active routine. **(4)** **\_\_\_** habits should start as early as possible because making good habits is difficult.
+**2.** To build a healthy lifestyle, people need **(3)** **\_\_\_** balanced diet and an active routine. Making good habits should start as early as possible.
 
 Question 3. A. a B. an C. the D. Ø
-Question 4. A. That B. This C. These D. Ø

@@ -16,6 +16,19 @@ export function QuestionPreviewCard({ question, index }: QuestionPreviewCardProp
             {question.question_number || `Câu ${index + 1}`}
           </Badge>
         </div>
+
+        {question.section && (
+          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mt-1">
+            {question.section}
+          </div>
+        )}
+
+        {question.stimulus_text && (
+          <div className="mt-1 p-2 bg-muted/30 rounded border border-border/60 text-[11px] leading-relaxed text-foreground/80">
+            {question.stimulus_text}
+          </div>
+        )}
+
         <CardTitle className="text-xs font-medium leading-relaxed mt-1">
           {question.stem}
         </CardTitle>

@@ -8,7 +8,6 @@
 - **Frontend**: React 19 + TypeScript + Vite web app (`vite-app/`) utilizing Tailwind CSS v4, Lucide icons, and Notion UI aesthetics (`@fontsource-variable/inter`).
 - **OCR Engine**: PyMuPDF (`fitz`) based PDF text & image converter, token alignment, and XML annotation parser in `backend/real_data_annotator/`.
 - **LLM Engine**: Multi-provider client (`backend/app/services/deepseek_client.py`) supporting DeepSeek, NVIDIA NIM, and Vilao.ai for question extraction and OCR cleanup.
-- For agent: You dont need to run the backend and frontend yourself, that's the job of user
 
 ---
 
@@ -31,6 +30,47 @@ LLM_API_KEY=<vilao_or_nvidia_api_key>
 DEEPSEEK_API_KEY=<deepseek_api_key>
 NVIDIA_API_KEY=<nvidia_api_key>
 ```
+
+---
+
+## Development Workflow & Commands
+
+### Running Components
+
+- **Backend FastAPI Server**:
+
+  ```bash
+  # Using Python
+  python backend/app.py
+
+  # Or using Pixi
+  pixi run backend
+  ```
+
+  - API Base URL: `http://localhost:8000`
+  - Interactive API Docs (Swagger): `http://localhost:8000/docs`
+
+- **Frontend Vite App**:
+
+  ```bash
+  cd vite-app
+  npm run dev
+  ```
+
+  - App URL: `http://localhost:5173`
+
+---
+
+## Frontend Commands (`vite-app/`)
+
+All frontend commands should be executed inside the `vite-app/` directory:
+
+- **Start Dev Server**: `npm run dev`
+- **TypeScript Check**: `npm run typecheck`
+- **Lint Code**: `npm run lint`
+- **Format Code**: `npm run format`
+- **Production Build**: `npm run build`
+- **Preview Build**: `npm run preview`
 
 ---
 

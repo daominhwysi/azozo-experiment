@@ -69,13 +69,9 @@ async def parse_exam_from_pdf_or_text(
 
     try:
         annotator = OCRAnnotator(model=PARSER_MODEL)
-        try:
-            annotation_res = annotator.annotate_text(ocr_text)
-        except Exception as err:
-            print(f"[Anchor Fallback] Full text tagging failed ({err}), trying anchor parser.")
-            annotation_res = annotator.annotate_text_anchor(ocr_text)
+        annotation_res = annotator.annotate_text(ocr_text)
 
-        structured_questions = parse_spans_into_structured_questions(
+        structured_questions, stimuli = parse_spans_into_structured_questions(
             annotation_res["raw_text"], annotation_res["spans"]
         )
         raw_xml = annotation_res.get("raw_xml", "")
@@ -84,9 +80,11 @@ async def parse_exam_from_pdf_or_text(
     except Exception as e:
         print(f"[Fallback Parser] LLM annotation unavailable/failed ({e}), using regex parser.")
         structured_questions = regex_parse_questions(ocr_text)
+        stimuli = {}
 
     if not structured_questions:
         structured_questions = regex_parse_questions(ocr_text)
+        stimuli = {}
 
     duration = time.time() - start_time
 
@@ -113,6 +111,7 @@ async def parse_exam_from_pdf_or_text(
         "spans_count": spans_count,
         "tokens_count": tokens_count,
         "questions": structured_questions,
+        "stimuli": stimuli,
         "log_folder": log_folder.name,
     }
 
@@ -121,14 +120,12 @@ async def parse_exam_from_pdf_or_text(
 async def parse_exam_from_pdf_or_text_stream(
     file: Optional[UploadFile] = File(None),
     raw_text: Optional[str] = Form(None),
-    mode: Optional[str] = Form("anchor")
 ):
     """
     Azota OCR & Exam Importer API with real-time SSE streaming.
     Streams 2 main stages:
       1. OCR (PyMuPDF layout & text extraction)
       2. Annotate (Token streaming sequence labeling & question structuring)
-    Supports mode="anchor" (Fast Anchor Shortcut method) or mode="full" (Full text tagging).
     """
     start_time = time.time()
     file_bytes = None
@@ -186,16 +183,16 @@ async def parse_exam_from_pdf_or_text_stream(
             return
 
         words_count = len(ocr_text.split())
-        estimated_tokens = max(40, int(words_count * (0.35 if mode == "anchor" else 1.3)) + 20)
+        estimated_tokens = max(40, int(words_count * 1.3) + 20)
 
         yield f"data: {json.dumps({'type': 'ocr_complete', 'step': 1, 'step_name': 'OCR', 'progress': 50, 'raw_text_length': len(ocr_text), 'estimated_tokens': estimated_tokens, 'message': f'Hoàn tất OCR ({len(ocr_text)} ký tự, ~{estimated_tokens} tokens dự kiến)'}, ensure_ascii=False)}\n\n"
 
         # --- STAGE 2: ANNOTATE ---
-        mode_label = "Anchor Shortcut" if mode == "anchor" else "Full Text"
-        yield f"data: {json.dumps({'type': 'annotate_start', 'step': 2, 'step_name': 'Annotate', 'progress': 50, 'streamed_tokens': 0, 'estimated_tokens': estimated_tokens, 'message': f'Bắt đầu gán nhãn LLM ({mode_label})...'}, ensure_ascii=False)}\n\n"
+        yield f"data: {json.dumps({'type': 'annotate_start', 'step': 2, 'step_name': 'Annotate', 'progress': 50, 'streamed_tokens': 0, 'estimated_tokens': estimated_tokens, 'message': 'Bắt đầu gán nhãn LLM (Full Text)...'}, ensure_ascii=False)}\n\n"
 
         annotation_res = None
         structured_questions = []
+        stimuli = {}
         queue = asyncio.Queue()
         loop = asyncio.get_event_loop()
 
@@ -205,14 +202,11 @@ async def parse_exam_from_pdf_or_text_stream(
         annotation_error = None
 
         def run_annotation():
-            nonlocal annotation_res, structured_questions, annotation_error
+            nonlocal annotation_res, structured_questions, annotation_error, stimuli
             try:
                 annotator = OCRAnnotator(model=PARSER_MODEL)
-                if mode == "anchor":
-                    annotation_res = annotator.annotate_text_anchor(ocr_text, callback=token_callback)
-                else:
-                    annotation_res = annotator.annotate_text_stream(ocr_text, callback=token_callback)
-                structured_questions = parse_spans_into_structured_questions(
+                annotation_res = annotator.annotate_text_stream(ocr_text, callback=token_callback)
+                structured_questions, stimuli = parse_spans_into_structured_questions(
                     annotation_res["raw_text"], annotation_res["spans"]
                 )
             except Exception as e:
@@ -221,6 +215,7 @@ async def parse_exam_from_pdf_or_text_stream(
                 print(f"[Fallback Parser in Stream] LLM annotation failed ({e}), using regex parser.")
                 traceback.print_exc()
                 structured_questions = regex_parse_questions(ocr_text)
+                stimuli = {}
             finally:
                 loop.call_soon_threadsafe(queue.put_nowait, None)
 
@@ -243,6 +238,7 @@ async def parse_exam_from_pdf_or_text_stream(
 
         if not structured_questions:
             structured_questions = regex_parse_questions(ocr_text)
+            stimuli = {}
 
         duration = time.time() - start_time
         spans_count = len(annotation_res.get("spans", [])) if annotation_res else 0
@@ -276,6 +272,7 @@ async def parse_exam_from_pdf_or_text_stream(
                 "spans_count": spans_count,
                 "tokens_count": tokens_count,
                 "questions": structured_questions,
+                "stimuli": stimuli,
                 "log_folder": log_folder.name,
             }
         }

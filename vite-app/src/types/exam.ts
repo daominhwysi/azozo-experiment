@@ -10,6 +10,9 @@ export interface Question {
   options: Option[];
   correct_answer: string;
   explanation: string;
+  stimulus_id?: string;
+  stimulus_text?: string;
+  section?: string;
 }
 
 export interface Exam {
@@ -63,4 +66,5 @@ export interface ParseExamResponse {
   spans_count: number;
   tokens_count: number;
   questions: Question[];
+  stimuli?: Record<string, string>;
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Exam } from "@/types/exam";
-import { fetchExams } from "@/services/api";
+import { fetchExams, deleteExam } from "@/services/api";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { ExamBank } from "@/components/exam/ExamBank";
@@ -40,8 +40,23 @@ export function App() {
     setActiveTab("student");
   };
 
+  const handleDeleteExam = async (examId: string) => {
+    try {
+      await deleteExam(examId);
+      setExams((prev) => {
+        const updated = prev.filter((e) => e.id !== examId);
+        if (selectedExam?.id === examId) {
+          setSelectedExam(updated[0] || null);
+        }
+        return updated;
+      });
+    } catch (e) {
+      console.error("Failed to delete exam", e);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans flex">
+    <div className="h-screen bg-background text-foreground font-sans flex overflow-hidden">
       {/* Top Global Progress Bar */}
       <TopLoader />
 
@@ -74,6 +89,7 @@ export function App() {
               setSelectedExam={setSelectedExam}
               onOpenOcrTab={() => setActiveTab("ocr")}
               onStartExam={handleStartExam}
+              onDeleteExam={handleDeleteExam}
             />
           )}
 

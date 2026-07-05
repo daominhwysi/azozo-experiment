@@ -1,9 +1,20 @@
 import { useState } from "react";
 import type { Exam } from "@/types/exam";
-import { Search, Clock, Plus } from "lucide-react";
+import { Search, Clock, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ExamViewer } from "./ExamViewer";
 
 
@@ -13,6 +24,7 @@ interface ExamBankProps {
   setSelectedExam: (exam: Exam) => void;
   onOpenOcrTab: () => void;
   onStartExam: (exam: Exam) => void;
+  onDeleteExam: (examId: string) => void;
 }
 
 export function ExamBank({
@@ -21,8 +33,11 @@ export function ExamBank({
   setSelectedExam,
   onOpenOcrTab,
   onStartExam,
+  onDeleteExam,
 }: ExamBankProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [deletingExamId, setDeletingExamId] = useState<string | null>(null);
+  const examToDelete = deletingExamId ? exams.find(e => e.id === deletingExamId) : null;
 
   const filteredExams = exams.filter(
     (e) =>
@@ -92,17 +107,29 @@ export function ExamBank({
 
                   <div className="flex items-center justify-between pt-1 text-[11px] text-muted-foreground">
                     <span>{exam.questions.length} câu hỏi</span>
-                    <Button
-                      size="sm"
-                      variant={isSelected ? "default" : "outline"}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onStartExam(exam);
-                      }}
-                      className="h-6 px-2 text-[10px]"
-                    >
-                      Vào Thi
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletingExamId(exam.id);
+                        }}
+                        className="p-1 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        title="Xóa đề thi"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                      <Button
+                        size="sm"
+                        variant={isSelected ? "default" : "outline"}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onStartExam(exam);
+                        }}
+                        className="h-6 px-2 text-[10px]"
+                      >
+                        Vào Thi
+                      </Button>
+                    </div>
                   </div>
                 </div>
               );
@@ -115,6 +142,35 @@ export function ExamBank({
       <div className="lg:col-span-7 border-l border-border pl-6 pr-2 pt-4 overflow-y-auto max-h-[calc(100vh-8rem)] scroll-pt-4">
         <ExamViewer exam={selectedExam} />
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {examToDelete && (
+        <AlertDialog open onOpenChange={(open) => { if (!open) setDeletingExamId(null); }}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogMedia>
+                <AlertTriangle className="size-6 text-destructive" />
+              </AlertDialogMedia>
+              <AlertDialogTitle>Xóa đề thi</AlertDialogTitle>
+              <AlertDialogDescription>
+                Bạn có chắc chắn muốn xóa "{examToDelete.title}"? Hành động này không thể hoàn tác.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setDeletingExamId(null)}>Hủy</AlertDialogCancel>
+              <AlertDialogAction
+                variant="destructive"
+                onClick={() => {
+                  onDeleteExam(deletingExamId!);
+                  setDeletingExamId(null);
+                }}
+              >
+                Xóa
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
 
     </div>
   );
