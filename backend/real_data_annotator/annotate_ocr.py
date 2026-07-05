@@ -168,7 +168,11 @@ def expand_anchor_xml(raw_text: str, anchor_xml: str) -> Tuple[str, List[Dict[st
         if i + 1 < len(raw_matches):
             next_m = raw_matches[i + 1]
             next_attr = next_m.group(3) if next_m.group(3) else (next_m.group(2) or "")
-            next_params = dict(re.findall(r'([a-zA-Z_0-9\-]+)=(?:"([^"]*)"|\'([^\']*)\'|(\S+))', next_attr))
+            next_params = {}
+            if next_attr:
+                next_attr_matches = re.findall(r'([a-zA-Z_0-9\-]+)=(?:"([^"]*)"|\'([^\']*)\'|(\S+))', next_attr)
+                for k, v1, v2, v3 in next_attr_matches:
+                    next_params[k] = v1 or v2 or v3
             next_start_phrase = next_params.get("start", next_m.group(3) or "").strip()
             if next_start_phrase:
                 found_next = raw_text.find(next_start_phrase, start_idx)
