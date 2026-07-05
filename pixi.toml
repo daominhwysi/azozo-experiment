@@ -1,0 +1,23 @@
+[workspace]
+name = "azozo"
+version = "0.1.0"
+description = "Azozo Exam Platform - Azota-grade PDF OCR & Notion UI System"
+authors = ["Antigravity"]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = ">=3.10"
+pip = "*"
+fastapi = "*"
+uvicorn = "*"
+pydantic = "*"
+pymupdf = "*"
+openai = "*"
+python-dotenv = "*"
+tqdm = "*"
+
+[tasks]
+backend = "python backend/app.py"
+frontend = "cd vite-app && npm run dev"
+start = "npx concurrently -k -n \"backend,frontend\" -c \"cyan,magenta\" \"python backend/app.py\" \"cd vite-app && npm run dev\""

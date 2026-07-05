@@ -1,0 +1,22 @@
+# Azozo Model & System Configuration
+
+models:
+  ocr:
+    model_name: "mn/Minimax-M3"
+    provider: "vilao"
+    batch_size: 3
+    concurrency: 5
+    description: "Vision LLM model for converting PDF pages to markdown text"
+
+  parser:
+    model_name: "op/deepseek/deepseek-v4-pro"
+    provider: "vilao"
+    description: "Sequence labeling LLM model for question stem and option annotation"
+
+logging:
+  dir: "ocr_logs"
+  enabled: true
+
+server:
+  host: "0.0.0.0"
+  port: 8000

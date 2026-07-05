@@ -1,0 +1,2345 @@
+{
+  "exams": [
+    {
+      "id": "exam_00f88bbe",
+      "title": "DVD X1",
+      "subject": "Toán Học",
+      "grade": "Lớp 12",
+      "duration_minutes": 45,
+      "created_at": "2026-07-05T09:31:08.469139",
+      "questions": [
+        {
+          "id": "q_1_29da72",
+          "question_number": "**1.**",
+          "stem": "Kết quả kiểm tra môn Toán của lớp 12 được cho bởi mẫu số liệu ghép nhóm như sau:\n\n| Nhóm điểm | $[0;2)$ | $[2;4)$ | $[4;6)$ | $[6;8)$ | $[8;10)$ |\n|---|---|---|---|---|---|\n| Tần số | 4 | 5 | 6 | 25 | 10 |\n\nTrung vị của mẫu số liệu ghép nhóm trên thuộc vào nhóm nào dưới đây?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$[6;8]$."
+            },
+            {
+              "label": "B",
+              "text": "$[2;4)$."
+            },
+            {
+              "label": "C",
+              "text": "$[4;6)$."
+            },
+            {
+              "label": "D",
+              "text": "$[8;10)$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_2_ac99e6",
+          "question_number": "**2.**",
+          "stem": "Cho khối hộp chữ nhật $ABCD.A'B'C'D'$ có $AB = 3a$, $AD = 4a$. Biết tứ giác $BB'D'D$ là hình vuông. Thể tích khối hộp đã cho là:",
+          "options": [
+            {
+              "label": "A",
+              "text": "$30a^3$."
+            },
+            {
+              "label": "B",
+              "text": "$60a^3$."
+            },
+            {
+              "label": "C",
+              "text": "$20a^3$."
+            },
+            {
+              "label": "D",
+              "text": "$12a^3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_3_076235",
+          "question_number": "**3.**",
+          "stem": "Phương trình $\\sin x = 0$ có họ nghiệm là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$x = \\dfrac{\\pi}{2} + k2\\pi, k \\in \\mathbb{Z}$."
+            },
+            {
+              "label": "B",
+              "text": "$x = k2\\pi, k \\in \\mathbb{Z}$."
+            },
+            {
+              "label": "C",
+              "text": "$x = \\dfrac{\\pi}{2} + \\pi, k \\in \\mathbb{Z}$."
+            },
+            {
+              "label": "D",
+              "text": "$x = k\\pi, k \\in \\mathbb{Z}$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_4_e4a256",
+          "question_number": "**4.**",
+          "stem": "Với mọi số thực dương $a$ thì $\\log_2(16a) - \\log_2 a$ bằng",
+          "options": [
+            {
+              "label": "A",
+              "text": "$\\log_2(15a)$."
+            },
+            {
+              "label": "B",
+              "text": "$8$."
+            },
+            {
+              "label": "C",
+              "text": "$4$."
+            },
+            {
+              "label": "D",
+              "text": "$4 - 2\\log_2 a$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_5_0a6b4f",
+          "question_number": "**5.**",
+          "stem": "Tập nghiệm của bất phương trình $\\log_{0,5}(2x-1) \\geq 1$ là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$\\left(\\dfrac{5}{2}; \\dfrac{11}{4}\\right)$."
+            },
+            {
+              "label": "B",
+              "text": "$\\left(\\dfrac{5}{2}; \\dfrac{11}{4}\\right]$."
+            },
+            {
+              "label": "C",
+              "text": "$\\left(\\dfrac{11}{4}; +\\infty\\right)$."
+            },
+            {
+              "label": "D",
+              "text": "$\\left(\\dfrac{1}{2}; \\dfrac{3}{4}\\right]$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_6_3424e2",
+          "question_number": "**6.**",
+          "stem": "Cho hàm số $f(x) = \\dfrac{ax^2 + 2x - 5}{x^2 - 3x + 2}$ (với $a$ là hằng số). Biết rằng $f(x)$ có giới hạn hữu hạn tại điểm $x = 1$. Giá trị $\\lim_{x \\to 1} f(x)$ bằng",
+          "options": [
+            {
+              "label": "A",
+              "text": "$-6$."
+            },
+            {
+              "label": "B",
+              "text": "$-8$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_7_882bb2",
+          "question_number": "**7.**",
+          "stem": "Cho hàm số $f(x)$ liên tục trên $\\mathbb{R}$ và có đồ thị như hình vẽ. Số điểm cực trị của hàm số $f(x)$ là\n\n*(Hình vẽ: đồ thị parabol mở lên, cắt trục hoành tại gốc O)*",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$2$."
+            },
+            {
+              "label": "C",
+              "text": "$3$."
+            },
+            {
+              "label": "D",
+              "text": "$1$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_8_62ee98",
+          "question_number": "**8.**",
+          "stem": "Hàm số $f(x) = x^3 - 3x^2 - 9x + 7$ có cực đại là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$-1$."
+            },
+            {
+              "label": "B",
+              "text": "$12$."
+            },
+            {
+              "label": "C",
+              "text": "$3$."
+            },
+            {
+              "label": "D",
+              "text": "$-20$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_9_73d054",
+          "question_number": "**9.**",
+          "stem": "Số điểm cực trị của hàm số $f(x) = x^2 - 2x + 1$ là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_10_3a7fd0",
+          "question_number": "**10.**",
+          "stem": "Số điểm cực trị của hàm số $f(x) = x^3 - 3x^2$ là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_11_40cf3c",
+          "question_number": "**11.**",
+          "stem": "Số điểm cực trị của hàm số $f(x) = x^4 - 2x^2 + 1$ là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_12_0295e0",
+          "question_number": "**12.**",
+          "stem": "Số điểm cực trị của hàm số $f(x) = x + \\dfrac{1}{x}$ là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_13_5f5c14",
+          "question_number": "**13.**",
+          "stem": "Số điểm cực trị của hàm số $f(x) = x - \\dfrac{22}{x}$ là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_14_39e603",
+          "question_number": "**14.**",
+          "stem": "Cho hàm số $f(x)$ thỏa mãn $f'(x) = x^2 - 2x + 1 \\ \\forall x \\in \\mathbb{R}$. Hàm số $f(x)$ có bao nhiêu điểm cực trị?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_15_28087f",
+          "question_number": "**15.**",
+          "stem": "Cho hàm số $f(x)$ thỏa mãn $f'(x) = x^2 - 2x \\ \\forall x \\in \\mathbb{R}$. Hàm số $f(x)$ có bao nhiêu điểm cực trị?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_16_b904f6",
+          "question_number": "**16.**",
+          "stem": "Cho hàm số $f(x)$ thỏa mãn $f'(x) = x^2(x^2-1)(x^2-2)(x^2-3)(x^2-4)(x^2-5) \\ \\forall x \\in \\mathbb{R}$. Hàm số $f(x)$ có bao nhiêu điểm cực trị?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$5$."
+            },
+            {
+              "label": "B",
+              "text": "$6$."
+            },
+            {
+              "label": "C",
+              "text": "$10$."
+            },
+            {
+              "label": "D",
+              "text": "$11$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_17_427df8",
+          "question_number": "**17.**",
+          "stem": "Cho hàm số $f(x)$ có đồ thị hàm số $f'(x)$ như hình vẽ:\n\nSố điểm cực tiểu của hàm số $y = f(x)$ là:\n\n*(Hình vẽ: đồ thị $f'(x)$ đi qua $-1$, $O$, $2$ trên trục $x$, giá trị $-4$ trên trục $y$)*",
+          "options": [
+            {
+              "label": "A",
+              "text": "$3$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$0$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_18_a1292e",
+          "question_number": "**18.**",
+          "stem": "Cho hàm số $f(x) = \\begin{cases} x - 1 & \\text{khi } x > 2 \\\\ x^2 - 3 & \\text{khi } x \\leq 2 \\end{cases}$ Hàm số $f(x)$ có bao nhiêu điểm cực trị?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_19_734068",
+          "question_number": "**19.**",
+          "stem": "Cho hàm số $f(x)$ nghịch biến trên $\\mathbb{R}$. Tập nghiệm của bất phương trình $f(x^2 - 49) > f(6x - 22)$ chứa bao nhiêu số nguyên?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$11$."
+            },
+            {
+              "label": "B",
+              "text": "$12$."
+            },
+            {
+              "label": "C",
+              "text": "$10$."
+            },
+            {
+              "label": "D",
+              "text": "Vô số."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_20_56ff44",
+          "question_number": "**20.**",
+          "stem": "Cho hàm số $y = f(x)$ có bảng xét dấu đạo hàm như sau\n\n| $x$ | $-\\infty$ | | $-3$ | | $-2$ | | $-1$ | | $0$ | | $1$ | | $+\\infty$ |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| $f'(x)$ | | $+$ | $0$ | $+$ | $0$ | $-$ | $0$ | $+$ | $0$ | $-$ | $0$ | $-$ |\n\nHàm số $f(x)$ đồng biến trên khoảng nào sau đây?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$(-\\infty; -2)$."
+            },
+            {
+              "label": "B",
+              "text": "$(-2; -1)$."
+            },
+            {
+              "label": "C",
+              "text": "$(-1; 1)$."
+            },
+            {
+              "label": "D",
+              "text": "$(1; +\\infty)$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_21_9074fb",
+          "question_number": "**21.**",
+          "stem": "Tìm mối liên hệ giữa $a$ và $b$ sao cho hàm số $f(x) = 2x + a\\sin x + b\\cos x$ luôn đồng biến trên $\\mathbb{R}$?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$\\dfrac{1}{a} + \\dfrac{1}{b} = 1$."
+            },
+            {
+              "label": "B",
+              "text": "$a + 2b \\geq \\dfrac{1+\\sqrt{2}}{3}$."
+            },
+            {
+              "label": "C",
+              "text": "$a^2 + b^2 \\leq 4$."
+            },
+            {
+              "label": "D",
+              "text": "$a + 2b = 2\\sqrt{3}$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_22_33c258",
+          "question_number": "**22.**",
+          "stem": "Trên khoảng $(0; \\pi)$, hàm số $f(x) = x + 2\\cos x$ đạt cực tiểu tại",
+          "options": [
+            {
+              "label": "A",
+              "text": "$x = \\dfrac{\\pi}{6}$."
+            },
+            {
+              "label": "B",
+              "text": "$x = \\dfrac{\\pi}{3}$."
+            },
+            {
+              "label": "C",
+              "text": "$x = \\dfrac{5\\pi}{6}$."
+            },
+            {
+              "label": "D",
+              "text": "$x = \\dfrac{2\\pi}{3}$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_23_931b81",
+          "question_number": "**23.**",
+          "stem": "Cho hàm số $f(x)$ thỏa mãn $f'(x) = (e^x - 1)(x^{26} + x^{25}) \\ \\forall x \\in \\mathbb{R}$. Số điểm cực trị của hàm số $f(x)$ là",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0$."
+            },
+            {
+              "label": "B",
+              "text": "$1$."
+            },
+            {
+              "label": "C",
+              "text": "$2$."
+            },
+            {
+              "label": "D",
+              "text": "$3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_24_021152",
+          "question_number": "**24.**",
+          "stem": "Tìm giá trị nhỏ nhất của hàm số $y = x + \\sqrt{25 - x^2}$ (kết quả làm tròn đến hàng đơn vị).",
+          "options": [
+            {
+              "label": "A",
+              "text": "$-4$."
+            },
+            {
+              "label": "B",
+              "text": "$-5$."
+            },
+            {
+              "label": "C",
+              "text": "$-6$."
+            },
+            {
+              "label": "D",
+              "text": "$-7$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_25_8dfb5e",
+          "question_number": "**25.**",
+          "stem": "Cho hàm số $f(x) = x \\cdot \\ln x$",
+          "options": [
+            {
+              "label": "a)",
+              "text": "Tập xác định của hàm số $f(x)$ là $D = [0; +\\infty)$."
+            },
+            {
+              "label": "b)",
+              "text": "Hàm số $f(x)$ có đúng 1 điểm cực trị."
+            },
+            {
+              "label": "c)",
+              "text": "Hàm số $f(x)$ đạt giá trị nhỏ nhất bằng $-1$."
+            },
+            {
+              "label": "d)",
+              "text": "Phương trình $f(x) = 0$ có 2 nghiệm phân biệt."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_26_480824",
+          "question_number": "**26.**",
+          "stem": "Cho hàm số $y = f(x)$ có đồ thị như hình vẽ\n\n*(Hình vẽ: đồ thị đi qua các điểm $-1$, $O$, $2$, $3$ trên trục $x$; giá trị $-4$ trên trục $y$)*",
+          "options": [
+            {
+              "label": "a)",
+              "text": "Hàm số $f(x)$ có 3 điểm cực trị."
+            },
+            {
+              "label": "b)",
+              "text": "Hàm số $f(x)$ nghịch biến trên khoảng $(-1; 2)$."
+            },
+            {
+              "label": "c)",
+              "text": "Hàm số $f(x)$ có giá trị cực đại bằng $2$."
+            },
+            {
+              "label": "d)",
+              "text": "Hàm số $f(x)$ không có đạo hàm tại $x = 3$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_27_ab5c3b",
+          "question_number": "**27.**",
+          "stem": "",
+          "options": [
+            {
+              "label": "a)",
+              "text": "Hàm số $f(x)$ không có đạo hàm tại $x = 1$ và $x = 3$."
+            },
+            {
+              "label": "b)",
+              "text": "$x = 1$ là một điểm cực tiểu của hàm số $y = f(x)$."
+            },
+            {
+              "label": "c)",
+              "text": "$\\min\\limits_{x \\in (0;2)} f(x) = -2$."
+            },
+            {
+              "label": "d)",
+              "text": "$f'(2{,}5) > 0$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        },
+        {
+          "id": "q_28_c69813",
+          "question_number": "**28.**",
+          "stem": "Cho hàm số $f(x)$ có $f'(x) = x^3 - 3x$ $\\forall x \\in \\mathbb{R}$.",
+          "options": [
+            {
+              "label": "a)",
+              "text": "Hàm số $f(x)$ đạt cực đại tại $x = 0$."
+            },
+            {
+              "label": "b)",
+              "text": "Hàm số $f(x)$ có $2$ điểm cực trị."
+            },
+            {
+              "label": "c)",
+              "text": "Hàm số $f(x)$ đồng biến trên $(1; +\\infty)$."
+            },
+            {
+              "label": "d)",
+              "text": "$\\max\\limits_{x \\in [-1;1]} f(x) = f(0)$."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": null
+        }
+      ]
+    },
+    {
+      "id": "exam_1f66e0dd",
+      "title": "Tieng Anh test 1",
+      "subject": "Toán Học",
+      "grade": "Lớp 12",
+      "duration_minutes": 45,
+      "created_at": "2026-07-05T09:21:04.568312",
+      "questions": [
+        {
+          "id": "q_1_60055b",
+          "question_number": "**Question 1** [1090644]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "quantifies the impactful disproportion faced by disadvantaged students"
+            },
+            {
+              "label": "B",
+              "text": "the impact of quantifying the disproportionate disadvantages of students"
+            },
+            {
+              "label": "C",
+              "text": "quantifying the disproportionate impact on disadvantaged students"
+            },
+            {
+              "label": "D",
+              "text": "that the disproportionate impact on disadvantaged students is quantified"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_1"
+        },
+        {
+          "id": "q_2_be45e4",
+          "question_number": "**Question 2** [1090645]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "in order that academic setbacks have socio-emotional impacts that are nearly impossible to separate"
+            },
+            {
+              "label": "B",
+              "text": "assuming that the socio-emotional impossibility of separating academic impacts from setbacks"
+            },
+            {
+              "label": "C",
+              "text": "on condition that the separation of academics from socio-emotional impacts is a nearly impossible setback"
+            },
+            {
+              "label": "D",
+              "text": "given that it is nearly impossible to separate academic setbacks from socio-emotional impacts"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_1"
+        },
+        {
+          "id": "q_3_f7e700",
+          "question_number": "**Question 3** [1090646]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "People argue that long-term gaps in reading and math skills are economically consequential to their measurement"
+            },
+            {
+              "label": "B",
+              "text": "The long-term economic consequences of these gaps in reading and math skills are, arguably, the measurement itself"
+            },
+            {
+              "label": "C",
+              "text": "The consequence of this argument is economically measuring the long-term gaps in reading and math skills"
+            },
+            {
+              "label": "D",
+              "text": "The argument is that these measurable gaps in reading and math skills will have long-term economic consequences"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_1"
+        },
+        {
+          "id": "q_4_551f0d",
+          "question_number": "**Question 4** [1090647]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "Overlooking student well-being is posited as harmfully creating a deficient mindset about the term"
+            },
+            {
+              "label": "B",
+              "text": "The harm created by this deficient mindset, they posit, is the term's oversight of student well-being"
+            },
+            {
+              "label": "C",
+              "text": "The creation of the term itself is posited as a harmful oversight of student well-being and a deficit mindset"
+            },
+            {
+              "label": "D",
+              "text": "They posit that the term itself creates a harmful deficit mindset that overlooks student well-being"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_1"
+        },
+        {
+          "id": "q_5_f18c51",
+          "question_number": "**Question 5** [1090648]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "a commitment to restructure the foundation of inequitable policies"
+            },
+            {
+              "label": "B",
+              "text": "founding inequitable policies on a commitment to restructuring"
+            },
+            {
+              "label": "C",
+              "text": "with a foundational commitment to restructuring inequitable policies"
+            },
+            {
+              "label": "D",
+              "text": "and a policy commitment to restructuring foundational inequity"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_1"
+        },
+        {
+          "id": "q_6_ebc8bd",
+          "question_number": "**Question 6** [1090649]:",
+          "stem": "Which of the following best paraphrases the underlined sentence in paragraph 2?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The visual blight of discarded waste disrupts the tranquil atmosphere, creating a profoundly unfitting spectacle in a location widely celebrated for its natural beauty."
+            },
+            {
+              "label": "B",
+              "text": "The tranquil ambiance is spoiled by the visual intrusion of discarded refuse, and this sight is also deemed deeply inappropriate for a location prized for its natural splendor."
+            },
+            {
+              "label": "C",
+              "text": "For a location cherished for its magnificent natural splendor, the sight of discarded waste ruins the serene feeling and is a profoundly disappointing spectacle for observers."
+            },
+            {
+              "label": "D",
+              "text": "Discarded refuse creates a jarring visual that not only shatters the location's peaceful atmosphere but also degrades the very natural splendor for which the area is so cherished."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_7_894278",
+          "question_number": "**Question 7** [1090650]:",
+          "stem": "The word **perplexing** in paragraph 3 is closest in meaning to ________.",
+          "options": [
+            {
+              "label": "A",
+              "text": "irrational"
+            },
+            {
+              "label": "B",
+              "text": "frustrating"
+            },
+            {
+              "label": "C",
+              "text": "puzzling"
+            },
+            {
+              "label": "D",
+              "text": "destructive"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_8_4e45f8",
+          "question_number": "**Question 8** [1090651]:",
+          "stem": "The word **its** in paragraph 3 refers to ________.",
+          "options": [
+            {
+              "label": "A",
+              "text": "appreciation"
+            },
+            {
+              "label": "B",
+              "text": "collective impact"
+            },
+            {
+              "label": "C",
+              "text": "personal responsibility"
+            },
+            {
+              "label": "D",
+              "text": "the environment"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_9_c1173f",
+          "question_number": "**Question 9** [1090652]:",
+          "stem": "Which of the following is NOT listed in the passage as an environmental consequence of the accumulated waste?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The corrosion of natural ecosystems"
+            },
+            {
+              "label": "B",
+              "text": "The contamination of soil and water"
+            },
+            {
+              "label": "C",
+              "text": "A grave threat to wildlife"
+            },
+            {
+              "label": "D",
+              "text": "A psychological disconnect"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_10_6786b2",
+          "question_number": "**Question 10** [1090653]:",
+          "stem": "The word **grave** in paragraph 4 is OPPOSITE in meaning to_______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "trivial"
+            },
+            {
+              "label": "B",
+              "text": "visible"
+            },
+            {
+              "label": "C",
+              "text": "distant"
+            },
+            {
+              "label": "D",
+              "text": "specific"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_11_311b59",
+          "question_number": "**Question 11** [1090654]:",
+          "stem": "Which of the following is TRUE according to the passage?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Numerous visitors are drawn to Vietnam's scenic destinations to research the extensive ecological impact of microplastic contamination."
+            },
+            {
+              "label": "B",
+              "text": "The prevalent accumulation of litter in scenic areas is attributed to insufficient waste disposal infrastructure managed by local authorities."
+            },
+            {
+              "label": "C",
+              "text": "Travelers arriving at Vietnam's natural beauty spots are often confronted with landscapes already spoiled by the waste from previous visitors."
+            },
+            {
+              "label": "D",
+              "text": "The rubbish left behind by tourists in scenic areas might typically consist of single-use items related to food and drink consumption."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_12_48653f",
+          "question_number": "**Question 12** [1090655]:",
+          "stem": "Which paragraph mentions a contradiction in the mindset of the visitors?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Paragraph 1"
+            },
+            {
+              "label": "B",
+              "text": "Paragraph 3"
+            },
+            {
+              "label": "C",
+              "text": "Paragraph 2"
+            },
+            {
+              "label": "D",
+              "text": "Paragraph 4"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_13_e7a7ee",
+          "question_number": "**Question 13** [1090656]:",
+          "stem": "Which paragraph mentions a situation where a place's attraction leads to its own ruin?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Paragraph 4"
+            },
+            {
+              "label": "B",
+              "text": "Paragraph 3"
+            },
+            {
+              "label": "C",
+              "text": "Paragraph 2"
+            },
+            {
+              "label": "D",
+              "text": "Paragraph 1"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_2"
+        },
+        {
+          "id": "q_14_d1e50d",
+          "question_number": "**Question 14** [1090657]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "volume"
+            },
+            {
+              "label": "B",
+              "text": "range"
+            },
+            {
+              "label": "C",
+              "text": "number"
+            },
+            {
+              "label": "D",
+              "text": "level"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_3"
+        },
+        {
+          "id": "q_15_c6ad2c",
+          "question_number": "**Question 15** [1090658]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "contamination"
+            },
+            {
+              "label": "B",
+              "text": "contaminated"
+            },
+            {
+              "label": "C",
+              "text": "contaminate"
+            },
+            {
+              "label": "D",
+              "text": "contaminant"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_3"
+        },
+        {
+          "id": "q_16_d1d320",
+          "question_number": "**Question 16** [1090659]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "who"
+            },
+            {
+              "label": "B",
+              "text": "which"
+            },
+            {
+              "label": "C",
+              "text": "whose"
+            },
+            {
+              "label": "D",
+              "text": "whom"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_3"
+        },
+        {
+          "id": "q_17_1cd465",
+          "question_number": "**Question 17** [1090660]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "come down"
+            },
+            {
+              "label": "B",
+              "text": "turn down"
+            },
+            {
+              "label": "C",
+              "text": "break down"
+            },
+            {
+              "label": "D",
+              "text": "get down"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_3"
+        },
+        {
+          "id": "q_18_ad9ec5",
+          "question_number": "**Question 18** [1090661]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "trained"
+            },
+            {
+              "label": "B",
+              "text": "have been trained"
+            },
+            {
+              "label": "C",
+              "text": "training"
+            },
+            {
+              "label": "D",
+              "text": "are training"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_3"
+        },
+        {
+          "id": "q_19_5fd283",
+          "question_number": "**Question 19** [1090662]:",
+          "stem": "",
+          "options": [
+            {
+              "label": "A",
+              "text": "peculiar"
+            },
+            {
+              "label": "B",
+              "text": "prevalent"
+            },
+            {
+              "label": "C",
+              "text": "prominent"
+            },
+            {
+              "label": "D",
+              "text": "pernicious"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_3"
+        },
+        {
+          "id": "q_20_2cf0ad",
+          "question_number": "**Question 20** [1090663]:",
+          "stem": "According to paragraph 1, the increasing tendency for employees to remain in their current positions stems from _______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "a stagnant labor situation characterized by minimal hiring"
+            },
+            {
+              "label": "B",
+              "text": "the high-stakes career moves available in the prior market"
+            },
+            {
+              "label": "C",
+              "text": "a recent large-scale study corroborating the new shift"
+            },
+            {
+              "label": "D",
+              "text": "a widespread apprehension about the economic outlook"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_21_1a0569",
+          "question_number": "**Question 21** [1090664]:",
+          "stem": "The word <u>concede</u> in paragraph 1 is closest in meaning to _______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "agree"
+            },
+            {
+              "label": "B",
+              "text": "argue"
+            },
+            {
+              "label": "C",
+              "text": "admit"
+            },
+            {
+              "label": "D",
+              "text": "reveal"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_22_ece4fa",
+          "question_number": "**Question 22** [1090665]:",
+          "stem": "Which of the following best summarises paragraph 2?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Career experts view job hugging as a pragmatic choice for survival although it reflects a concerning lack of career ambition, often seen more frequently in older, established generations who have a tendency to be more risk-averse."
+            },
+            {
+              "label": "B",
+              "text": "Job hugging is seen as a survival tactic, with career analysts suggesting that its higher occurrence among Gen X and Boomers results from their greater demand for financial security compared to younger, less established generations."
+            },
+            {
+              "label": "C",
+              "text": "Career analysts interpret job hugging not as passivity but as a reasonable adjustment to economic volatility, a common practice offering emotional stability that appears more prevalent among older employee cohorts."
+            },
+            {
+              "label": "D",
+              "text": "Career analysts describe job hugging as offering crucial emotional reassurance in uncertain times, making it the obviously preferred and logical approach for most workers, particularly experienced older employees in the workforce."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_23_3da04f",
+          "question_number": "**Question 23** [1090666]:",
+          "stem": "How do career experts interpret the \"job hugging\" trend?",
+          "options": [
+            {
+              "label": "A",
+              "text": "As a widespread practice reflecting high levels of job satisfaction."
+            },
+            {
+              "label": "B",
+              "text": "As a calculated strategy driven by survival instincts in a volatile economy."
+            },
+            {
+              "label": "C",
+              "text": "As a logical but ultimately unproductive response to current market fears."
+            },
+            {
+              "label": "D",
+              "text": "As a risk-averse tactic limited mostly to Gen X and Boomer employees."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_24_6642e6",
+          "question_number": "Question 24 [1090667]:",
+          "stem": "The word <u>it</u> in paragraph 2 refers to ________.",
+          "options": [
+            {
+              "label": "A",
+              "text": "the survey"
+            },
+            {
+              "label": "B",
+              "text": "the trend"
+            },
+            {
+              "label": "C",
+              "text": "the strategy"
+            },
+            {
+              "label": "D",
+              "text": "the prevalence rate"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_25_47d0df",
+          "question_number": "Question 25 [1090668]:",
+          "stem": "Which of the following best paraphrases the underlined sentence in paragraph 3?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The experts' counsel to job huggers is to casually observe the employment field while, at the same time, making the most of their existing roles."
+            },
+            {
+              "label": "B",
+              "text": "Experts advise job huggers to capitalize on their existing roles as an effective method for passively observing the employment field."
+            },
+            {
+              "label": "C",
+              "text": "While \"job huggers\" are advised to casually observe the employment landscape, they should also focus on preserving their present roles."
+            },
+            {
+              "label": "D",
+              "text": "A continuous observation of the job market is recommended for \"job huggers\" by experts, in addition to capitalizing on their present roles."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_26_7c5d5e",
+          "question_number": "Question 26 [1090669]:",
+          "stem": "What financial advantage do employers gain from increased staff retention?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The ability to retain valuable institutional knowledge and expertise."
+            },
+            {
+              "label": "B",
+              "text": "The avoidance of costs associated with recruiting and training replacements."
+            },
+            {
+              "label": "C",
+              "text": "A workforce that feels generally more secure and therefore more valued."
+            },
+            {
+              "label": "D",
+              "text": "A neutral perspective on the overall trend shared by almost half of managers."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_27_88bb70",
+          "question_number": "Question 27 [1090670]:",
+          "stem": "Which of the following can be inferred from the passage?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Employees engaged in \"job hugging\" often seek for career advancement through internal promotions while the overall labor market remains uncertain."
+            },
+            {
+              "label": "B",
+              "text": "There exists a significant disparity between the general employer perception and the prevalent employee sentiment regarding the \"job hugging\" trend."
+            },
+            {
+              "label": "C",
+              "text": "The practice of \"side stacking\" is viewed by career experts as a more reliable path to financial security than attempting to switch jobs in the current market."
+            },
+            {
+              "label": "D",
+              "text": "The recent economic uncertainty is causing younger generations to adopt risk-averse career strategies similar to those typical of older workers."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_28_b73baf",
+          "question_number": "Question 28 [1090671]:",
+          "stem": "Where in the passage does the following sentence best fit?\n    <mark>Balancing present security with preparation for eventual transitions becomes the overarching aim.</mark>",
+          "options": [
+            {
+              "label": "A",
+              "text": "[I]"
+            },
+            {
+              "label": "B",
+              "text": "[IV]"
+            },
+            {
+              "label": "C",
+              "text": "[II]"
+            },
+            {
+              "label": "D",
+              "text": "[III]"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_29_26063b",
+          "question_number": "Question 29 [1090672]:",
+          "stem": "Which of the following best summarises the passage?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The rise of 'job hugging' signifies a negative workforce trend where economic fear compels employees into stagnation, despite advice to upskill, resulting in staff feeling stuck while primarily benefiting employers who appreciate reduced turnover expenses and enjoy stability."
+            },
+            {
+              "label": "B",
+              "text": "As employees practice 'job hugging' due to uncertainty, many cultivate side hustles for security, and employers perceive this overall trend positively, viewing the diversification of income streams as a sign of initiative that also happens to lower company turnover costs."
+            },
+            {
+              "label": "C",
+              "text": "The 'job hugging' phenomenon, which is driven by economic apprehension among workers, is seen as overwhelmingly beneficial for employers who gain workforce stability and reduced costs, while employees are simply counseled to focus on internal growth opportunities."
+            },
+            {
+              "label": "D",
+              "text": "The labor market's pivot to 'job hugging' reflects economic anxiety, a trend experts deem practical despite mixed employee feelings, and workers are advised to leverage stability for growth, enabling empowered future career moves while employers gain from lower turnover."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_30_6fda55",
+          "question_number": "Question 30 [1090673]:",
+          "stem": "a. The website looked professional, and the product description seemed perfect, so I decided to place an order.\n    b. It was a disappointing experience, and now I'm much more cautious about where I shop online.\n    c. I tried contacting the seller multiple times, but they never responded, and I realized I had been scammed.\n    d. I recently had a frustrating experience when I bought a phone case online.\n    e. However, when the package arrived, it wasn't even close to what I had expected - the quality was poor, and it didn't fit my phone at all.",
+          "options": [
+            {
+              "label": "A",
+              "text": "a-e-c-d-b"
+            },
+            {
+              "label": "B",
+              "text": "c-e-d-a-b"
+            },
+            {
+              "label": "C",
+              "text": "e-a-d-c-b"
+            },
+            {
+              "label": "D",
+              "text": "d-a-e-c-b"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        },
+        {
+          "id": "q_31_178435",
+          "question_number": "Question 31 [1090674]:",
+          "stem": "a. Emma: Yes, it's terrible. Oil spills destroy entire ecosystems and kill marine animals.\n    b. Tom: Have you heard about the recent oil spill off the coast of California, Emma?\n    c. Emma: I agree, the effects are long-lasting. We need stricter regulations to prevent these spills.\n    d. Tom: Absolutely, more preventive measures are needed to protect our oceans.\n    e. Tom: It's so hard to clean up, too. The damage lasts for years.",
+          "options": [
+            {
+              "label": "A",
+              "text": "b-a-e-c-d"
+            },
+            {
+              "label": "B",
+              "text": "b-d-e-c-a"
+            },
+            {
+              "label": "C",
+              "text": "a-e-c-d-b"
+            },
+            {
+              "label": "D",
+              "text": "a-b-c-e-d"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "",
+          "stimulus_id": "stim_4"
+        }
+      ]
+    },
+    {
+      "id": "exam_fd7380f6",
+      "title": "Đề Tiếng Anh Thử Nghiệm 2026",
+      "subject": "Tiếng Anh",
+      "grade": "Lớp 12",
+      "duration_minutes": 45,
+      "created_at": "2026-07-05T04:04:16.258810",
+      "questions": [
+        {
+          "id": "q_1_7053d1",
+          "question_number": "**Question 6** [1090649]:",
+          "stem": "Which of the following best paraphrases the underlined sentence in paragraph 2?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The visual blight of discarded waste disrupts the tranquil atmosphere, creating a profoundly unfitting spectacle in a location widely celebrated for its natural beauty."
+            },
+            {
+              "label": "B",
+              "text": "The tranquil ambiance is spoiled by the visual intrusion of discarded refuse, and this sight is also deemed deeply inappropriate for a location prized for its natural splendor."
+            },
+            {
+              "label": "C",
+              "text": "For a location cherished for its magnificent natural splendor, the sight of discarded waste ruins the serene feeling and is a profoundly disappointing spectacle for observers."
+            },
+            {
+              "label": "D",
+              "text": "Discarded refuse creates a jarring visual that not only shatters the location's peaceful atmosphere but also degrades the very natural splendor for which the area is so cherished."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_2_5a4742",
+          "question_number": "**Question 7** [1090650]:",
+          "stem": "The word **perplexing** in paragraph 3 is closest in meaning to _______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "irrational"
+            },
+            {
+              "label": "B",
+              "text": "frustrating"
+            },
+            {
+              "label": "C",
+              "text": "puzzling"
+            },
+            {
+              "label": "D",
+              "text": "destructive"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_3_589129",
+          "question_number": "**Question 8** [1090651]:",
+          "stem": "The word **its** in paragraph 3 refers to _______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "appreciation"
+            },
+            {
+              "label": "B",
+              "text": "collective impact"
+            },
+            {
+              "label": "C",
+              "text": "personal responsibility"
+            },
+            {
+              "label": "D",
+              "text": "the environment"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_4_684977",
+          "question_number": "**Question 9** [1090652]:",
+          "stem": "Which of the following is NOT listed in the passage as an environmental consequence of the accumulated waste?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The corrosion of natural ecosystems"
+            },
+            {
+              "label": "B",
+              "text": "The contamination of soil and water"
+            },
+            {
+              "label": "C",
+              "text": "A grave threat to wildlife"
+            },
+            {
+              "label": "D",
+              "text": "A psychological disconnect"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_5_1aa98e",
+          "question_number": "**Question 10** [1090653]:",
+          "stem": "The word **grave** in paragraph 4 is OPPOSITE in meaning to_______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "trivial"
+            },
+            {
+              "label": "B",
+              "text": "visible"
+            },
+            {
+              "label": "C",
+              "text": "distant"
+            },
+            {
+              "label": "D",
+              "text": "specific"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_6_d3049c",
+          "question_number": "**Question 11** [1090654]:",
+          "stem": "Which of the following is TRUE according to the passage?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Numerous visitors are drawn to Vietnam's scenic destinations to research the extensive ecological impact of microplastic contamination."
+            },
+            {
+              "label": "B",
+              "text": "The prevalent accumulation of litter in scenic areas is attributed to insufficient waste disposal infrastructure managed by local authorities."
+            },
+            {
+              "label": "C",
+              "text": "Travelers arriving at Vietnam's natural beauty spots are often confronted with landscapes already spoiled by the waste from previous visitors."
+            },
+            {
+              "label": "D",
+              "text": "The rubbish left behind by tourists in scenic areas might typically consist of single-use items related to food and drink consumption."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_7_e722fb",
+          "question_number": "**Question 12** [1090655]:",
+          "stem": "Which paragraph mentions a contradiction in the mindset of the visitors?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Paragraph 1"
+            },
+            {
+              "label": "B",
+              "text": "Paragraph 3"
+            },
+            {
+              "label": "C",
+              "text": "Paragraph 2"
+            },
+            {
+              "label": "D",
+              "text": "Paragraph 4"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_8_47bac6",
+          "question_number": "**Question 13** [1090656]:",
+          "stem": "Which paragraph mentions a situation where a place's attraction leads to its own ruin?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Paragraph 4"
+            },
+            {
+              "label": "B",
+              "text": "Paragraph 3"
+            },
+            {
+              "label": "C",
+              "text": "Paragraph 2"
+            },
+            {
+              "label": "D",
+              "text": "Paragraph 1"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_9_d9b6a2",
+          "question_number": "**Question 20** [1090663]:",
+          "stem": "According to paragraph 1, the increasing tendency for employees to remain in their current positions stems from _______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "a stagnant labor situation characterized by minimal hiring"
+            },
+            {
+              "label": "B",
+              "text": "the high-stakes career moves available in the prior market"
+            },
+            {
+              "label": "C",
+              "text": "a recent large-scale study corroborating the new shift"
+            },
+            {
+              "label": "D",
+              "text": "a widespread apprehension about the economic outlook"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_10_07bd22",
+          "question_number": "**Question 21** [1090664]:",
+          "stem": "The word **concede** in paragraph 1 is closest in meaning to _______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "agree"
+            },
+            {
+              "label": "B",
+              "text": "argue"
+            },
+            {
+              "label": "C",
+              "text": "admit"
+            },
+            {
+              "label": "D",
+              "text": "reveal**"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_11_1d5aed",
+          "question_number": "**Question 22** [1090665]:",
+          "stem": "Which of the following best summarises paragraph 2?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Career experts view job hugging as a pragmatic choice for survival although it reflects a concerning lack of career ambition, often seen more frequently in older, established generations who have a tendency to be more risk-averse."
+            },
+            {
+              "label": "B",
+              "text": "Job hugging is seen as a survival tactic, with career analysts suggesting that its higher occurrence among Gen X and Boomers results from their greater demand for financial security compared to younger, less established generations."
+            },
+            {
+              "label": "C",
+              "text": "Career analysts interpret job hugging not as passivity but as a reasonable adjustment to economic volatility, a common practice offering emotional stability that appears more prevalent among older employee cohorts."
+            },
+            {
+              "label": "D",
+              "text": "Career analysts describe job hugging as offering crucial emotional reassurance in uncertain times, making it the obviously preferred and logical approach for most workers, particularly experienced older employees in the workforce."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_12_021a3d",
+          "question_number": "**Question 23** [1090666]:",
+          "stem": "How do career experts interpret the \"job hugging\" trend?",
+          "options": [
+            {
+              "label": "A",
+              "text": "As a widespread practice reflecting high levels of job satisfaction."
+            },
+            {
+              "label": "B",
+              "text": "As a calculated strategy driven by survival instincts in a volatile economy."
+            },
+            {
+              "label": "C",
+              "text": "As a logical but ultimately unproductive response to current market fears."
+            },
+            {
+              "label": "D",
+              "text": "As a risk-averse tactic limited mostly to Gen X and Boomer employees."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_13_acec36",
+          "question_number": "Question 24 [1090667]:",
+          "stem": "The word <u>it</u> in paragraph 2 refers to _______.",
+          "options": [
+            {
+              "label": "A",
+              "text": "the survey"
+            },
+            {
+              "label": "B",
+              "text": "the trend"
+            },
+            {
+              "label": "C",
+              "text": "the strategy"
+            },
+            {
+              "label": "D",
+              "text": "the prevalence rate"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_14_b440d4",
+          "question_number": "Question 25 [1090668]:",
+          "stem": "Which of the following best paraphrases the underlined sentence in paragraph 3?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The experts' counsel to job huggers is to casually observe the employment field while, at the same time, making the most of their existing roles."
+            },
+            {
+              "label": "B",
+              "text": "Experts advise job huggers to capitalize on their existing roles as an effective method for passively observing the employment field."
+            },
+            {
+              "label": "C",
+              "text": "While \"job huggers\" are advised to casually observe the employment landscape, they should also focus on preserving their present roles."
+            },
+            {
+              "label": "D",
+              "text": "A continuous observation of the job market is recommended for \"job huggers\" by experts, in addition to capitalizing on their present roles."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_15_5b60c5",
+          "question_number": "Question 26 [1090669]:",
+          "stem": "What financial advantage do employers gain from increased staff retention?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The ability to retain valuable institutional knowledge and expertise."
+            },
+            {
+              "label": "B",
+              "text": "The avoidance of costs associated with recruiting and training replacements."
+            },
+            {
+              "label": "C",
+              "text": "A workforce that feels generally more secure and therefore more valued."
+            },
+            {
+              "label": "D",
+              "text": "A neutral perspective on the overall trend shared by almost half of managers."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_16_9c8ff9",
+          "question_number": "Question 27 [1090670]:",
+          "stem": "Which of the following can be inferred from the passage?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Employees engaged in \"job hugging\" often seek for career advancement through internal promotions while the overall labor market remains uncertain."
+            },
+            {
+              "label": "B",
+              "text": "There exists a significant disparity between the general employer perception and the prevalent employee sentiment regarding the \"job hugging\" trend."
+            },
+            {
+              "label": "C",
+              "text": "The practice of \"side stacking\" is viewed by career experts as a more reliable path to financial security than attempting to switch jobs in the current market."
+            },
+            {
+              "label": "D",
+              "text": "The recent economic uncertainty is causing younger generations to adopt risk-averse career strategies similar to those typical of older workers."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_17_f17213",
+          "question_number": "Question 28 [1090671]:",
+          "stem": "Where in the passage does the following sentence best fit?\nBalancing present security with preparation for eventual transitions becomes the overarching aim.",
+          "options": [
+            {
+              "label": "A",
+              "text": "[I]"
+            },
+            {
+              "label": "B",
+              "text": "[IV]"
+            },
+            {
+              "label": "C",
+              "text": "[II]"
+            },
+            {
+              "label": "D",
+              "text": "[III]"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_18_6b82a0",
+          "question_number": "Question 29 [1090672]:",
+          "stem": "Which of the following best summarises the passage?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The rise of 'job hugging' signifies a negative workforce trend where economic fear compels employees into stagnation, despite advice to upskill, resulting in staff feeling stuck while primarily benefiting employers who appreciate reduced turnover expenses and enjoy stability."
+            },
+            {
+              "label": "B",
+              "text": "As employees practice 'job hugging' due to uncertainty, many cultivate side hustles for security, and employers perceive this overall trend positively, viewing the diversification of income streams as a sign of initiative that also happens to lower company turnover costs."
+            },
+            {
+              "label": "C",
+              "text": "The 'job hugging' phenomenon, which is driven by economic apprehension among workers, is seen as overwhelmingly beneficial for employers who gain workforce stability and reduced costs, while employees are simply counseled to focus on internal growth opportunities."
+            },
+            {
+              "label": "D",
+              "text": "The labor market's pivot to 'job hugging' reflects economic anxiety, a trend experts deem practical despite mixed employee feelings, and workers are advised to leverage stability for growth, enabling empowered future career moves while employers gain from lower turnover."
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_19_723f38",
+          "question_number": "Question 30 [1090673]:",
+          "stem": "a. The website looked professional, and the product description seemed perfect, so I decided to place an order.\nb. It was a disappointing experience, and now I'm much more cautious about where I shop online.\nc. I tried contacting the seller multiple times, but they never responded, and I realized I had been scammed.\nd. I recently had a frustrating experience when I bought a phone case online.\ne. However, when the package arrived, it wasn't even close to what I had expected - the quality was poor, and it didn't fit my phone at all.",
+          "options": [
+            {
+              "label": "A",
+              "text": "a-e-c-d-b"
+            },
+            {
+              "label": "B",
+              "text": "c-e-d-a-b"
+            },
+            {
+              "label": "C",
+              "text": "e-a-d-c-b"
+            },
+            {
+              "label": "D",
+              "text": "d-a-e-c-b"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        },
+        {
+          "id": "q_20_41cd96",
+          "question_number": "Question 31 [1090674]:",
+          "stem": "a. Emma: Yes, it's terrible. Oil spills destroy entire ecosystems and kill marine animals.\nb. Tom: Have you heard about the recent oil spill off the coast of California, Emma?\nc. Emma: I agree, the effects are long-lasting. We need stricter regulations to prevent these spills.\nd. Tom: Absolutely, more preventive measures are needed to protect our oceans.\ne. Tom: It's so hard to clean up, too. The damage lasts for years.",
+          "options": [
+            {
+              "label": "A",
+              "text": "b-a-e-c-d"
+            },
+            {
+              "label": "B",
+              "text": "b-d-e-c-a"
+            },
+            {
+              "label": "C",
+              "text": "a-e-c-d-b"
+            },
+            {
+              "label": "D",
+              "text": "a-b-c-e-d"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "id": "exam_math_101",
+      "title": "Đề Khảo Sát Tốt Nghiệp THPT Môn Toán 2026 - Hải Phòng",
+      "subject": "Toán Học",
+      "grade": "Lớp 12",
+      "duration_minutes": 45,
+      "created_at": "2026-07-05T03:40:14.223626",
+      "questions": [
+        {
+          "id": "q1",
+          "question_number": "Câu 1",
+          "stem": "Trong không gian với hệ trục tọa độ Oxyz, cho các điểm A(2;2;3), B(2;-2;-1). Tọa độ của điểm M thoả mãn hệ thức MA + 3MB = 0 là",
+          "options": [
+            {
+              "label": "A",
+              "text": "(2;-1;1)"
+            },
+            {
+              "label": "B",
+              "text": "(2;-1;0)"
+            },
+            {
+              "label": "C",
+              "text": "(-2;-1;0)"
+            },
+            {
+              "label": "D",
+              "text": "(2;1;0)"
+            }
+          ],
+          "correct_answer": "B",
+          "explanation": "Ta có 3MB = (6-3x; -6-3y; -3-3z), MA = (2-x; 2-y; 3-z). Từ MA + 3MB = 0 suy ra M(2; -1; 0)."
+        },
+        {
+          "id": "q2",
+          "question_number": "Câu 2",
+          "stem": "Cho hàm số f(x) có bảng biến thiên với giá trị cực đại bằng 3 tại x = 2. Giá trị cực đại của hàm số đã cho bằng:",
+          "options": [
+            {
+              "label": "A",
+              "text": "3"
+            },
+            {
+              "label": "B",
+              "text": "-2"
+            },
+            {
+              "label": "C",
+              "text": "-1"
+            },
+            {
+              "label": "D",
+              "text": "2"
+            }
+          ],
+          "correct_answer": "A",
+          "explanation": "Dựa vào bảng biến thiên, giá trị cực đại của hàm số f(x) là 3 tại x = 2."
+        },
+        {
+          "id": "q3",
+          "question_number": "Câu 3",
+          "stem": "Cho hình chóp S.ABC có đáy ABC là tam giác vuông tại B, SA vuông góc với (ABC). Biết SA = AB = 4a, BC = 3a. Thể tích khối chóp S.ABC bằng:",
+          "options": [
+            {
+              "label": "A",
+              "text": "4a³"
+            },
+            {
+              "label": "B",
+              "text": "8a³"
+            },
+            {
+              "label": "C",
+              "text": "16a³"
+            },
+            {
+              "label": "D",
+              "text": "24a³"
+            }
+          ],
+          "correct_answer": "B",
+          "explanation": "Diện tích đáy S_ABC = 1/2 * AB * BC = 1/2 * 4a * 3a = 6a². Thể tích V = 1/3 * SA * S_ABC = 1/3 * 4a * 6a² = 8a³."
+        }
+      ]
+    }
+  ],
+  "submissions": [
+    {
+      "id": "sub_31b1b9e1",
+      "exam_id": "exam_math_101",
+      "exam_title": "Đề Khảo Sát Tốt Nghiệp THPT Môn Toán 2026 - Hải Phòng",
+      "student_name": "Nguyễn Văn A",
+      "student_code": "STU001",
+      "submitted_at": "2026-07-05T03:52:19.596622",
+      "total_questions": 3,
+      "correct_count": 0,
+      "score": 0.0,
+      "percentage": 0.0,
+      "detailed_results": [
+        {
+          "question_id": "q1",
+          "question_number": "Câu 1",
+          "stem": "Trong không gian với hệ trục tọa độ Oxyz, cho các điểm A(2;2;3), B(2;-2;-1). Tọa độ của điểm M thoả mãn hệ thức MA + 3MB = 0 là",
+          "options": [
+            {
+              "label": "A",
+              "text": "(2;-1;1)"
+            },
+            {
+              "label": "B",
+              "text": "(2;-1;0)"
+            },
+            {
+              "label": "C",
+              "text": "(-2;-1;0)"
+            },
+            {
+              "label": "D",
+              "text": "(2;1;0)"
+            }
+          ],
+          "student_answer": "C",
+          "correct_answer": "B",
+          "is_correct": false,
+          "explanation": "Ta có 3MB = (6-3x; -6-3y; -3-3z), MA = (2-x; 2-y; 3-z). Từ MA + 3MB = 0 suy ra M(2; -1; 0)."
+        },
+        {
+          "question_id": "q2",
+          "question_number": "Câu 2",
+          "stem": "Cho hàm số f(x) có bảng biến thiên với giá trị cực đại bằng 3 tại x = 2. Giá trị cực đại của hàm số đã cho bằng:",
+          "options": [
+            {
+              "label": "A",
+              "text": "3"
+            },
+            {
+              "label": "B",
+              "text": "-2"
+            },
+            {
+              "label": "C",
+              "text": "-1"
+            },
+            {
+              "label": "D",
+              "text": "2"
+            }
+          ],
+          "student_answer": "B",
+          "correct_answer": "A",
+          "is_correct": false,
+          "explanation": "Dựa vào bảng biến thiên, giá trị cực đại của hàm số f(x) là 3 tại x = 2."
+        },
+        {
+          "question_id": "q3",
+          "question_number": "Câu 3",
+          "stem": "Cho hình chóp S.ABC có đáy ABC là tam giác vuông tại B, SA vuông góc với (ABC). Biết SA = AB = 4a, BC = 3a. Thể tích khối chóp S.ABC bằng:",
+          "options": [
+            {
+              "label": "A",
+              "text": "4a³"
+            },
+            {
+              "label": "B",
+              "text": "8a³"
+            },
+            {
+              "label": "C",
+              "text": "16a³"
+            },
+            {
+              "label": "D",
+              "text": "24a³"
+            }
+          ],
+          "student_answer": "C",
+          "correct_answer": "B",
+          "is_correct": false,
+          "explanation": "Diện tích đáy S_ABC = 1/2 * AB * BC = 1/2 * 4a * 3a = 6a². Thể tích V = 1/3 * SA * S_ABC = 1/3 * 4a * 6a² = 8a³."
+        }
+      ]
+    },
+    {
+      "id": "sub_78086d2e",
+      "exam_id": "exam_math_101",
+      "exam_title": "Đề Khảo Sát Tốt Nghiệp THPT Môn Toán 2026 - Hải Phòng",
+      "student_name": "Nguyễn Văn A",
+      "student_code": "STU001",
+      "submitted_at": "2026-07-05T03:40:27.980102",
+      "total_questions": 3,
+      "correct_count": 0,
+      "score": 0.0,
+      "percentage": 0.0,
+      "detailed_results": [
+        {
+          "question_id": "q1",
+          "question_number": "Câu 1",
+          "stem": "Trong không gian với hệ trục tọa độ Oxyz, cho các điểm A(2;2;3), B(2;-2;-1). Tọa độ của điểm M thoả mãn hệ thức MA + 3MB = 0 là",
+          "options": [
+            {
+              "label": "A",
+              "text": "(2;-1;1)"
+            },
+            {
+              "label": "B",
+              "text": "(2;-1;0)"
+            },
+            {
+              "label": "C",
+              "text": "(-2;-1;0)"
+            },
+            {
+              "label": "D",
+              "text": "(2;1;0)"
+            }
+          ],
+          "student_answer": "A",
+          "correct_answer": "B",
+          "is_correct": false,
+          "explanation": "Ta có 3MB = (6-3x; -6-3y; -3-3z), MA = (2-x; 2-y; 3-z). Từ MA + 3MB = 0 suy ra M(2; -1; 0)."
+        },
+        {
+          "question_id": "q2",
+          "question_number": "Câu 2",
+          "stem": "Cho hàm số f(x) có bảng biến thiên với giá trị cực đại bằng 3 tại x = 2. Giá trị cực đại của hàm số đã cho bằng:",
+          "options": [
+            {
+              "label": "A",
+              "text": "3"
+            },
+            {
+              "label": "B",
+              "text": "-2"
+            },
+            {
+              "label": "C",
+              "text": "-1"
+            },
+            {
+              "label": "D",
+              "text": "2"
+            }
+          ],
+          "student_answer": "C",
+          "correct_answer": "A",
+          "is_correct": false,
+          "explanation": "Dựa vào bảng biến thiên, giá trị cực đại của hàm số f(x) là 3 tại x = 2."
+        },
+        {
+          "question_id": "q3",
+          "question_number": "Câu 3",
+          "stem": "Cho hình chóp S.ABC có đáy ABC là tam giác vuông tại B, SA vuông góc với (ABC). Biết SA = AB = 4a, BC = 3a. Thể tích khối chóp S.ABC bằng:",
+          "options": [
+            {
+              "label": "A",
+              "text": "4a³"
+            },
+            {
+              "label": "B",
+              "text": "8a³"
+            },
+            {
+              "label": "C",
+              "text": "16a³"
+            },
+            {
+              "label": "D",
+              "text": "24a³"
+            }
+          ],
+          "student_answer": "C",
+          "correct_answer": "B",
+          "is_correct": false,
+          "explanation": "Diện tích đáy S_ABC = 1/2 * AB * BC = 1/2 * 4a * 3a = 6a². Thể tích V = 1/3 * SA * S_ABC = 1/3 * 4a * 6a² = 8a³."
+        }
+      ]
+    }
+  ]
+}
