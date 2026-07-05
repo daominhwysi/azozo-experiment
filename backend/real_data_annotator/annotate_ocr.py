@@ -481,15 +481,16 @@ def get_client_and_model(
         ), target_model
 
 
-def load_few_shot_messages(example_dir: Path) -> List[Dict[str, str]]:
+def load_few_shot_messages(example_dir: Path, prefix: str = "in_") -> List[Dict[str, str]]:
     messages = []
     if not example_dir.exists():
         return messages
 
+    out_prefix = "anchor_out_" if prefix.startswith("anchor") else "out_"
     i = 1
     while True:
-        in_file = example_dir / f"in_{i}.md"
-        out_file = example_dir / f"out_{i}.md"
+        in_file = example_dir / f"{prefix}{i}.md"
+        out_file = example_dir / f"{out_prefix}{i}.md"
         if not (in_file.exists() and out_file.exists()):
             break
         try:
@@ -504,7 +505,7 @@ def load_few_shot_messages(example_dir: Path) -> List[Dict[str, str]]:
         i += 1
 
     if messages:
-        print(f"  Loaded {len(messages) // 2} few-shot example pair(s).")
+        print(f"  Loaded {len(messages) // 2} few-shot example pair(s) (prefix='{prefix}').")
     return messages
 
 
@@ -526,7 +527,8 @@ class OCRAnnotator:
         self.client, self.model_name = get_client_and_model(
             model, self.deepseek_key, self.llm_key, provider=provider
         )
-        self.few_shot_messages = load_few_shot_messages(script_dir / "example")
+        self.few_shot_messages = load_few_shot_messages(script_dir / "example", prefix="in_")
+        self.anchor_few_shot_messages = load_few_shot_messages(script_dir / "example", prefix="anchor_in_")
 
     def annotate_text(self, raw_ocr_text: str) -> Dict[str, Any]:
         """
@@ -655,6 +657,9 @@ class OCRAnnotator:
             model=self.model_name,
             messages=[
                 {"role": "system", "content": ANCHOR_SYSTEM_PROMPT},
+            ]
+            + self.anchor_few_shot_messages
+            + [
                 {"role": "user", "content": raw_ocr_text},
             ],
             temperature=0.0,
