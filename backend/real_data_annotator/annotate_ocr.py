@@ -117,7 +117,7 @@ CRITICAL RULES:
 def expand_anchor_xml(raw_text: str, anchor_xml: str) -> Tuple[str, List[Dict[str, Any]]]:
     """
     Parses anchor XML string and expands start/end anchor phrases into exact character spans.
-    Returns clean raw_text and character spans.
+    Features smart gap partitioning to ensure short option texts (e.g. cloze tests) never overflow.
     """
     allowed_tags = set(BASE_TAGS)
     tag_pattern = re.compile(r"<([a-zA-Z_0-9\-]+)(?:\s+([^/>]*))?(?:/>|>(.*?)</\1>)", re.DOTALL)
@@ -125,8 +125,9 @@ def expand_anchor_xml(raw_text: str, anchor_xml: str) -> Tuple[str, List[Dict[st
     spans = []
     global_cursor = 0
     container_stack = []
+    raw_matches = list(tag_pattern.finditer(anchor_xml))
 
-    for match in tag_pattern.finditer(anchor_xml):
+    for i, match in enumerate(raw_matches):
         tag_name = match.group(1)
         attr_str = match.group(3) if match.group(3) else (match.group(2) or "")
         inner_content = match.group(3) or ""
@@ -162,23 +163,36 @@ def expand_anchor_xml(raw_text: str, anchor_xml: str) -> Tuple[str, List[Dict[st
                 else:
                     continue
 
+        # Look ahead for next tag start to constrain end_idx if end_phrase matches too far
+        next_tag_start_idx = -1
+        if i + 1 < len(raw_matches):
+            next_m = raw_matches[i + 1]
+            next_attr = next_m.group(3) if next_m.group(3) else (next_m.group(2) or "")
+            next_params = dict(re.findall(r'([a-zA-Z_0-9\-]+)=(?:"([^"]*)"|\'([^\']*)\'|(\S+))', next_attr))
+            next_start_phrase = next_params.get("start", next_m.group(3) or "").strip()
+            if next_start_phrase:
+                found_next = raw_text.find(next_start_phrase, start_idx)
+                if found_next != -1:
+                    next_tag_start_idx = found_next
+
+        end_idx = -1
         if end_phrase:
             end_search_start = start_idx + len(start_phrase)
             end_match_idx = raw_text.find(end_phrase, end_search_start)
             if end_match_idx != -1:
                 end_idx = end_match_idx + len(end_phrase)
+                if next_tag_start_idx != -1 and tag_name != "question" and end_idx > next_tag_start_idx:
+                    end_idx = next_tag_start_idx
             else:
                 m_end = re.search(re.escape(end_phrase), raw_text[end_search_start:], re.IGNORECASE)
                 if m_end:
                     end_idx = end_search_start + m_end.end()
+                    if next_tag_start_idx != -1 and tag_name != "question" and end_idx > next_tag_start_idx:
+                        end_idx = next_tag_start_idx
                 else:
-                    m_end_sub = re.search(re.escape(end_phrase[-15:]), raw_text[end_search_start:], re.IGNORECASE)
-                    if m_end_sub:
-                        end_idx = end_search_start + m_end_sub.end()
-                    else:
-                        end_idx = start_idx + len(start_phrase)
+                    end_idx = next_tag_start_idx if next_tag_start_idx != -1 else (start_idx + len(start_phrase))
         else:
-            end_idx = start_idx + len(start_phrase)
+            end_idx = next_tag_start_idx if next_tag_start_idx != -1 else (start_idx + len(start_phrase))
 
         extracted_text = raw_text[start_idx:end_idx]
 
