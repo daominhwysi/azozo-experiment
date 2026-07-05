@@ -69,7 +69,7 @@ async def parse_exam_from_pdf_or_text(
 
     try:
         annotator = OCRAnnotator(model=PARSER_MODEL)
-        annotation_res = annotator.annotate_text(ocr_text)
+        annotation_res = annotator.annotate_text_anchor(ocr_text)
         structured_questions = parse_spans_into_structured_questions(
             annotation_res["raw_text"], annotation_res["spans"]
         )
