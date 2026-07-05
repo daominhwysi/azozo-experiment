@@ -202,8 +202,10 @@ async def parse_exam_from_pdf_or_text_stream(
         def token_callback(streamed, estimated, chunk):
             loop.call_soon_threadsafe(queue.put_nowait, (streamed, estimated, chunk))
 
+        annotation_error = None
+
         def run_annotation():
-            nonlocal annotation_res, structured_questions
+            nonlocal annotation_res, structured_questions, annotation_error
             try:
                 annotator = OCRAnnotator(model=PARSER_MODEL)
                 if mode == "anchor":
@@ -214,7 +216,10 @@ async def parse_exam_from_pdf_or_text_stream(
                     annotation_res["raw_text"], annotation_res["spans"]
                 )
             except Exception as e:
+                import traceback
+                annotation_error = str(e)
                 print(f"[Fallback Parser in Stream] LLM annotation failed ({e}), using regex parser.")
+                traceback.print_exc()
                 structured_questions = regex_parse_questions(ocr_text)
             finally:
                 loop.call_soon_threadsafe(queue.put_nowait, None)
