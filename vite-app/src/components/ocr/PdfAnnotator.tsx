@@ -105,7 +105,7 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
           } else if (evt.type === "annotate_start" || evt.type === "annotate_progress") {
             setCurrentStageIndex(1);
             setOcrProgress(evt.progress);
-            if (evt.streamed_tokens && evt.estimated_tokens) {
+            if (typeof evt.streamed_tokens === "number" && typeof evt.estimated_tokens === "number") {
               setOcrStatusText(`Đang gán nhãn LLM (${evt.streamed_tokens} / ~${evt.estimated_tokens} tokens)...`);
             } else {
               setOcrStatusText(evt.message);

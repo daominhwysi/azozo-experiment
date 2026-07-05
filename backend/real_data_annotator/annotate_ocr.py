@@ -667,12 +667,18 @@ class OCRAnnotator:
         words = raw_ocr_text.split()
         estimated_total_tokens = max(40, int(len(words) * 0.3) + 20)
 
+        if callback:
+            callback(0, estimated_total_tokens, "")
+
+        # Use top 2 concise anchor few-shot pairs (4 messages) for ultra-fast TTFT prompt prefill
+        anchor_shots = self.anchor_few_shot_messages[:4] if len(self.anchor_few_shot_messages) >= 4 else self.anchor_few_shot_messages
+
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
                 {"role": "system", "content": ANCHOR_SYSTEM_PROMPT},
             ]
-            + self.anchor_few_shot_messages
+            + anchor_shots
             + [
                 {"role": "user", "content": raw_ocr_text},
             ],
