@@ -26,6 +26,8 @@ logs/
 output/
 tmp/
 *.log
+*.db
+*.json.bak
 
 # OS & IDE
 .DS_Store
