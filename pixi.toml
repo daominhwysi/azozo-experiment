@@ -20,4 +20,5 @@ tqdm = "*"
 [tasks]
 backend = "python backend/app.py"
 frontend = "cd vite-app && npm run dev"
-start = "npx concurrently -k -n \"backend,frontend\" -c \"cyan,magenta\" \"python backend/app.py\" \"cd vite-app && npm run dev\""
+dev = "npx concurrently -k -n \"backend,frontend-dev\" -c \"cyan,magenta\" \"python backend/app.py\" \"cd vite-app && npm run dev\""
+start = "npx concurrently -k -n \"backend,frontend-prod\" -c \"cyan,green\" \"python backend/app.py\" \"cd vite-app && npm run build && npm run preview\""

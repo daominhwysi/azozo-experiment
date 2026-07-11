@@ -1,10 +1,10 @@
-import { Sidebar as SidebarIcon, RefreshCw } from "lucide-react";
+import { Sidebar as SidebarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
-  activeTab: "bank" | "ocr" | "student";
+  activeTab: "bank" | "ocr" | "student" | "gradebook" | "submissions";
   onRefresh: () => void;
   isLoading: boolean;
 }
@@ -13,13 +13,13 @@ export function Header({
   sidebarOpen,
   setSidebarOpen,
   activeTab,
-  onRefresh,
-  isLoading,
 }: HeaderProps) {
   const tabTitles: Record<string, string> = {
-    bank: "Ngân Hàng Đề Thi Notion",
-    ocr: "Công Cụ OCR & Bóc Tách Đề Thi",
-    student: "Phòng Thi Trực Tuyến Học Sinh",
+    bank: "Notion Exam Bank",
+    ocr: "PDF OCR & Importer",
+    student: "Online Examination Room",
+    gradebook: "Gradebook & Analytics",
+    submissions: "Student Results History",
   };
 
   return (
@@ -30,7 +30,7 @@ export function Header({
           size="icon"
           onClick={() => setSidebarOpen((prev) => !prev)}
           className="h-8 w-8 text-muted-foreground hover:text-foreground"
-          title={sidebarOpen ? "Thu gọn thanh bên" : "Mở thanh bên"}
+          title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
         >
           <SidebarIcon className="h-4 w-4" />
         </Button>
@@ -44,19 +44,6 @@ export function Header({
             {tabTitles[activeTab]}
           </span>
         </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onRefresh}
-          disabled={isLoading}
-          className="h-8 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-        >
-          <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
-          Đồng bộ Backend
-        </Button>
       </div>
     </header>
   );

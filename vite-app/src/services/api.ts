@@ -46,6 +46,24 @@ export async function createExam(payload: CreateExamPayload): Promise<Exam> {
   }
 }
 
+export async function updateExam(examId: string, payload: CreateExamPayload): Promise<Exam> {
+  topLoader.start();
+  try {
+    const res = await fetch(`${API_BASE}/exams/${examId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to update exam: ${res.statusText}`);
+    }
+    return await res.json();
+  } finally {
+    topLoader.done();
+  }
+}
+
+
 export async function parseExamFromPdfOrText(
   file: File | null,
   rawText: string
@@ -190,3 +208,140 @@ export async function submitExam(
     topLoader.done();
   }
 }
+
+export async function importAnswers(
+  examId: string,
+  file: File | null,
+  rawText: string
+): Promise<{ success: boolean; exam: Exam; extracted_text: string; mapping: Record<string, string> }> {
+  topLoader.start();
+  try {
+    const formData = new FormData();
+    if (file) {
+      formData.append("file", file);
+    }
+    if (rawText) {
+      formData.append("raw_text", rawText);
+    }
+
+    const res = await fetch(`${API_BASE}/exams/${examId}/import-answers`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to import answers: ${res.statusText}`);
+    }
+    return await res.json();
+  } finally {
+    topLoader.done();
+  }
+}
+
+export interface OcrTask {
+  id: string;
+  status: "pending" | "processing" | "completed" | "failed";
+  progress: number;
+  message: string;
+  filename: string | null;
+  add_to_bank: boolean;
+  title: string;
+  subject: string;
+  grade: string;
+  duration_minutes: number;
+  created_at: string;
+  completed_at?: string;
+  error?: string;
+  added_to_bank_id?: string;
+  result?: ParseExamResponse;
+}
+
+export async function createOcrTask(
+  file: File | null,
+  rawText: string,
+  addToBank: boolean,
+  title: string,
+  subject: string,
+  grade: string,
+  durationMinutes: number
+): Promise<{ task_id: string; status: string }> {
+  topLoader.start();
+  try {
+    const formData = new FormData();
+    if (file) formData.append("file", file);
+    if (rawText) formData.append("raw_text", rawText);
+    formData.append("add_to_bank", String(addToBank));
+    formData.append("title", title);
+    formData.append("subject", subject);
+    formData.append("grade", grade);
+    formData.append("duration_minutes", String(durationMinutes));
+
+    const res = await fetch(`${API_BASE}/ocr-tasks`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to create OCR task: ${res.statusText}`);
+    }
+    return await res.json();
+  } finally {
+    topLoader.done();
+  }
+}
+
+export async function fetchOcrTasks(): Promise<OcrTask[]> {
+  const res = await fetch(`${API_BASE}/ocr-tasks`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch OCR tasks: ${res.statusText}`);
+  }
+  return await res.json();
+}
+
+export async function fetchOcrTask(taskId: string): Promise<OcrTask> {
+  const res = await fetch(`${API_BASE}/ocr-tasks/${taskId}`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch OCR task: ${res.statusText}`);
+  }
+  return await res.json();
+}
+
+export async function deleteOcrTask(taskId: string): Promise<{ success: boolean }> {
+  const res = await fetch(`${API_BASE}/ocr-tasks/${taskId}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to delete OCR task: ${res.statusText}`);
+  }
+  return await res.json();
+}
+
+export async function fetchSubmissions(examId?: string): Promise<TestResult[]> {
+  topLoader.start();
+  try {
+    const url = examId ? `${API_BASE}/exams/submissions?exam_id=${examId}` : `${API_BASE}/exams/submissions`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch submissions: ${res.statusText}`);
+    }
+    return await res.json();
+  } finally {
+    topLoader.done();
+  }
+}
+
+export async function deleteSubmission(submissionId: string): Promise<void> {
+  topLoader.start();
+  try {
+    const res = await fetch(`${API_BASE}/exams/submissions/${submissionId}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to delete submission: ${res.statusText}`);
+    }
+  } finally {
+    topLoader.done();
+  }
+}
+
+

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Exam } from "@/types/exam";
-import { Search, Clock, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { Search, Clock, Plus, Trash2, AlertTriangle, UploadCloud } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,8 @@ interface ExamBankProps {
   onOpenOcrTab: () => void;
   onStartExam: (exam: Exam) => void;
   onDeleteExam: (examId: string) => void;
+  onUpdateExam: (updatedExam: Exam) => void;
+  onEditExam: (exam: Exam | null) => void;
 }
 
 export function ExamBank({
@@ -34,6 +36,8 @@ export function ExamBank({
   onOpenOcrTab,
   onStartExam,
   onDeleteExam,
+  onUpdateExam,
+  onEditExam,
 }: ExamBankProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [deletingExamId, setDeletingExamId] = useState<string | null>(null);
@@ -51,17 +55,22 @@ export function ExamBank({
       {/* Left List Pane */}
       <div className="lg:col-span-5 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-foreground">Danh Sách Đề Thi ({exams.length})</h2>
-          <Button size="sm" onClick={onOpenOcrTab} className="h-8 gap-1 text-xs">
-            <Plus className="h-3.5 w-3.5" /> Thêm từ PDF/OCR
-          </Button>
+          <h2 className="text-sm font-bold text-foreground">Exam Catalog ({exams.length})</h2>
+          <div className="flex gap-1.5">
+            <Button size="sm" variant="outline" onClick={() => onEditExam(null)} className="h-8 gap-1 text-xs">
+              <Plus className="h-3.5 w-3.5" /> Create Exam
+            </Button>
+            <Button size="sm" onClick={onOpenOcrTab} className="h-8 gap-1 text-xs">
+              <UploadCloud className="h-3.5 w-3.5" /> OCR PDF
+            </Button>
+          </div>
         </div>
 
         {/* Search Input */}
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
           <Input
-            placeholder="Tìm kiếm theo tên đề, môn học, lớp..."
+            placeholder="Search by exam title, subject, grade..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-8 h-8 text-xs"
@@ -72,7 +81,7 @@ export function ExamBank({
         <div className="space-y-2.5 overflow-y-auto max-h-[calc(100vh-12rem)] pr-1">
           {filteredExams.length === 0 ? (
             <div className="p-8 text-center text-xs text-muted-foreground border border-dashed rounded-lg">
-              Không tìm thấy đề thi phù hợp.
+              No matching exams found.
             </div>
           ) : (
             filteredExams.map((exam) => {
@@ -97,7 +106,7 @@ export function ExamBank({
                       </Badge>
                     </div>
                     <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-3 w-3" /> {exam.duration_minutes} phút
+                      <Clock className="h-3 w-3" /> {exam.duration_minutes} mins
                     </span>
                   </div>
 
@@ -106,7 +115,7 @@ export function ExamBank({
                   </h3>
 
                   <div className="flex items-center justify-between pt-1 text-[11px] text-muted-foreground">
-                    <span>{exam.questions.length} câu hỏi</span>
+                    <span>{exam.questions.length} questions</span>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={(e) => {
@@ -114,7 +123,7 @@ export function ExamBank({
                           setDeletingExamId(exam.id);
                         }}
                         className="p-1 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                        title="Xóa đề thi"
+                        title="Delete Exam"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -127,7 +136,7 @@ export function ExamBank({
                         }}
                         className="h-6 px-2 text-[10px]"
                       >
-                        Vào Thi
+                        Take Exam
                       </Button>
                     </div>
                   </div>
@@ -140,7 +149,7 @@ export function ExamBank({
 
       {/* Right Preview Pane */}
       <div className="lg:col-span-7 border-l border-border pl-6 pr-2 pt-4 overflow-y-auto max-h-[calc(100vh-8rem)] scroll-pt-4">
-        <ExamViewer exam={selectedExam} />
+        <ExamViewer key={selectedExam?.id} exam={selectedExam} onUpdateExam={onUpdateExam} onEditExam={onEditExam} />
       </div>
 
       {/* Delete Confirmation Dialog */}
@@ -151,13 +160,13 @@ export function ExamBank({
               <AlertDialogMedia>
                 <AlertTriangle className="size-6 text-destructive" />
               </AlertDialogMedia>
-              <AlertDialogTitle>Xóa đề thi</AlertDialogTitle>
+              <AlertDialogTitle>Delete Exam</AlertDialogTitle>
               <AlertDialogDescription>
-                Bạn có chắc chắn muốn xóa "{examToDelete.title}"? Hành động này không thể hoàn tác.
+                Are you sure you want to delete "{examToDelete.title}"? This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setDeletingExamId(null)}>Hủy</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setDeletingExamId(null)}>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 variant="destructive"
                 onClick={() => {
@@ -165,7 +174,7 @@ export function ExamBank({
                   setDeletingExamId(null);
                 }}
               >
-                Xóa
+                Delete
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

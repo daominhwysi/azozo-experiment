@@ -1,141 +1,213 @@
-import { useState, useRef } from "react";
-import type { Question } from "@/types/exam";
-import { parseExamFromPdfOrTextStream, createExam } from "@/services/api";
+import { useState, useEffect } from "react";
+import { 
+  createOcrTask, 
+  fetchOcrTasks, 
+  deleteOcrTask, 
+  fetchOcrTask, 
+  createExam
+} from "@/services/api";
+import type { OcrTask } from "@/services/api";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { UploadCloud, FileCode, Sliders, Check } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { QuestionPreviewCard } from "./QuestionPreviewCard";
-import { StagedProgressLoader, type ProgressStage } from "@/components/ui/staged-progress-loader";
-
-const OCR_STAGES: ProgressStage[] = [
-  {
-    id: "ocr",
-    label: "OCR",
-    description: "Turn image to text",
-  },
-  {
-    id: "annotate",
-    label: "Annotate",
-    description: "Sequence labelling",
-  },
-];
+import { 
+  UploadCloud, 
+  Loader2, 
+  Check, 
+  FileCode, 
+  Sliders, 
+  Trash2, 
+  AlertCircle, 
+  RefreshCw, 
+  BookOpen, 
+  Eye, 
+  EyeOff 
+} from "lucide-react";
 
 interface PdfAnnotatorProps {
   onExamCreated: () => void;
 }
 
 export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
+  const [activeInputTab, setActiveInputTab] = useState<"file" | "text">("file");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [importText, setImportText] = useState("");
-  const [ocrInputMode, setOcrInputMode] = useState<"pdf" | "text">("pdf");
-
-  const [isParsingOCR, setIsParsingOCR] = useState(false);
-  const [ocrProgress, setOcrProgress] = useState(0);
-  const [currentStageIndex, setCurrentStageIndex] = useState(0);
-  const [ocrStatusText, setOcrStatusText] = useState("");
-  const [ocrError, setOcrError] = useState<string | null>(null);
-  const [extractedRawText, setExtractedRawText] = useState("");
-  const [showRawText, setShowRawText] = useState(false);
-  const [importedQuestions, setImportedQuestions] = useState<Question[]>([]);
-
-  // Exam Form State
-  const [examTitleInput, setExamTitleInput] = useState("Đề Thi Thử Tốt Nghiệp THPT 2026");
-  const [examSubjectInput, setExamSubjectInput] = useState("Toán Học");
-  const [examGradeInput, setExamGradeInput] = useState("Lớp 12");
+  const [rawText, setRawText] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const [addToBank, setAddToBank] = useState(true);
+  const [examTitleInput, setExamTitleInput] = useState("Trial Graduation Assessment 2026");
+  const [examSubjectInput, setExamSubjectInput] = useState("Mathematics");
+  const [examGradeInput, setExamGradeInput] = useState("Grade 12");
   const [examDurationInput, setExamDurationInput] = useState(45);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ocrError, setOcrError] = useState<string | null>(null);
+  
+  // OCR Background Tasks state
+  const [tasks, setTasks] = useState<OcrTask[]>([]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
-        setPdfFile(file);
-        if (!examTitleInput || examTitleInput === "Đề Thi Thử Tốt Nghiệp THPT 2026") {
-          setExamTitleInput(file.name.replace(/\.pdf$/i, ""));
-        }
-      } else {
-        alert("Vui lòng chọn tập tin định dạng PDF (.pdf)");
-      }
+  // Active review output state
+  const [importedQuestions, setImportedQuestions] = useState<any[]>([]);
+  const [importedRawText, setImportedRawText] = useState("");
+  const [showRawText, setShowRawText] = useState(false);
+  const [isSavingToBank, setIsSavingToBank] = useState(false);
+
+  // Poll tasks statuses periodically
+  useEffect(() => {
+    loadTasks();
+    const interval = setInterval(() => {
+      pollRunningTasks();
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadTasks = async () => {
+    try {
+      const activeTasks = await fetchOcrTasks();
+      setTasks(activeTasks);
+    } catch (e) {
+      console.error("Failed to load OCR tasks", e);
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const pollRunningTasks = async () => {
+    try {
+      const activeTasks = await fetchOcrTasks();
+      // Check if any task has changed state to trigger user alerts
+      setTasks((prev) => {
+        activeTasks.forEach((task) => {
+          const matchingPrev = prev.find((t) => t.id === task.id);
+          if (matchingPrev && matchingPrev.status !== task.status) {
+            if (task.status === "completed") {
+              if (task.add_to_bank) {
+                alert(`🎉 Task "${task.filename || "Raw Text"}" completed successfully and auto-saved to the Exam Bank!`);
+                onExamCreated();
+              } else {
+                alert(`🎉 Task "${task.filename || "Raw Text"}" completed! Results are displayed on the right pane.`);
+              }
+              handleViewTaskResult(task.id);
+            } else if (task.status === "failed") {
+              alert(`❌ Task "${task.filename || "Raw Text"}" failed: ${task.error || "Unknown error"}`);
+            }
+          }
+        });
+        return activeTasks;
+      });
+    } catch (e) {
+      console.warn("Poll tasks failed: backend offline", e);
+    }
+  };
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      if (!examTitleInput || examTitleInput === "Trial Graduation Assessment 2026") {
+        const cleanName = file.name.substring(0, file.name.lastIndexOf(".")) || file.name;
+        setExamTitleInput(cleanName);
+      }
+      if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
         setPdfFile(file);
-        if (!examTitleInput || examTitleInput === "Đề Thi Thử Tốt Nghiệp THPT 2026") {
-          setExamTitleInput(file.name.replace(/\.pdf$/i, ""));
-        }
       } else {
-        alert("Vui lòng chọn tập tin định dạng PDF (.pdf)");
+        alert("Please select a valid PDF file (.pdf)");
       }
     }
   };
 
-  const handleStartOCR = async () => {
-    if (ocrInputMode === "pdf" && !pdfFile) {
-      alert("Vui lòng tải lên 1 tập tin PDF đề thi!");
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!examTitleInput || examTitleInput === "Trial Graduation Assessment 2026") {
+        const cleanName = file.name.substring(0, file.name.lastIndexOf(".")) || file.name;
+        setExamTitleInput(cleanName);
+      }
+      if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+        setPdfFile(file);
+      } else {
+        alert("Please select a valid PDF file (.pdf)");
+      }
+    }
+  };
+
+  const handleStartOcr = async () => {
+    if (activeInputTab === "file" && !pdfFile) {
+      alert("Please upload a PDF exam sheet!");
       return;
     }
-    if (ocrInputMode === "text" && !importText.trim()) {
-      alert("Vui lòng dán văn bản đề thi!");
+    if (activeInputTab === "text" && !rawText.trim()) {
+      alert("Please paste the exam content text!");
       return;
     }
 
-    setIsParsingOCR(true);
+    setIsSubmitting(true);
     setOcrError(null);
-    setOcrProgress(10);
-    setCurrentStageIndex(0);
-    setOcrStatusText("Đang khởi tạo PyMuPDF Text Extractor...");
 
     try {
-      const res = await parseExamFromPdfOrTextStream(
-        ocrInputMode === "pdf" ? pdfFile : null,
-        ocrInputMode === "text" ? importText : "",
-        (evt) => {
-          if (evt.type === "ocr_start" || evt.type === "ocr_progress" || evt.type === "ocr_complete") {
-            setCurrentStageIndex(0);
-            setOcrProgress(evt.progress);
-            setOcrStatusText(evt.message);
-          } else if (evt.type === "annotate_start" || evt.type === "annotate_progress") {
-            setCurrentStageIndex(1);
-            setOcrProgress(evt.progress);
-            if (typeof evt.streamed_tokens === "number" && typeof evt.estimated_tokens === "number") {
-              setOcrStatusText(`Đang gán nhãn LLM (${evt.streamed_tokens} / ~${evt.estimated_tokens} tokens)...`);
-            } else {
-              setOcrStatusText(evt.message);
-            }
-          } else if (evt.type === "complete") {
-            setCurrentStageIndex(1);
-            setOcrProgress(100);
-            setOcrStatusText("Trích xuất câu hỏi hoàn tất!");
-          }
-        },
+      await createOcrTask(
+        activeInputTab === "file" ? pdfFile : null,
+        activeInputTab === "text" ? rawText : "",
+        addToBank,
+        examTitleInput,
+        examSubjectInput,
+        examGradeInput,
+        examDurationInput
       );
-
-      setExtractedRawText(res.raw_text || "");
-      setImportedQuestions(res.questions || []);
+      
+      // Reset inputs
+      setPdfFile(null);
+      setRawText("");
+      
+      // Proactively reload lists
+      await loadTasks();
+      
+      alert("🚀 Background OCR processing task initiated successfully. You do not need to wait!");
     } catch (err: any) {
       console.error(err);
-      setOcrError(err?.message || "Lỗi khi OCR. Vui lòng kiểm tra lại backend!");
+      setOcrError(err?.message || "Error creating OCR task.");
+      alert("Error creating task: " + (err?.message || "Please check backend server!"));
     } finally {
-      setTimeout(() => {
-        setIsParsingOCR(false);
-      }, 600);
+      setIsSubmitting(false);
     }
   };
 
-  const handleSaveToExamBank = async () => {
+  const handleViewTaskResult = async (taskId: string) => {
+    try {
+      const task = await fetchOcrTask(taskId);
+      if (task.status === "completed" && task.result) {
+        setImportedQuestions(task.result.questions);
+        setImportedRawText(task.result.raw_text);
+      } else if (task.status === "failed") {
+        alert(`Task failed with error: ${task.error || "Unknown reason"}`);
+      } else {
+        alert("Task is currently processing in the background. Please wait!");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this task?")) return;
+    try {
+      await deleteOcrTask(taskId);
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleSaveImportedToBank = async () => {
     if (importedQuestions.length === 0) {
-      alert("Chưa có câu hỏi nào để lưu!");
+      alert("There are no questions to save!");
       return;
     }
-
+    setIsSavingToBank(true);
     try {
       await createExam({
         title: examTitleInput,
@@ -144,210 +216,314 @@ export function PdfAnnotator({ onExamCreated }: PdfAnnotatorProps) {
         duration_minutes: examDurationInput,
         questions: importedQuestions,
       });
-
-      alert("🎉 Đã lưu thành công đề thi mới vào Ngân hàng Đề Thi!");
+      alert("Successfully saved new exam to the Exam Bank!");
       onExamCreated();
     } catch (e) {
       console.error(e);
-      alert("Lỗi khi lưu đề thi vào ngân hàng!");
+      alert("Error saving exam to the bank!");
+    } finally {
+      setIsSavingToBank(false);
     }
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-12">
-      {/* Page Header */}
-      <div className="space-y-1">
-        <h1 className="text-xl font-bold tracking-tight text-foreground">
-          OCR Engine
-        </h1>
-        <p className="text-xs text-muted-foreground">
-          Trích xuất tự động danh sách câu hỏi và các phương án từ file PDF đề thi thực tế.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Input Settings & File Upload */}
-        <div className="lg:col-span-5 space-y-4">
-          {/* Input Mode Switcher */}
-          <div className="flex bg-muted p-1 rounded-lg gap-1 border border-border">
-            <button
-              onClick={() => setOcrInputMode("pdf")}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${ocrInputMode === "pdf"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-                }`}
-            >
-              Tải File PDF
-            </button>
-            <button
-              onClick={() => setOcrInputMode("text")}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${ocrInputMode === "text"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-                }`}
-            >
-              Dán Văn Bản Thô
-            </button>
-          </div>
-
-          {ocrInputMode === "pdf" ? (
-            <div
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-border hover:border-primary/50 bg-card hover:bg-muted/20 p-6 rounded-xl text-center cursor-pointer transition-all space-y-2"
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <UploadCloud className="h-8 w-8 text-primary mx-auto opacity-80" />
-              <div className="text-xs font-semibold text-foreground">
-                {pdfFile ? pdfFile.name : "Kéo thả file PDF đề thi vào đây"}
-              </div>
-              <p className="text-[11px] text-muted-foreground">
-                Hoặc nhấp để chọn file từ máy tính (.pdf)
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full max-w-7xl mx-auto pb-12">
+      {/* Left pane: Upload PDF and controls */}
+      <div className="lg:col-span-5 space-y-5">
+        <Card className="border-border">
+          <CardContent className="p-4 space-y-4">
+            <div>
+              <h2 className="text-sm font-bold text-foreground">Import Exam via AI OCR</h2>
+              <p className="text-[10px] text-muted-foreground mt-0.5">
+                Automatically extract questions and options from raw PDF sheets or text.
               </p>
             </div>
-          ) : (
-            <Textarea
-              placeholder="Dán nội dung đề thi tại đây (Ví dụ: Câu 1. Trong không gian... A. (1;2) B. (2;3)...)"
-              value={importText}
-              onChange={(e) => setImportText(e.target.value)}
-              className="h-44 text-xs font-mono"
-            />
-          )}
 
-          {/* Exam Metadata Config */}
-          <Card className="border-border">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <Sliders className="h-3.5 w-3.5" /> Thông Tin Đề Thi Tạo Mới
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-xs">
+            {/* Input tabs switcher */}
+            <div className="flex p-0.5 bg-muted/60 rounded-lg border border-border/80 h-8">
+              <button
+                onClick={() => setActiveInputTab("file")}
+                className={`flex-1 text-[11px] font-semibold rounded-md transition-all ${
+                  activeInputTab === "file"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Upload PDF File
+              </button>
+              <button
+                onClick={() => setActiveInputTab("text")}
+                className={`flex-1 text-[11px] font-semibold rounded-md transition-all ${
+                  activeInputTab === "text"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Paste Raw Text
+              </button>
+            </div>
+
+            {/* Content inputs */}
+            {activeInputTab === "file" ? (
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleFileDrop}
+                className={`border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer select-none duration-200 ${
+                  isDragging
+                    ? "border-primary bg-primary/5 ring-4 ring-primary/10 scale-[0.99]"
+                    : "border-border/80 bg-muted/10 hover:bg-muted/20 hover:border-primary/40"
+                }`}
+                onClick={() => document.getElementById("file-select-inp")?.click()}
+              >
+                <UploadCloud className="h-8 w-8 mx-auto text-muted-foreground/60 mb-2" />
+                <p className="text-xs font-semibold text-foreground">
+                  {pdfFile ? pdfFile.name : "Drag and drop exam PDF file here"}
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  Or click to select a file from your computer (.pdf)
+                </p>
+                <input
+                  type="file"
+                  id="file-select-inp"
+                  accept=".pdf"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </div>
+            ) : (
+              <Textarea
+                value={rawText}
+                onChange={(e) => setRawText(e.target.value)}
+                placeholder="Paste exam content here (e.g. Question 1. In space... A. (1;2) B. (2;3)...)"
+                className="text-xs min-h-[135px] bg-card border-border/80 focus-visible:ring-1 focus-visible:ring-ring"
+              />
+            )}
+
+            {/* New Exam details metadata fields */}
+            <div className="border border-border/60 rounded-xl p-3.5 bg-muted/10 space-y-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 border-b border-border/40 pb-1.5">
+                <Sliders className="h-3.5 w-3.5" /> New Exam Meta Details
+              </p>
+              
               <div className="space-y-1">
-                <label className="text-[11px] text-muted-foreground">Tên đề thi:</label>
+                <label className="text-[10px] text-muted-foreground">Exam Title:</label>
                 <Input
                   value={examTitleInput}
                   onChange={(e) => setExamTitleInput(e.target.value)}
-                  className="h-8 text-xs"
+                  className="h-8 text-xs bg-background"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
-                  <label className="text-[11px] text-muted-foreground">Môn học:</label>
+                  <label className="text-[10px] text-muted-foreground">Subject:</label>
                   <Input
                     value={examSubjectInput}
                     onChange={(e) => setExamSubjectInput(e.target.value)}
-                    className="h-8 text-xs"
+                    className="h-8 text-xs bg-background"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[11px] text-muted-foreground">Khối lớp:</label>
+                  <label className="text-[10px] text-muted-foreground">Grade:</label>
                   <Input
                     value={examGradeInput}
                     onChange={(e) => setExamGradeInput(e.target.value)}
-                    className="h-8 text-xs"
+                    className="h-8 text-xs bg-background"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] text-muted-foreground">Thời gian (phút):</label>
+                <label className="text-[10px] text-muted-foreground">Duration (mins):</label>
                 <Input
                   type="number"
                   value={examDurationInput}
-                  onChange={(e) => setExamDurationInput(Number(e.target.value))}
-                  className="h-8 text-xs"
+                  onChange={(e) => setExamDurationInput(parseInt(e.target.value, 10) || 45)}
+                  className="h-8 text-xs bg-background"
                 />
               </div>
 
-              <Button
-                onClick={handleStartOCR}
-                disabled={isParsingOCR}
-                className="w-full gap-1.5 h-9 text-xs"
-              >
-                {isParsingOCR ? (
-                  "Đang OCR..."
-                ) : (
-                  <>
-                    <FileCode className="h-4 w-4" /> Bắt Đầu OCR
-                  </>
-                )}
-              </Button>
+              {/* Auto Save switch toggle */}
+              <div className="flex items-center justify-between pt-1.5 border-t border-border/30">
+                <span className="text-[10px] text-muted-foreground font-semibold">
+                  Auto-save to Exam Bank
+                </span>
+                <Switch
+                  checked={addToBank}
+                  onCheckedChange={setAddToBank}
+                  className="scale-90"
+                />
+              </div>
+            </div>
 
-              {isParsingOCR && (
-                <div className="pt-2">
-                  <StagedProgressLoader
-                    title="OCR"
-                    subtitle="Quy trình OCR"
-                    stages={OCR_STAGES}
-                    currentStageIndex={currentStageIndex}
-                    progress={ocrProgress}
-                    statusText={ocrStatusText}
-                    error={ocrError}
-                  />
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Preview Extracted Questions Pane */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-foreground">
-              Kết Quả OCR({importedQuestions.length} câu)
-            </h2>
-            {importedQuestions.length > 0 && (
-              <div className="flex items-center gap-2">
-                {extractedRawText && (
-                  <Button
-                    onClick={() => setShowRawText(!showRawText)}
-                    variant="outline"
-                    size="sm"
-                    className="h-8 text-xs"
-                  >
-                    {showRawText ? "Ẩn Text Gốc" : "Xem Text Gốc"}
-                  </Button>
-                )}
-                <Button
-                  onClick={handleSaveToExamBank}
-                  size="sm"
-                  className="h-8 gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  <Check className="h-3.5 w-3.5" /> Lưu Vào Ngân Hàng Đề Thi
-                </Button>
-
+            {/* Error alerts */}
+            {ocrError && (
+              <div className="p-2.5 rounded-lg border border-destructive/20 bg-destructive/5 text-destructive text-[11px] leading-relaxed flex gap-1.5 items-start">
+                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                <span>{ocrError}</span>
               </div>
             )}
-          </div>
 
-          {showRawText && extractedRawText && (
-            <div className="p-3 bg-muted/50 rounded-lg text-xs font-mono whitespace-pre-wrap max-h-48 overflow-y-auto border">
-              {extractedRawText}
-            </div>
-          )}
+            {/* Trigger Button */}
+            <Button
+              className="w-full h-9 text-xs font-semibold gap-1.5"
+              onClick={handleStartOcr}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Creating task...
+                </>
+              ) : (
+                <>
+                  <FileCode className="h-4 w-4" /> Start OCR
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
 
-          <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-14rem)] pr-1 pt-2 px-1 scroll-pt-2">
-            {importedQuestions.length === 0 ? (
-              <div className="p-12 text-center text-xs text-muted-foreground border border-dashed rounded-xl space-y-2">
-                <FileCode className="h-8 w-8 mx-auto opacity-40" />
-                <p>Chưa có dữ liệu OCR.</p>
-                <p className="text-[11px]">Tải file PDF hoặc dán text và nhấn "Bắt Đầu OCR".</p>
+        {/* Background Task Manager */}
+        <Card className="border-border">
+          <CardHeader className="py-3 px-4 border-b border-border/60 flex flex-row items-center justify-between">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Running OCR Tasks ({tasks.filter(t => t.status === "pending" || t.status === "processing").length})
+            </CardTitle>
+            <Button size="icon" variant="ghost" onClick={loadTasks} className="h-6 w-6 text-muted-foreground">
+              <RefreshCw className="h-3 w-3" />
+            </Button>
+          </CardHeader>
+          <CardContent className="p-2 divide-y divide-border/40 max-h-56 overflow-y-auto">
+            {tasks.length === 0 ? (
+              <div className="p-6 text-center text-xs text-muted-foreground">
+                No tasks are currently running.
               </div>
             ) : (
-              importedQuestions.map((q, idx) => (
-                <QuestionPreviewCard key={q.id || idx} question={q} index={idx} />
-              ))
+              tasks.map((task) => {
+                const isPending = task.status === "pending";
+                const isProcessing = task.status === "processing";
+                const isCompleted = task.status === "completed";
+                const isFailed = task.status === "failed";
+                
+                return (
+                  <div
+                    key={task.id}
+                    onClick={() => handleViewTaskResult(task.id)}
+                    className="p-2.5 hover:bg-muted/30 rounded-lg cursor-pointer transition-colors flex items-center justify-between gap-3 text-xs"
+                  >
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <p className="font-semibold text-foreground truncate max-w-[200px]" title={task.filename || "Raw Text"}>
+                        {task.filename || "Raw Text"}
+                      </p>
+                      
+                      {/* Sub text stats */}
+                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                        <span>{task.title}</span>
+                        <span>•</span>
+                        <span>
+                          {task.add_to_bank ? "✓ Auto-save" : "Extract only"}
+                        </span>
+                      </div>
+                      
+                      {/* Simple progress bar */}
+                      {(isPending || isProcessing) && (
+                        <Progress value={task.progress} className="h-1 mt-1" />
+                      )}
+                    </div>
+
+                    {/* Actions and Status indicators */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {isCompleted && (
+                        <Badge variant="secondary" className="text-[9px] bg-green-500/10 text-green-600 hover:bg-green-500/10 py-0 flex items-center gap-0.5">
+                          <Check className="h-2.5 w-2.5" /> {task.added_to_bank_id ? "Saved to Bank" : "Click to View"}
+                        </Badge>
+                      )}
+                      {isFailed && (
+                        <Badge variant="destructive" className="text-[9px] py-0">
+                          Failed
+                        </Badge>
+                      )}
+                      {(isPending || isProcessing) && (
+                        <Badge variant="outline" className="text-[9px] py-0 gap-1">
+                          <Loader2 className="h-2.5 w-2.5 animate-spin text-primary" /> Running
+                        </Badge>
+                      )}
+                      
+                      <button
+                        onClick={(e) => handleDeleteTask(task.id, e)}
+                        className="p-1 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                        title="Delete task"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Right pane: Review Output & Structure */}
+      <div className="lg:col-span-7 flex flex-col h-full space-y-5">
+        <Card className="border-border flex-1 flex flex-col min-w-0">
+          <CardHeader className="py-3 px-4 border-b border-border/60 flex flex-row items-center justify-between">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              OCR Result ({importedQuestions.length} questions)
+            </CardTitle>
+            
+            {importedQuestions.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => setShowRawText(!showRawText)}
+                  className="h-7 text-[10px] gap-1"
+                >
+                  {showRawText ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                  {showRawText ? "Hide Raw Text" : "View Raw Text"}
+                </Button>
+                
+                {!addToBank && (
+                  <Button 
+                    size="sm" 
+                    onClick={handleSaveImportedToBank} 
+                    disabled={isSavingToBank}
+                    className="h-7 text-[10px] gap-1.5"
+                  >
+                    <Check className="h-3.5 w-3.5" /> Save to Exam Bank
+                  </Button>
+                )}
+              </div>
+            )}
+          </CardHeader>
+          <CardContent className="p-4 flex-1 overflow-y-auto max-h-[calc(100vh-12rem)] space-y-4">
+            {importedQuestions.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground text-xs space-y-1.5">
+                <BookOpen className="h-8 w-8 opacity-40 mb-1" />
+                <p>No OCR data available.</p>
+                <p className="text-[11px]">Upload a PDF file or paste text and click "Start OCR".</p>
+              </div>
+            ) : showRawText ? (
+              <pre className="font-mono text-[11px] leading-relaxed p-4 bg-muted/40 rounded-xl border border-border/60 overflow-x-auto whitespace-pre-wrap">
+                {importedRawText}
+              </pre>
+            ) : (
+              <div className="space-y-3.5 divide-y divide-border/30">
+                {importedQuestions.map((q, idx) => (
+                  <div key={q.id || idx} className="pt-3.5 first:pt-0">
+                    <QuestionPreviewCard question={q} index={idx} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

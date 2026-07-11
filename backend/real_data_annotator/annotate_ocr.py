@@ -652,7 +652,8 @@ class OCRAnnotator:
             raise ValueError("Input OCR text is empty.")
 
         words = raw_ocr_text.split()
-        estimated_total_tokens = max(50, int(len(words) * 1.3) + 20)
+        original_input_tokens = max(30, int(len(words) * 1.3))
+        estimated_total_tokens = int(original_input_tokens * 1.8)
 
         all_tagged_texts = []
         all_spans = []

@@ -4,7 +4,7 @@ models:
   ocr:
     model_name: "mn/Minimax-M3"
     provider: "vilao"
-    batch_size: 3
+    batch_size: 6
     concurrency: 5
     description: "Vision LLM model for converting PDF pages to markdown text"
 
@@ -13,6 +13,11 @@ models:
     provider: "vilao"
     thinking: disabled
     description: "Sequence labeling LLM model for question stem and option annotation"
+
+  answer_mapper:
+    model_name: "mn/Minimax-M3"
+    provider: "vilao"
+    description: "LLM model for mapping unstructured answer keys to questions"
 
 logging:
   dir: "ocr_logs"

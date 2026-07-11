@@ -34,6 +34,7 @@ export interface DetailedResult {
   correct_answer: string;
   is_correct: boolean;
   explanation: string;
+  stimulus_text?: string;
 }
 
 export interface TestResult {
