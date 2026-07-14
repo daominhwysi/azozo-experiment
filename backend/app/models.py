@@ -10,7 +10,7 @@ class ExamQuestion(BaseModel):
     question_number: str
     stem: str
     options: List[QuestionOption]
-    correct_answer: Optional[str] = "A"
+    correct_answer: Optional[str] = ""
     explanation: Optional[str] = ""
     stimulus_id: Optional[str] = None
     stimulus_text: Optional[str] = ""

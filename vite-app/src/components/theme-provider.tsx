@@ -58,8 +58,6 @@ function disableTransitionsTemporarily() {
   }
 }
 
-
-
 export function ThemeProvider({
   children,
   defaultTheme = "system",
@@ -121,8 +119,6 @@ export function ThemeProvider({
       mediaQuery.removeEventListener("change", handleChange)
     }
   }, [theme, applyTheme])
-
-
 
   React.useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {

@@ -133,3 +133,17 @@ azozo/
   - Adhere to Notion UI design principles (minimalist, 4px grid rhythm, clean typography with Inter variable font).
   - Use `clsx` and `tailwind-merge` for standard class merging.
   - Run `npm run typecheck` and `npm run lint` inside `vite-app/` before committing changes.
+
+---
+
+## Design Context & Guidelines
+
+When working on the frontend interface, refer to these primary documents:
+- [PRODUCT.md](file:///home/minh1/project/azozo/PRODUCT.md): Strategic foundation including register (`product`), platform (`web`), user breakdown, and principles.
+- [DESIGN.md](file:///home/minh1/project/azozo/DESIGN.md): Technical visual specification including colors, typography hierarchy, flat elevation model, and component styles.
+
+### Core Visual Rules
+- **The Ten Percent Rule**: Limit the primary accent color (`Deep Ink` #373737) and active indicators to 10% or less of any single viewport.
+- **Grid Rhythm**: Keep layouts aligned to a strict 4px vertical rhythm.
+- **Banned Patterns**: Do not use side-stripe borders (e.g. `border-l-3` or `border-l-2` colored accents on one side of a card), nested cards, gradient text, or glassmorphism.
+
