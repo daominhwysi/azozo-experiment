@@ -49,10 +49,10 @@ export const SingleQuestionTakingView = memo(function SingleQuestionTakingView({
             <div className="flex min-h-0 flex-1 flex-col space-y-4 overflow-y-auto p-5">
               <div className="space-y-4">
                 <div className="flex items-start gap-2">
-                  <span className="shrink-0 text-sm font-bold text-primary select-none">
+                  <span className="shrink-0 text-sm font-bold text-foreground/80 select-none">
                     {qNum || `Question ${index + 1}:`}
                   </span>
-                  <div className="flex-1 text-sm leading-relaxed font-medium text-foreground">
+                  <div className="flex-1 text-sm leading-relaxed font-normal text-foreground">
                     {renderTextWithTables(question.stem)}
                   </div>
                 </div>
@@ -111,10 +111,10 @@ export const SingleQuestionTakingView = memo(function SingleQuestionTakingView({
         <div className="min-h-0 w-full flex-1 overflow-y-auto">
           <div className="mx-auto w-full max-w-2xl space-y-4 p-5">
             <div className="flex items-start gap-2">
-              <span className="shrink-0 text-sm font-bold text-primary select-none">
+              <span className="shrink-0 text-sm font-bold text-foreground/80 select-none">
                 {qNum || `Question ${index + 1}:`}
               </span>
-              <div className="flex-1 text-sm leading-relaxed font-medium text-foreground">
+              <div className="flex-1 text-sm leading-relaxed font-normal text-foreground">
                 {renderTextWithTables(question.stem)}
               </div>
             </div>

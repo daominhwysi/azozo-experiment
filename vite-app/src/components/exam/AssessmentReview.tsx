@@ -230,7 +230,7 @@ export function AssessmentReview({ result, onBack, choiceStyle }: AssessmentRevi
                 >
                   {/* Question Status Header */}
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-primary select-none">
+                    <span className="text-xs font-bold text-foreground/80 select-none">
                       {qNum || `Question ${index + 1}:`}
                     </span>
                     <span className="flex items-center gap-1 text-xs select-none">
@@ -256,7 +256,7 @@ export function AssessmentReview({ result, onBack, choiceStyle }: AssessmentRevi
                   )}
 
                   {/* Stem / Question Description */}
-                  <div className="text-xs leading-relaxed font-medium text-foreground md:text-sm">
+                  <div className="text-xs leading-relaxed font-normal text-foreground md:text-sm">
                     {renderTextWithTables(res.stem)}
                   </div>
 

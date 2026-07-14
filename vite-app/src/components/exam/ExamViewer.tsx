@@ -84,10 +84,10 @@ function QuestionRow({
   return (
     <div className="space-y-2 border-b border-border/40 py-4 last:border-b-0">
       <div className="flex items-start gap-2">
-        <span className="shrink-0 text-xs font-bold text-primary select-none md:text-sm">
+        <span className="shrink-0 text-xs font-bold text-foreground/80 select-none md:text-sm">
           {qNum || `Question ${index + 1}:`}
         </span>
-        <div className="flex-1 text-xs leading-relaxed font-medium text-foreground md:text-sm">
+        <div className="flex-1 text-xs leading-relaxed font-normal text-foreground md:text-sm">
           {renderTextWithTables(question.stem)}
         </div>
       </div>

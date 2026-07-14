@@ -130,10 +130,10 @@ export function ExamStudentRoomFullResultsView({
                   className="scroll-mt-20 space-y-3 border-b border-border/40 py-4 last:border-b-0"
                 >
                   <div className="flex items-start gap-2">
-                    <span className="shrink-0 text-xs font-bold text-primary select-none md:text-sm">
+                    <span className="shrink-0 text-xs font-bold text-foreground/80 select-none md:text-sm">
                       {qNum || `Question ${idx + 1}:`}
                     </span>
-                    <div className="flex-1 text-xs leading-relaxed font-medium text-foreground md:text-sm">
+                    <div className="flex-1 text-xs leading-relaxed font-normal text-foreground md:text-sm">
                       {renderTextWithTables(res.stem)}
                     </div>
                     <Badge
