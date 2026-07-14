@@ -35,6 +35,10 @@ NVIDIA_API_KEY=<nvidia_api_key>
 
 ## Development Workflow & Commands
 
+### Git Integration & Feature Completion
+
+- **Branch & Push Rule**: Upon finishing every feature/task, the agent **MUST** call the interactive `ask_question` tool to ask the user if they want to create a new branch and push the changes to GitHub. Do not commit or push without asking first.
+
 ### Running Components
 
 - **Backend FastAPI Server**:
