@@ -2,7 +2,7 @@
 name: Azozo
 description: Notion-inspired online examination and OCR token labeling system
 colors:
-  primary: "#373737"
+  primary: "#2b4c7e"
   secondary: "#f7f7f7"
   foreground: "#252525"
   background: "#ffffff"
@@ -64,7 +64,7 @@ Azozo is built around Notion's signature layout and design aesthetic: a clean, q
 The color palette is restricted, calm, and functional, relying on soft tints of gray to structure the user interface.
 
 ### Primary
-- **Deep Ink** (#373737 / `oklch(0.205 0 0)`): Used for primary text headings, buttons, and high-emphasis controls.
+- **Deep Slate Blue** (#2b4c7e / `oklch(0.36 0.08 250)`): Used for primary text headings, buttons, active states, and high-emphasis controls.
 
 ### Secondary
 - **Silver Silk** (#f7f7f7 / `oklch(0.97 0 0)`): Used for secondary buttons, inactive states, sidebar backgrounds, and row shading.
@@ -75,7 +75,7 @@ The color palette is restricted, calm, and functional, relying on soft tints of 
 - **Muted Gray** (#8f8f8f / `oklch(0.556 0 0)`): Used for helper text, placeholders, and low-emphasis information.
 - **Border Gray** (#ebebeb / `oklch(0.922 0 0)`): The standard 1px container border color.
 
-**The Ten Percent Rule.** The primary accent (#373737) and active indicators are used on ≤10% of any given screen to draw focus only to the most critical actions.
+**The Ten Percent Rule.** The primary accent (#2b4c7e) and active indicators are used on ≤10% of any given screen to draw focus only to the most critical actions.
 
 ## 3. Typography
 
