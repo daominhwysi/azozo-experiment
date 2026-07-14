@@ -1,29 +1,42 @@
-import { useState, useEffect, useMemo, useRef } from "react";
-import type { Exam, Question } from "@/types/exam";
-import { parseExamLanguage, serializeExamLanguage } from "@/services/examLanguage";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Save, X, FileText, CheckCircle, AlertTriangle, Eye, Clock } from "lucide-react";
-import Editor, { type Monaco } from "@monaco-editor/react";
-import { useTheme } from "@/components/theme-provider";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect, useMemo, useRef } from "react"
+import type { Exam, Question } from "@/types/exam"
+import {
+  parseExamLanguage,
+  serializeExamLanguage,
+} from "@/services/examLanguage"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Save,
+  X,
+  CheckCircle,
+  AlertTriangle,
+  Clock,
+} from "lucide-react"
+import Editor, { type Monaco } from "@monaco-editor/react"
+import { useTheme } from "@/components/theme-provider"
 
 // Custom theme colors matching Azozo's Notion aesthetic
 const setupMonacoAelLanguage = (monaco: Monaco) => {
   // Check if language already registered to prevent duplicates
   if (monaco.languages.getLanguages().some((lang: any) => lang.id === "ael")) {
-    return;
+    return
   }
 
   // Register custom language ID 'ael'
-  monaco.languages.register({ id: "ael" });
+  monaco.languages.register({ id: "ael" })
 
   // Define tokenizer
   monaco.languages.setMonarchTokensProvider("ael", {
     tokenizer: {
       root: [
         // Metadata lines
-        [/^(Title|Subject|Grade|Duration)(\s*:\s*)(.*)$/, ["keyword.meta", "operator", "string.meta"]],
+        [
+          /^(Title|Subject|Grade|Duration)(\s*:\s*)(.*)$/,
+          ["keyword.meta", "operator", "string.meta"],
+        ],
 
         // [Question] Tag
         [/^\[Question\]\s*$/, "keyword.tag"],
@@ -32,31 +45,39 @@ const setupMonacoAelLanguage = (monaco: Monaco) => {
         [/^\s*[A-D]\.\s+/, "variable.option"],
 
         // Answers
-        [/^(Answer)(\s*:\s*)([A-D]\s*)$/, ["keyword.answer", "operator", "number.answer"]],
+        [
+          /^(Answer)(\s*:\s*)([A-D]\s*)$/,
+          ["keyword.answer", "operator", "number.answer"],
+        ],
 
         // Explanations
-        [/^(Explanation)(\s*:\s*)(.*)$/, ["keyword.explanation", "operator", "string.explanation"]],
+        [
+          /^(Explanation)(\s*:\s*)(.*)$/,
+          ["keyword.explanation", "operator", "string.explanation"],
+        ],
       ],
     },
-  });
+  })
 
   // Autocomplete Suggestions
   monaco.languages.registerCompletionItemProvider("ael", {
     provideCompletionItems: (model: any, position: any) => {
-      const word = model.getWordUntilPosition(position);
+      const word = model.getWordUntilPosition(position)
       const range = {
         startLineNumber: position.lineNumber,
         endLineNumber: position.lineNumber,
         startColumn: word.startColumn,
         endColumn: word.endColumn,
-      };
+      }
 
       const suggestions = [
         {
           label: "[Question] Block",
           kind: monaco.languages.CompletionItemKind.Snippet,
-          insertText: "[Question]\nQuestion ${1:1}: ${2:text}\nA. ${3:Option A}\nB. ${4:Option B}\nC. ${5:Option C}\nD. ${6:Option D}\nAnswer: ${7:A}\nExplanation: ${8:explanation text}",
-          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          insertText:
+            "[Question]\nQuestion ${1:1}: ${2:text}\nA. ${3:Option A}\nB. ${4:Option B}\nC. ${5:Option C}\nD. ${6:Option D}\nAnswer: ${7:A}\nExplanation: ${8:explanation text}",
+          insertTextRules:
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
           documentation: "Insert a standard multiple choice question template",
           range,
         },
@@ -64,35 +85,39 @@ const setupMonacoAelLanguage = (monaco: Monaco) => {
           label: "Title:",
           kind: monaco.languages.CompletionItemKind.Keyword,
           insertText: "Title: ${1:Exam Title}",
-          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          insertTextRules:
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
           range,
         },
         {
           label: "Subject:",
           kind: monaco.languages.CompletionItemKind.Keyword,
           insertText: "Subject: ${1:Mathematics}",
-          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          insertTextRules:
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
           range,
         },
         {
           label: "Grade:",
           kind: monaco.languages.CompletionItemKind.Keyword,
           insertText: "Grade: ${1:Grade 12}",
-          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          insertTextRules:
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
           range,
         },
         {
           label: "Duration:",
           kind: monaco.languages.CompletionItemKind.Keyword,
           insertText: "Duration: ${1:45}",
-          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          insertTextRules:
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
           range,
         },
-      ];
+      ]
 
-      return { suggestions };
+      return { suggestions }
     },
-  });
+  })
 
   // Dark Theme
   monaco.editor.defineTheme("aelThemeDark", {
@@ -112,7 +137,7 @@ const setupMonacoAelLanguage = (monaco: Monaco) => {
       "editor.background": "#121212",
       "editor.lineHighlightBackground": "#1e1e1e",
     },
-  });
+  })
 
   // Light Theme
   monaco.editor.defineTheme("aelThemeLight", {
@@ -132,57 +157,56 @@ const setupMonacoAelLanguage = (monaco: Monaco) => {
       "editor.background": "#fafafa",
       "editor.lineHighlightBackground": "#f3f4f6",
     },
-  });
-};
+  })
+}
 
 // Custom hook to debounce state updates
 function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+      setDebouncedValue(value)
+    }, delay)
 
     return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
+      clearTimeout(handler)
+    }
+  }, [value, delay])
 
-  return debouncedValue;
+  return debouncedValue
 }
 
 interface ExamEditorProps {
-  exam: Exam | null;
-  onSave: (examData: Omit<Exam, "id" | "created_at">) => Promise<void>;
-  onCancel: () => void;
+  exam: Exam | null
+  onSave: (examData: Omit<Exam, "id" | "created_at">) => Promise<void>
+  onCancel: () => void
 }
 
 export function ExamEditor({ exam, onSave, onCancel }: ExamEditorProps) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  const editorTheme = isDark ? "aelThemeDark" : "aelThemeLight";
+  const { theme } = useTheme()
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
+  const editorTheme = isDark ? "aelThemeDark" : "aelThemeLight"
 
-  const editorRef = useRef<any>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [markupText, setMarkupText] = useState("");
-  const [parseError, setParseError] = useState<string | null>(null);
+  const editorRef = useRef<any>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [markupText, setMarkupText] = useState("")
 
   // Debounce keypress changes by 350ms to optimize re-rendering and parsing calculations
-  const debouncedMarkupText = useDebounce(markupText, 350);
+  const debouncedMarkupText = useDebounce(markupText, 350)
 
   const handleEditorDidMount = (editor: any) => {
-    editorRef.current = editor;
-  };
+    editorRef.current = editor
+  }
 
   // Initialize markup text from exam
   useEffect(() => {
-    let initialText = "";
-    if (exam) {
-      initialText = serializeExamLanguage(exam);
-    } else {
-      initialText = 
-`Title: Midterm Assessment Exam
+    const initialText = exam
+      ? serializeExamLanguage(exam)
+      : `Title: Midterm Assessment Exam
 Subject: Mathematics
 Grade: Grade 12
 Duration: 60
@@ -203,88 +227,96 @@ B. e^x
 C. x
 D. 1/(x^2)
 Answer: A
-Explanation: According to the fundamental rules of calculus, d/dx(ln x) = 1/x.`;
-    }
+Explanation: According to the fundamental rules of calculus, d/dx(ln x) = 1/x.`
 
-    setMarkupText(initialText);
+    setMarkupText(initialText)
     if (editorRef.current && editorRef.current.getValue() !== initialText) {
-      editorRef.current.setValue(initialText);
+      editorRef.current.setValue(initialText)
     }
-  }, [exam]);
+  }, [exam])
 
   // Live parse AEL markup (debounced to avoid performance lag)
-  const parsedExam = useMemo(() => {
+  const { parsedExam, parseError } = useMemo(() => {
     try {
-      const parsed = parseExamLanguage(debouncedMarkupText);
-      setParseError(null);
-      return parsed;
-    } catch (err: any) {
-      setParseError("Syntax warning: " + (err?.message || "Verify your tags [Question] and options layout."));
-      return null;
+      const parsed = parseExamLanguage(debouncedMarkupText)
+      return { parsedExam: parsed, parseError: null }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Verify your tags [Question] and options layout."
+      return {
+        parsedExam: null,
+        parseError: "Syntax warning: " + msg
+      }
     }
-  }, [debouncedMarkupText]);
+  }, [debouncedMarkupText])
 
   const handleSaveAll = async () => {
     if (!parsedExam) {
-      alert("Please fix syntax errors before saving the exam.");
-      return;
+      alert("Please fix syntax errors before saving the exam.")
+      return
     }
-    setIsSaving(true);
+    setIsSaving(true)
     try {
-      await onSave(parsedExam);
+      await onSave(parsedExam)
     } catch (err) {
-      console.error(err);
-      setParseError(err instanceof Error ? err.message : "Failed to save the exam.");
+      console.error(err)
+      alert(
+        err instanceof Error ? err.message : "Failed to save the exam."
+      )
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   return (
-    <div className="flex flex-col h-full w-full space-y-4">
+    <div className="flex h-full w-full flex-col">
       {/* Header bar */}
-      <div className="flex items-center justify-between border-b border-border pb-3 shrink-0">
-        <div>
-          <h1 className="text-base font-bold tracking-tight text-foreground flex items-center gap-2">
-            <FileText className="h-4.5 w-4.5 text-primary" />
-            Azozo AEL Split Editor
-          </h1>
-          <p className="text-[11px] text-muted-foreground">
-            Author assessments in real-time. Write Azozo Exam Language markup on the left; review rendering on the right.
-          </p>
+      <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-4 select-none">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 select-none">
+            <span className="text-xl font-black tracking-tighter text-primary">
+              AZOZO
+            </span>
+            <span className="rounded border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[9px] font-bold tracking-widest text-muted-foreground uppercase">
+              Editor
+            </span>
+          </div>
+          {parsedExam ? (
+            <span className="flex items-center gap-1 rounded-md bg-green-500/10 px-2 py-0.5 text-[10px] font-semibold text-green-600 ml-1.5">
+              <CheckCircle className="h-3 w-3" /> Valid Markup
+            </span>
+          ) : (
+            <span className="flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold text-amber-600 ml-1.5">
+              <AlertTriangle className="h-3 w-3" /> Syntax Warning
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={onCancel} className="h-8 gap-1.5 text-xs">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onCancel}
+            className="h-8 gap-1.5 text-xs"
+          >
             <X className="h-3.5 w-3.5" /> Cancel
           </Button>
-          <Button size="sm" onClick={handleSaveAll} disabled={isSaving || !parsedExam} className="h-8 gap-1.5 text-xs">
-            <Save className="h-3.5 w-3.5" /> {isSaving ? "Saving..." : "Save Exam"}
+          <Button
+            size="sm"
+            onClick={handleSaveAll}
+            disabled={isSaving || !parsedExam}
+            className="h-8 gap-1.5 text-xs"
+          >
+            <Save className="h-3.5 w-3.5" />{" "}
+            {isSaving ? "Saving..." : "Save Exam"}
           </Button>
         </div>
-      </div>
+      </header>
 
       {/* Split Panels Container */}
-      <div className="flex flex-col lg:flex-row flex-1 min-h-0 border border-border rounded-xl bg-card overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
         {/* Left Side: Plaintext Editor */}
-        <div className="flex flex-col flex-1 h-full min-w-0 border-b lg:border-b-0 lg:border-r border-border">
-          <div className="py-2.5 px-4 border-b border-border/60 bg-muted/20 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              <FileText className="h-3.5 w-3.5" /> Plaintext Editor (AEL)
-            </div>
-            
-            {parsedExam ? (
-              <span className="text-[10px] text-green-600 bg-green-500/10 px-2 py-0.5 rounded-md flex items-center gap-1 font-semibold">
-                <CheckCircle className="h-3 w-3" /> Valid Markup
-              </span>
-            ) : (
-              <span className="text-[10px] text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded-md flex items-center gap-1 font-semibold">
-                <AlertTriangle className="h-3 w-3" /> Syntax Alert
-              </span>
-            )}
-          </div>
-
-          <div className="flex-1 min-h-0 relative flex flex-col">
+        <div className="flex h-full min-w-0 flex-1 flex-col border-b border-border lg:border-r lg:border-b-0">
+          <div className="relative flex min-h-0 flex-1 flex-col">
             <Editor
               height="100%"
               defaultLanguage="ael"
@@ -308,7 +340,7 @@ Explanation: According to the fundamental rules of calculus, d/dx(ln x) = 1/x.`;
 
             {/* Error Message Box inside editor area bottom */}
             {parseError && (
-              <div className="p-2 border-t border-border bg-destructive/10 text-destructive text-[10px] font-mono leading-normal shrink-0">
+              <div className="shrink-0 border-t border-border bg-destructive/10 p-2 font-mono text-[10px] leading-normal text-destructive">
                 {parseError}
               </div>
             )}
@@ -316,28 +348,32 @@ Explanation: According to the fundamental rules of calculus, d/dx(ln x) = 1/x.`;
         </div>
 
         {/* Right Side: Live Render Preview */}
-        <div className="flex flex-col flex-1 h-full min-w-0 bg-background/10">
-          <div className="py-2.5 px-4 border-b border-border/60 bg-muted/20 flex items-center gap-1.5 text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">
-            <Eye className="h-3.5 w-3.5" /> Live Render Preview
-          </div>
-
-          <ScrollArea className="flex-1 p-6 md:p-8 min-h-0 bg-background/50">
+        <div className="flex h-full min-w-0 flex-1 flex-col bg-background/10">
+          <ScrollArea className="min-h-0 flex-1 bg-background/50 p-6 md:p-8">
             {parsedExam ? (
               <div className="space-y-6">
                 {/* Notion Style Header Cover/Card */}
-                <div className="space-y-3 pb-4 border-b border-border/40">
+                <div className="space-y-3 border-b border-border/40 pb-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="text-[10px]">{parsedExam.subject}</Badge>
-                    <Badge variant="secondary" className="text-[10px]">{parsedExam.grade}</Badge>
-                    <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium">
-                      <Clock className="h-3 w-3" /> {parsedExam.duration_minutes} mins
+                    <Badge variant="outline" className="text-[10px]">
+                      {parsedExam.subject}
+                    </Badge>
+                    <Badge variant="secondary" className="text-[10px]">
+                      {parsedExam.grade}
+                    </Badge>
+                    <span className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground">
+                      <Clock className="h-3 w-3" />{" "}
+                      {parsedExam.duration_minutes} mins
                     </span>
                   </div>
-                  <h2 className="text-lg font-bold text-foreground tracking-tight leading-snug">
+                  <h2 className="text-lg leading-snug font-bold tracking-tight text-foreground">
                     {parsedExam.title}
                   </h2>
                   <p className="text-[10px] text-muted-foreground">
-                    Total questions: <span className="font-semibold text-foreground">{parsedExam.questions.length} items</span>
+                    Total questions:{" "}
+                    <span className="font-semibold text-foreground">
+                      {parsedExam.questions.length} items
+                    </span>
                   </p>
                 </div>
 
@@ -345,66 +381,78 @@ Explanation: According to the fundamental rules of calculus, d/dx(ln x) = 1/x.`;
                 <div className="space-y-6 divide-y divide-border/30">
                   {parsedExam.questions.map((q: Question, idx: number) => {
                     return (
-                      <div key={q.id || idx} className="pt-4 first:pt-0 space-y-2">
+                      <div
+                        key={q.id || idx}
+                        className="space-y-2 pt-4 first:pt-0"
+                      >
                         {/* Stimulus readout */}
                         {q.stimulus_text && (
-                          <div className="p-3 bg-muted/40 border-l-3 border-primary/40 rounded-r-lg text-xs text-muted-foreground font-mono leading-relaxed italic mb-2">
+                          <div className="mb-2 rounded-lg border border-border/60 bg-card p-4 font-serif text-sm leading-relaxed text-foreground/90 italic">
                             {q.stimulus_text}
                           </div>
                         )}
 
                         {/* Stem */}
                         <div className="flex items-start gap-2">
-                          <span className="text-xs font-bold text-primary select-none pt-0.5">
+                          <span className="pt-0.5 text-xs font-bold text-primary select-none">
                             {q.question_number || `Question ${idx + 1}`}:
                           </span>
-                          <p className="text-xs font-medium text-foreground leading-relaxed flex-1">
+                          <p className="flex-1 text-xs leading-relaxed font-medium text-foreground">
                             {q.stem}
                           </p>
                         </div>
 
                         {/* Options */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pl-6 pt-1">
+                        <div className="grid grid-cols-1 gap-2 pt-1 pl-6">
                           {q.options.map((opt) => {
-                            const isCorrect = opt.label === q.correct_answer;
+                            const isCorrect = opt.label === q.correct_answer
                             return (
                               <div
                                 key={opt.label}
-                                className={`p-2 rounded-lg border text-xs flex items-center gap-2 select-none ${
+                                className={`flex items-center gap-2 rounded-lg border p-2 text-xs select-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                                   isCorrect
-                                    ? "border-green-500 bg-green-500/10 text-green-700 dark:text-green-400 font-semibold"
+                                    ? "border-emerald-500 bg-emerald-500/10 font-semibold text-emerald-700 dark:text-emerald-400"
                                     : "border-border/60 bg-card text-muted-foreground"
                                 }`}
                               >
-                                <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[9px] border ${
-                                  isCorrect ? "bg-green-500 text-white border-green-500" : "bg-muted text-muted-foreground border-border"
-                                }`}>
+                                <span
+                                  className={`flex h-5 w-5 items-center justify-center rounded-full border text-[9px] font-bold ${
+                                    isCorrect
+                                      ? "border-emerald-500 bg-emerald-500 text-white"
+                                      : "border-border bg-muted text-muted-foreground"
+                                  }`}
+                                >
                                   {opt.label}
                                 </span>
-                                <span className="flex-1 truncate">{opt.text || "..."}</span>
+                                <span className="flex-1 truncate">
+                                  {opt.text || "..."}
+                                </span>
                               </div>
-                            );
+                            )
                           })}
                         </div>
 
                         {/* Explanation preview */}
                         {q.explanation && (
-                          <div className="mt-2 ml-6 p-2 bg-muted/20 border-l-2 border-border/80 text-[10px] text-muted-foreground leading-relaxed">
-                            <span className="font-semibold text-foreground/80">Explanation: </span>
+                          <div className="mt-2 ml-6 rounded-lg border border-border/80 bg-muted/20 p-2 text-[10px] leading-relaxed text-muted-foreground">
+                            <span className="font-semibold text-foreground/80">
+                              Explanation:{" "}
+                            </span>
                             {q.explanation}
                           </div>
                         )}
                       </div>
-                    );
+                    )
                   })}
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-20">
-                <AlertTriangle className="h-8 w-8 text-amber-500/80 mb-2" />
+              <div className="flex h-full flex-col items-center justify-center py-20 text-center text-muted-foreground">
+                <AlertTriangle className="mb-2 h-8 w-8 text-amber-500/80" />
                 <p className="text-xs font-semibold">Preview Unavailable</p>
-                <p className="text-[10px] text-muted-foreground max-w-xs mt-1 leading-relaxed">
-                  The parser is currently experiencing issues. Please correct your formatting on the left pane to restore the live view.
+                <p className="mt-1 max-w-xs text-[10px] leading-relaxed text-muted-foreground">
+                  The parser is currently experiencing issues. Please correct
+                  your formatting on the left pane to restore the live view.
                 </p>
               </div>
             )}
@@ -412,5 +460,5 @@ Explanation: According to the fundamental rules of calculus, d/dx(ln x) = 1/x.`;
         </div>
       </div>
     </div>
-  );
+  )
 }

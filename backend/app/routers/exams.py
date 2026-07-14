@@ -80,7 +80,7 @@ def submit_exam(exam_id: str, req: StudentSubmissionRequest):
     for q in questions:
         q_id = q["id"]
         student_ans = req.answers.get(q_id, "")
-        correct_ans = q.get("correct_answer", "A")
+        correct_ans = q.get("correct_answer", "")
         student_ans_clean = student_ans.replace("(", "").replace(")", "").strip().upper()
         correct_ans_clean = correct_ans.replace("(", "").replace(")", "").strip().upper()
         is_correct = (student_ans_clean == correct_ans_clean)
