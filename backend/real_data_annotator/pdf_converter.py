@@ -104,14 +104,23 @@ class PDFOCRConverter:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        base_url: str = "https://api.vilao.ai/v1",
+        base_url: Optional[str] = None,
         model: str = "mn/Minimax-M3",
         batch_size: int = 3,
         concurrency: int = 5,
         examples_dir: Optional[Union[str, Path]] = None,
     ):
-        self.api_key = api_key or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
-        self.base_url = base_url
+        if base_url is None or base_url == "https://api.vilao.ai/v1":
+            if model.startswith("phatchau036/") or model.startswith("mainnewnol/") or "xah" in model.lower():
+                self.base_url = "https://api.xah.io/v1"
+                self.api_key = api_key or os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY")
+            else:
+                self.base_url = "https://api.vilao.ai/v1"
+                self.api_key = api_key or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
+        else:
+            self.base_url = base_url
+            self.api_key = api_key or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
+
         self.model = model
         self.batch_size = batch_size
         self.concurrency = concurrency

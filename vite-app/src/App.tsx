@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { TopLoader } from "@/components/ui/top-loader"
 import { Loader2 } from "lucide-react"
+import { Toaster } from "@/components/ui/sonner"
 
 // Lazy-loaded workspace components for optimized bundle size & faster initial load
 const ExamBank = lazy(() =>
@@ -178,6 +179,7 @@ export function App() {
     <div className="flex h-screen overflow-hidden bg-background font-sans text-foreground">
       {/* Top Global Progress Bar */}
       <TopLoader />
+      <Toaster />
 
       {/* Collapsible Left Sidebar */}
       {sidebarOpen && !isTestRunning && (

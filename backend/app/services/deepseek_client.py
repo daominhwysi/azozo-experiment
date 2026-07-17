@@ -45,6 +45,13 @@ if os.environ.get("LLM_API_KEY"):
         base_url="https://api.vilao.ai/v1",
     )
 
+xah_client = None
+if os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY"):
+    xah_client = OpenAI(
+        api_key=os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY"),
+        base_url="https://api.xah.io/v1",
+    )
+
 # Alias client for test mocking compatibility
 client = deepseek_client
 
@@ -57,23 +64,29 @@ def chat(
     provider: Optional[str] = None,
 ) -> str:
     """
-    Call the DeepSeek (or NVIDIA NIM DeepSeek, or Vilao.ai) chat API and return the assistant reply text.
+    Call the DeepSeek (or NVIDIA NIM DeepSeek, or Vilao.ai, or Xah.io) chat API and return the assistant reply text.
     """
     is_nvidia = False
     use_vilao = False
+    use_xah = False
     
     if provider == "nvidia":
         is_nvidia = True
     elif provider == "vilao":
         use_vilao = True
+    elif provider == "xah":
+        use_xah = True
     elif provider == "deepseek":
         pass
     else:
         # Auto-detect routing
         is_nvidia = model in ["deepseek-v4-pro", "deepseek-ai/deepseek-v4-pro"]
         
+        # Check if we should route to Xah
+        if model.startswith("phatchau036/") or model.startswith("mainnewnol/") or "xah" in model.lower():
+            use_xah = True
         # Check if we should route to Vilao.ai
-        if "/" in model:
+        elif "/" in model:
             use_vilao = True
         elif "minimax" in model.lower() or model.startswith("mn/"):
             use_vilao = True
@@ -105,6 +118,12 @@ def chat(
             
         kwargs["extra_body"] = {"chat_template_kwargs": {"thinking": thinking_bool}}
         
+    elif use_xah:
+        if xah_client is None:
+            raise ValueError("Error: Model routes to xah.io but neither XAH_API_KEY nor LLM_API_KEY is set.")
+        active_client = xah_client
+        kwargs["model"] = model
+
     elif use_vilao:
         if vilao_client is None:
             if deepseek_client is not None:

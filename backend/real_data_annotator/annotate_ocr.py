@@ -321,14 +321,18 @@ def get_client_and_model(
     provider: Optional[str] = None,
 ) -> Tuple[OpenAI, str]:
     nvidia_key = os.environ.get("NVIDIA_API_KEY") or deepseek_key
+    xah_key = os.environ.get("XAH_API_KEY") or llm_key
     is_nvidia = False
     use_vilao = False
+    use_xah = False
     is_deepseek = False
 
     if provider == "nvidia":
         is_nvidia = True
     elif provider == "vilao":
         use_vilao = True
+    elif provider == "xah":
+        use_xah = True
     elif provider == "deepseek":
         is_deepseek = True
     else:
@@ -343,7 +347,9 @@ def get_client_and_model(
                 print("Error: Neither DEEPSEEK_API_KEY nor LLM_API_KEY is set.")
                 sys.exit(1)
         else:
-            if "/" in model_name or "minimax" in model_name.lower():
+            if model_name.startswith("phatchau036/") or model_name.startswith("mainnewnol/") or "xah" in model_name.lower():
+                use_xah = True
+            elif "/" in model_name or "minimax" in model_name.lower():
                 use_vilao = True
             elif not deepseek_key and llm_key:
                 use_vilao = True
@@ -356,6 +362,10 @@ def get_client_and_model(
         return OpenAI(
             api_key=nvidia_key, base_url="https://integrate.api.nvidia.com/v1"
         ), target_model
+    elif use_xah:
+        target_model = model_name
+        print(f"Routing to Xah.io API with model: {target_model}")
+        return OpenAI(api_key=xah_key, base_url="https://api.xah.io/v1"), target_model
     elif use_vilao:
         final_model = model_name or "op/deepseek/deepseek-v4-pro"
         if "/" not in final_model:

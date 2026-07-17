@@ -1,0 +1,8 @@
+{
+  "font_stack": "Inter Variable",
+  "palette": "OKLCH custom properties",
+  "motion": "none",
+  "spacing": "Tailwind default spacing scale",
+  "framework": "React 19 + Vite",
+  "last_scan": "2026-07-17"
+}
