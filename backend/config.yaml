@@ -2,21 +2,21 @@
 
 models:
   ocr:
-    model_name: "mn/Minimax-M3"
-    provider: "vilao"
+    model_name: "mainnewnol/Minimax-M3"
+    provider: "xah"
     batch_size: 6
     concurrency: 5
     description: "Vision LLM model for converting PDF pages to markdown text"
 
   parser:
-    model_name: "op/deepseek/deepseek-v4-pro"
-    provider: "vilao"
+    model_name: "vpsnodelab/deepseek-v4-pro"
+    provider: "xah"
     thinking: disabled
     description: "Sequence labeling LLM model for question stem and option annotation"
 
   answer_mapper:
-    model_name: "mn/Minimax-M3"
-    provider: "vilao"
+    model_name: "mainnewnol/Minimax-M3"
+    provider: "xah"
     description: "LLM model for mapping unstructured answer keys to questions"
 
 logging:
