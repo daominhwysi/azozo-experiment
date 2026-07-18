@@ -23,6 +23,7 @@ OCR_MODEL = config_data.get("models", {}).get("ocr", {}).get("model_name", "main
 OCR_BATCH_SIZE = config_data.get("models", {}).get("ocr", {}).get("batch_size", 3)
 OCR_CONCURRENCY = config_data.get("models", {}).get("ocr", {}).get("concurrency", 5)
 PARSER_MODEL = config_data.get("models", {}).get("parser", {}).get("model_name", "mainnewnol/deepseek-v4-pro")
+PARSER_PROVIDER = config_data.get("models", {}).get("parser", {}).get("provider", "xah")
 PARSER_THINKING = config_data.get("models", {}).get("parser", {}).get("thinking", "enabled")
 ANSWER_MAPPER_MODEL = config_data.get("models", {}).get("answer_mapper", {}).get("model_name", "mainnewnol/Minimax-M3")
 ANSWER_MAPPER_PROVIDER = config_data.get("models", {}).get("answer_mapper", {}).get("provider", "xah")

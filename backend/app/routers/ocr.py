@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import Optional
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
 from fastapi.responses import StreamingResponse
-from backend.app.config import TMP_DIR, OCR_MODEL, OCR_BATCH_SIZE, OCR_CONCURRENCY, PARSER_MODEL
+from backend.app.config import TMP_DIR, OCR_MODEL, OCR_BATCH_SIZE, OCR_CONCURRENCY, PARSER_MODEL, PARSER_PROVIDER
 from backend.app.services.parser import parse_spans_into_structured_questions, regex_parse_questions
 from backend.app.services.ocr_logger import log_ocr_annotate_request
 from backend.real_data_annotator.pdf_converter import PDFOCRConverter
@@ -78,7 +78,7 @@ async def parse_exam_from_pdf_or_text(
     annotation_res = None
 
     try:
-        annotator = OCRAnnotator(model=PARSER_MODEL)
+        annotator = OCRAnnotator(model=PARSER_MODEL, provider=PARSER_PROVIDER)
         annotation_res = annotator.annotate_text(ocr_text)
 
         structured_questions, stimuli = parse_spans_into_structured_questions(
@@ -385,7 +385,7 @@ def run_ocr_task_bg(
 
         update_task(progress=50, message="Bắt đầu gán nhãn LLM...")
 
-        annotator = OCRAnnotator(model=PARSER_MODEL)
+        annotator = OCRAnnotator(model=PARSER_MODEL, provider=PARSER_PROVIDER)
         try:
             annotation_res = annotator.annotate_text_stream(ocr_text, callback=bg_token_callback)
             structured_questions, stimuli = parse_spans_into_structured_questions(

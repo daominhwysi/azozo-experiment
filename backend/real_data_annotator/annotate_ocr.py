@@ -347,7 +347,7 @@ def get_client_and_model(
                 print("Error: Neither DEEPSEEK_API_KEY nor LLM_API_KEY is set.")
                 sys.exit(1)
         else:
-            if model_name.startswith("phatchau036/") or model_name.startswith("mainnewnol/") or "xah" in model_name.lower():
+            if model_name.startswith("phatchau036/") or model_name.startswith("mainnewnol/") or model_name.startswith("vpsnodelab/") or "xah" in model_name.lower():
                 use_xah = True
             elif "/" in model_name or "minimax" in model_name.lower():
                 use_vilao = True
