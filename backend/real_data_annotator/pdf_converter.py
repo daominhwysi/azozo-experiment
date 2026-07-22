@@ -25,7 +25,7 @@ SYSTEM_PROMPT_LONG_CONTEXT = (
     "You are an expert Document OCR and Structural Layout Mining Assistant. "
     "Perform precise OCR on the provided document page images into clean, structured Markdown AND emit a compact page boundary JSON header.\n\n"
     "CRITICAL USABILITY RULES (Usability over Visual Reproduction):\n"
-    "1. PAGE WRAPPER: Wrap the output of each page in <page> ... </page>.\n"
+    "1. PAGES WRAPPER: Wrap the entire response in <pages> ... </pages>. Inside <pages>, wrap each individual page in <page> ... </page>.\n"
     "2. NO ARTIFICIAL SPACING OR VISUAL REPRODUCTION: Do NOT attempt to visually replicate physical layout using spaces, tabs, or multiple consecutive empty spaces. Do NOT use whitespace to simulate multi-column layouts, align numbers under gaps, or pad text to match physical margins. Prioritize clean, usable text over visual reproduction.\n"
     "3. SINGLE-COLUMN MERGING: If the input page has multiple columns, convert and merge them into a clean, single-column linear flow following logical reading order.\n"
     "4. MARKDOWN & LATEX: Extract text, headings, and lists in standard Markdown. Convert all math formulas and equations to standard LaTeX ($...$ inline, $$...$$ block).\n"
@@ -52,11 +52,66 @@ def prune_think_tags(text: str) -> str:
     return cleaned.strip()
 
 
+def normalize_batch_metadata(batch_text: str, start_page_num: int) -> str:
+    """
+    Ensures each page's <page_metadata> block in a batch response has the correct absolute PDF page number 'p'.
+    start_page_num is 1-indexed (e.g. 7 for batch pages 7..12).
+    """
+    page_idx = 0
+
+    def replace_meta(match):
+        nonlocal page_idx
+        meta_content = match.group(1)
+        actual_p = start_page_num + page_idx
+        page_idx += 1
+        fixed_meta = re.sub(r'("p"\s*:\s*)\d+', r"\g<1>" + str(actual_p), meta_content)
+        return f"<page_metadata>\n{fixed_meta}\n</page_metadata>"
+
+    pattern = r"<page_metadata>\s*(.*?)\s*</page_metadata>"
+    return re.sub(pattern, replace_meta, batch_text, flags=re.DOTALL)
+
+
 def load_few_shot_messages(example_dir: Path) -> List[Dict[str, Any]]:
     messages = []
     if not example_dir.exists():
         return messages
 
+    # Check for numbered subdirectories first (e.g. 1/, 2/, ...)
+    subdirs = sorted([d for d in example_dir.iterdir() if d.is_dir() and d.name.isdigit()], key=lambda x: int(x.name))
+    if subdirs:
+        for sdir in subdirs:
+            out_file = sdir / "out.md"
+            if not out_file.exists():
+                out_file = sdir / "out_1.md"
+            if not out_file.exists():
+                continue
+
+            in_files = sorted([f for f in sdir.glob("in_*.png")], key=lambda x: int(re.search(r"\d+", x.stem).group() if re.search(r"\d+", x.stem) else 0))
+            if not in_files:
+                continue
+
+            try:
+                with open(out_file, "r", encoding="utf-8") as f_out:
+                    out_content = f_out.read()
+
+                content_parts = [{"type": "text", "text": SYSTEM_PROMPT_LONG_CONTEXT}]
+                for idx, in_file in enumerate(in_files):
+                    page_num = idx + 1
+                    with open(in_file, "rb") as f_in:
+                        img_base64 = base64.b64encode(f_in.read()).decode("utf-8")
+                    content_parts.append({"type": "text", "text": f"--- Document Page {page_num} ---"})
+                    content_parts.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_base64}"}})
+
+                messages.append({"role": "user", "content": content_parts})
+                messages.append({"role": "assistant", "content": out_content})
+            except Exception as e:
+                print(f"  [Warning] Failed to load multi-image OCR few-shot pair from {sdir}: {e}")
+
+        if messages:
+            print(f"  Loaded {len(messages) // 2} multi-image few-shot OCR example pair(s).")
+            return messages
+
+    # Legacy flat directory structure fallback (in_1.png, out_1.md ...)
     i = 1
     while True:
         in_file = example_dir / f"in_{i}.png"
@@ -206,6 +261,7 @@ class PDFOCRConverter:
                     )
                     raw_result = response.choices[0].message.content
                     batch_result = prune_think_tags(raw_result)
+                    batch_result = normalize_batch_metadata(batch_result, s_idx + 1)
                     return (b_id, batch_result)
 
                 except Exception as e:
@@ -245,7 +301,14 @@ class PDFOCRConverter:
                             f"Đang bóc tách OCR trang {completed_pages}/{total_pages}..."
                         )
 
-        final_text = "\n\n".join(filter(None, results)).strip()
+        clean_batches = []
+        for batch_res in filter(None, results):
+            cleaned_b = re.sub(r"^\s*<pages>\s*", "", batch_res, flags=re.IGNORECASE)
+            cleaned_b = re.sub(r"\s*</pages>\s*$", "", cleaned_b, flags=re.IGNORECASE)
+            clean_batches.append(cleaned_b.strip())
+
+        combined_pages = "\n\n".join(clean_batches).strip()
+        final_text = f"<pages>\n{combined_pages}\n</pages>"
 
         if output_path:
             output_path = Path(output_path)
