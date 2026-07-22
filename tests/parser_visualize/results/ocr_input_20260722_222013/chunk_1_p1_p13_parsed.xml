@@ -1,0 +1,807 @@
+<!-- Chunk 1: Pages p1-p13 | Tokens: 4,473 | Method: regex_fallback -->
+
+<question id="chunk_0_q_regex_1">
+  <question_label>101.</question_label>
+  <stem>Aberdeen Bank offers a range of financial services ------ the needs of its customers.</stem>
+  <option_label>A.</option_label>
+  <option_text>meet</option_text>
+  <option_label>B.</option_label>
+  <option_text>to meet</option_text>
+  <option_label>C.</option_label>
+  <option_text>is meeting</option_text>
+  <option_label>D.</option_label>
+  <option_text>meetings</option_text>
+</question>
+
+<question id="chunk_0_q_regex_2">
+  <question_label>102.</question_label>
+  <stem>------ staff are asked to provide a backup cell phone number and e-mail address.</stem>
+  <option_label>A.</option_label>
+  <option_text>Every</option_text>
+  <option_label>B.</option_label>
+  <option_text>All</option_text>
+  <option_label>C.</option_label>
+  <option_text>Each</option_text>
+  <option_label>D.</option_label>
+  <option_text>Any</option_text>
+</question>
+
+<question id="chunk_0_q_regex_3">
+  <question_label>103.</question_label>
+  <stem>Today, Mr. Rahn will present ------ ideas to improve the company's accounting software.</stem>
+  <option_label>A.</option_label>
+  <option_text>he</option_text>
+  <option_label>B.</option_label>
+  <option_text>him</option_text>
+  <option_label>C.</option_label>
+  <option_text>his</option_text>
+  <option_label>D.</option_label>
+  <option_text>himself</option_text>
+</question>
+
+<question id="chunk_0_q_regex_4">
+  <question_label>104.</question_label>
+  <stem>The firm's one-hour lunch policy is ------ enforced, so do not return late.</stem>
+  <option_label>A.</option_label>
+  <option_text>strictly</option_text>
+  <option_label>B.</option_label>
+  <option_text>hungrily</option_text>
+  <option_label>C.</option_label>
+  <option_text>punctually</option_text>
+  <option_label>D.</option_label>
+  <option_text>bravely</option_text>
+</question>
+
+<question id="chunk_0_q_regex_5">
+  <question_label>105.</question_label>
+  <stem>Ms. Martinova's promotion to chief financial officer is contingent ------ approval by our board of executives.</stem>
+  <option_label>A.</option_label>
+  <option_text>within</option_text>
+  <option_label>B.</option_label>
+  <option_text>on</option_text>
+  <option_label>C.</option_label>
+  <option_text>around</option_text>
+  <option_label>D.</option_label>
+  <option_text>beside</option_text>
+</question>
+
+<question id="chunk_0_q_regex_6">
+  <question_label>106.</question_label>
+  <stem>The peninsula's southernmost portion is rarely visited because it is not ------ accessible to travelers.</stem>
+  <option_label>A.</option_label>
+  <option_text>easy</option_text>
+  <option_label>B.</option_label>
+  <option_text>easily</option_text>
+  <option_label>C.</option_label>
+  <option_text>easier</option_text>
+  <option_label>D.</option_label>
+  <option_text>easiest</option_text>
+</question>
+
+<question id="chunk_0_q_regex_7">
+  <question_label>107.</question_label>
+  <stem>The Vaknis Group ------ all clients a flat consultation fee, to be paid in advance.</stem>
+  <option_label>A.</option_label>
+  <option_text>informs</option_text>
+  <option_label>B.</option_label>
+  <option_text>considers</option_text>
+  <option_label>C.</option_label>
+  <option_text>charges</option_text>
+  <option_label>D.</option_label>
+  <option_text>suggests</option_text>
+</question>
+
+<question id="chunk_0_q_regex_8">
+  <question_label>108.</question_label>
+  <stem>On August 19, employees will not be able to access their e-mail account ------ time sheet.</stem>
+  <option_label>A.</option_label>
+  <option_text>like</option_text>
+  <option_label>B.</option_label>
+  <option_text>so</option_text>
+  <option_label>C.</option_label>
+  <option_text>or</option_text>
+  <option_label>D.</option_label>
+  <option_text>first 292</option_text>
+</question>
+
+<question id="chunk_0_q_regex_9">
+  <question_label>109.</question_label>
+  <stem>Walk-in clients are ------ a reliable source of business for the Auburn Hair Salon.</stem>
+  <option_label>A.</option_label>
+  <option_text>typically</option_text>
+  <option_label>B.</option_label>
+  <option_text>fairly</option_text>
+  <option_label>C.</option_label>
+  <option_text>sharply</option_text>
+  <option_label>D.</option_label>
+  <option_text>evenly</option_text>
+</question>
+
+<question id="chunk_0_q_regex_10">
+  <question_label>110.</question_label>
+  <stem>By the end of the year, all packaging used for Schaefer's food products will be ------ recyclable.</stem>
+  <option_label>A.</option_label>
+  <option_text>critically</option_text>
+  <option_label>B.</option_label>
+  <option_text>initially</option_text>
+  <option_label>C.</option_label>
+  <option_text>freshly</option_text>
+  <option_label>D.</option_label>
+  <option_text>fully</option_text>
+</question>
+
+<question id="chunk_0_q_regex_11">
+  <question_label>111.</question_label>
+  <stem>Highbrook Hotel staff are trained to provide each guest with an exceptional ------.</stem>
+  <option_label>A.</option_label>
+  <option_text>experiencing</option_text>
+  <option_label>B.</option_label>
+  <option_text>is experienced</option_text>
+  <option_label>C.</option_label>
+  <option_text>experience</option_text>
+  <option_label>D.</option_label>
+  <option_text>to experience</option_text>
+</question>
+
+<question id="chunk_0_q_regex_12">
+  <question_label>112.</question_label>
+  <stem>In ------ for their help, volunteers at the library's book sale were given personalized tea mugs.</stem>
+  <option_label>A.</option_label>
+  <option_text>appreciate</option_text>
+  <option_label>B.</option_label>
+  <option_text>appreciative</option_text>
+  <option_label>C.</option_label>
+  <option_text>appreciation</option_text>
+  <option_label>D.</option_label>
+  <option_text>appreciates</option_text>
+</question>
+
+<question id="chunk_0_q_regex_13">
+  <question_label>113.</question_label>
+  <stem>Because employees must learn to use the new software, several training sessions will take place ------ the next two weeks.</stem>
+  <option_label>A.</option_label>
+  <option_text>by</option_text>
+  <option_label>B.</option_label>
+  <option_text>over</option_text>
+  <option_label>C.</option_label>
+  <option_text>against</option_text>
+  <option_label>D.</option_label>
+  <option_text>at</option_text>
+</question>
+
+<question id="chunk_0_q_regex_14">
+  <question_label>114.</question_label>
+  <stem>Flight attendants asked passengers to take their seats ------ upon boarding the plane.</stem>
+  <option_label>A.</option_label>
+  <option_text>quicken</option_text>
+  <option_label>B.</option_label>
+  <option_text>quickened</option_text>
+  <option_label>C.</option_label>
+  <option_text>quickly</option_text>
+  <option_label>D.</option_label>
+  <option_text>quickest</option_text>
+</question>
+
+<question id="chunk_0_q_regex_15">
+  <question_label>115.</question_label>
+  <stem>Last July, Rojas Rieper LLC ------ a grand opening celebration.</stem>
+  <option_label>A.</option_label>
+  <option_text>hosts</option_text>
+  <option_label>B.</option_label>
+  <option_text>hosted</option_text>
+  <option_label>C.</option_label>
+  <option_text>will host</option_text>
+  <option_label>D.</option_label>
+  <option_text>is hosting</option_text>
+</question>
+
+<question id="chunk_0_q_regex_16">
+  <question_label>116.</question_label>
+  <stem>Mr. Kim was one ------ three people who received the firm's Competitive Edge award.</stem>
+  <option_label>A.</option_label>
+  <option_text>by</option_text>
+  <option_label>B.</option_label>
+  <option_text>of</option_text>
+  <option_label>C.</option_label>
+  <option_text>for</option_text>
+  <option_label>D.</option_label>
+  <option_text>to</option_text>
+</question>
+
+<question id="chunk_0_q_regex_17">
+  <question_label>117.</question_label>
+  <stem>Interviews begin today for the production manager ------ at Zhu Pharmaceuticals.</stem>
+  <option_label>A.</option_label>
+  <option_text>participation</option_text>
+  <option_label>B.</option_label>
+  <option_text>outline</option_text>
+  <option_label>C.</option_label>
+  <option_text>arrangement</option_text>
+  <option_label>D.</option_label>
+  <option_text>position</option_text>
+</question>
+
+<question id="chunk_0_q_regex_18">
+  <question_label>118.</question_label>
+  <stem>Tours of the historic courthouse are offered twice a week ------ the summer.</stem>
+  <option_label>A.</option_label>
+  <option_text>onto</option_text>
+  <option_label>B.</option_label>
+  <option_text>during</option_text>
+  <option_label>C.</option_label>
+  <option_text>about</option_text>
+  <option_label>D.</option_label>
+  <option_text>at</option_text>
+</question>
+
+<question id="chunk_0_q_regex_19">
+  <question_label>119.</question_label>
+  <stem>------ the next few months, Abundi Ltd. will open its fourth pharmaceutical laboratory in New Zealand.</stem>
+  <option_label>A.</option_label>
+  <option_text>Within</option_text>
+  <option_label>B.</option_label>
+  <option_text>Soon</option_text>
+  <option_label>C.</option_label>
+  <option_text>Even</option_text>
+  <option_label>D.</option_label>
+  <option_text>When</option_text>
+</question>
+
+<question id="chunk_0_q_regex_20">
+  <question_label>120.</question_label>
+  <stem>The ------ at Yohanan Company organizes the delivery of supplies to all conference locations.</stem>
+  <option_label>A.</option_label>
+  <option_text>coordinating</option_text>
+  <option_label>B.</option_label>
+  <option_text>coordinates</option_text>
+  <option_label>C.</option_label>
+  <option_text>coordinated</option_text>
+  <option_label>D.</option_label>
+  <option_text>coordinator **GO ON TO THE NEXT PAGE** TEST 10 **293**</option_text>
+</question>
+
+<question id="chunk_0_q_regex_21">
+  <question_label>121.</question_label>
+  <stem>The owners of Rowecroft Porcelain ------ to begin production of casual dinnerware sets next month.</stem>
+  <option_label>A.</option_label>
+  <option_text>intend</option_text>
+  <option_label>B.</option_label>
+  <option_text>intending</option_text>
+  <option_label>C.</option_label>
+  <option_text>intentional</option_text>
+  <option_label>D.</option_label>
+  <option_text>intentionally</option_text>
+</question>
+
+<question id="chunk_0_q_regex_22">
+  <question_label>122.</question_label>
+  <stem>Mykos Auto Makers agreed to grant long-term factory employees ------ vacation time.</stem>
+  <option_label>A.</option_label>
+  <option_text>exhausted</option_text>
+  <option_label>B.</option_label>
+  <option_text>every</option_text>
+  <option_label>C.</option_label>
+  <option_text>extended</option_text>
+  <option_label>D.</option_label>
+  <option_text>any</option_text>
+</question>
+
+<question id="chunk_0_q_regex_23">
+  <question_label>123.</question_label>
+  <stem>The customer ------ believed that the coat he had purchased was waterproof.</stem>
+  <option_label>A.</option_label>
+  <option_text>mistakenly</option_text>
+  <option_label>B.</option_label>
+  <option_text>mistaken</option_text>
+  <option_label>C.</option_label>
+  <option_text>mistook</option_text>
+  <option_label>D.</option_label>
+  <option_text>mistake</option_text>
+</question>
+
+<question id="chunk_0_q_regex_24">
+  <question_label>124.</question_label>
+  <stem>All cars built by Roadway Motors come ------ with an alarm reminding drivers to buckle their seat belts.</stem>
+  <option_label>A.</option_label>
+  <option_text>equips</option_text>
+  <option_label>B.</option_label>
+  <option_text>equipped</option_text>
+  <option_label>C.</option_label>
+  <option_text>equipping</option_text>
+  <option_label>D.</option_label>
+  <option_text>equipment</option_text>
+</question>
+
+<question id="chunk_0_q_regex_25">
+  <question_label>125.</question_label>
+  <stem>The components of the CT640 dishwasher are largely the same as ------ of earlier models.</stem>
+  <option_label>A.</option_label>
+  <option_text>they</option_text>
+  <option_label>B.</option_label>
+  <option_text>them</option_text>
+  <option_label>C.</option_label>
+  <option_text>those</option_text>
+  <option_label>D.</option_label>
+  <option_text>themselves</option_text>
+</question>
+
+<question id="chunk_0_q_regex_26">
+  <question_label>126.</question_label>
+  <stem>The Nakato Group has won several industry awards for its innovative marketing ------.</stem>
+  <option_label>A.</option_label>
+  <option_text>strategize</option_text>
+  <option_label>B.</option_label>
+  <option_text>strategic</option_text>
+  <option_label>C.</option_label>
+  <option_text>strategically</option_text>
+  <option_label>D.</option_label>
+  <option_text>strategies</option_text>
+</question>
+
+<question id="chunk_0_q_regex_27">
+  <question_label>127.</question_label>
+  <stem>Krit Pinthong's new mystery novel is the most widely ------ book of the year.</stem>
+  <option_label>A.</option_label>
+  <option_text>estimated</option_text>
+  <option_label>B.</option_label>
+  <option_text>anticipated</option_text>
+  <option_label>C.</option_label>
+  <option_text>assumed</option_text>
+  <option_label>D.</option_label>
+  <option_text>predicted</option_text>
+</question>
+
+<question id="chunk_0_q_regex_28">
+  <question_label>128.</question_label>
+  <stem>The leadership team was quite relieved ------ the Toyvar building project was completed under budget.</stem>
+  <option_label>A.</option_label>
+  <option_text>especially</option_text>
+  <option_label>B.</option_label>
+  <option_text>following</option_text>
+  <option_label>C.</option_label>
+  <option_text>when</option_text>
+  <option_label>D.</option_label>
+  <option_text>than</option_text>
+</question>
+
+<question id="chunk_0_q_regex_29">
+  <question_label>129.</question_label>
+  <stem>------ two floors of offices, the building offers several retail spaces.</stem>
+  <option_label>A.</option_label>
+  <option_text>In addition to</option_text>
+  <option_label>B.</option_label>
+  <option_text>Fortunately</option_text>
+  <option_label>C.</option_label>
+  <option_text>In order that</option_text>
+  <option_label>D.</option_label>
+  <option_text>Especially</option_text>
+</question>
+
+<question id="chunk_0_q_regex_30">
+  <question_label>130.</question_label>
+  <stem>------ regarding construction noise and traffic delays should be directed to Mr. Jasdi, the project manager.</stem>
+  <option_label>A.</option_label>
+  <option_text>Materials</option_text>
+  <option_label>B.</option_label>
+  <option_text>Concerns</option_text>
+  <option_label>C.</option_label>
+  <option_text>Expansions</option_text>
+  <option_label>D.</option_label>
+  <option_text>Selections</option_text>
+</question>
+
+<question id="chunk_0_q_regex_31">
+  <question_label>294.</question_label>
+  <stem>## PART 6 **Directions:** Read the texts that follow. A word, phrase, or sentence is missing in parts of each text. Four answer choices for each question are given below the text. Select the best answer to complete the text. Then mark the letter</stem>
+  <option_label>A.</option_label>
+  <option_text>,</option_text>
+  <option_label>B.</option_label>
+  <option_text>,</option_text>
+  <option_label>C.</option_label>
+  <option_text>, or</option_text>
+  <option_label>D.</option_label>
+  <option_text>on your answer sheet. **Questions 131-134** refer to the following advertisement. > **JOIN THE RGBS AUTOMOTIVE TEAM** > > RGBS Automotive is ------ hiring full-time and part-time workers. Apply today! ------ could become part of our manufacturing team! We make high-tech products ------ found in cars and trucks of all kinds. > > RGBS Automotive pays well, and we provide ongoing training plus opportunities for promotion. > > ------ . Go to www.rgbsautomotive.com for more details and to fill out an application.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_32">
+  <question_label>131.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>now</option_text>
+  <option_label>B.</option_label>
+  <option_text>likewise</option_text>
+  <option_label>C.</option_label>
+  <option_text>there</option_text>
+  <option_label>D.</option_label>
+  <option_text>instead</option_text>
+</question>
+
+<question id="chunk_0_q_regex_33">
+  <question_label>132.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>It</option_text>
+  <option_label>B.</option_label>
+  <option_text>You</option_text>
+  <option_label>C.</option_label>
+  <option_text>They</option_text>
+  <option_label>D.</option_label>
+  <option_text>Everyone</option_text>
+</question>
+
+<question id="chunk_0_q_regex_34">
+  <question_label>133.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>can be</option_text>
+  <option_label>B.</option_label>
+  <option_text>that are</option_text>
+  <option_label>C.</option_label>
+  <option_text>and being</option_text>
+  <option_label>D.</option_label>
+  <option_text>that had been</option_text>
+</question>
+
+<question id="chunk_0_q_regex_35">
+  <question_label>134.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>Ours is a highly competitive industry.</option_text>
+  <option_label>B.</option_label>
+  <option_text>RGBS Automotive began doing business 45 years ago.</option_text>
+  <option_label>C.</option_label>
+  <option_text>We also offer a generous number of vacation days.</option_text>
+  <option_label>D.</option_label>
+  <option_text>RGBS Automotive sells a wide selection of merchandise. **GO ON TO THE NEXT PAGE** TEST 10 **295** **Questions 135-138** refer to the following memo. > **MEMO** > > To: Marketing Team > From: Alyssa Jacobs, Project Manager > Date: 27 September > Subject: Meeting wrap-up > > Thank you again to all of you for your fine work on the upcoming marketing campaign for the Turbo Omega 2 smartphone. As ------ during yesterday's meeting, our goal is to launch the television, radio, and social media advertisements on 1 November. The phone itself will be in stores by 1 December. ------ . > > ------ , Gary Carollo will draft the press release and post it on our shared drive, where all of you will be able to read it. Please e-mail any ------ for changes to Gary within one week. He will present his final draft at our next regular meeting. We will also tie up any loose ends at that time.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_36">
+  <question_label>135.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>taken</option_text>
+  <option_label>B.</option_label>
+  <option_text>driven</option_text>
+  <option_label>C.</option_label>
+  <option_text>earned</option_text>
+  <option_label>D.</option_label>
+  <option_text>decided</option_text>
+</question>
+
+<question id="chunk_0_q_regex_37">
+  <question_label>136.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>Remember to turn off your phone at the end of the workday.</option_text>
+  <option_label>B.</option_label>
+  <option_text>This gives us one month to generate consumer excitement.</option_text>
+  <option_label>C.</option_label>
+  <option_text>The wholesale price can also be adjusted if necessary.</option_text>
+  <option_label>D.</option_label>
+  <option_text>These new features will surely increase Turbo Omega 2 sales.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_38">
+  <question_label>137.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>Rather</option_text>
+  <option_label>B.</option_label>
+  <option_text>Soon</option_text>
+  <option_label>C.</option_label>
+  <option_text>After all</option_text>
+  <option_label>D.</option_label>
+  <option_text>That is</option_text>
+</question>
+
+<question id="chunk_0_q_regex_39">
+  <question_label>138.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>suggesting</option_text>
+  <option_label>B.</option_label>
+  <option_text>suggested</option_text>
+  <option_label>C.</option_label>
+  <option_text>suggestions</option_text>
+  <option_label>D.</option_label>
+  <option_text>suggests</option_text>
+</question>
+
+<question id="chunk_0_q_regex_40">
+  <question_label>296.</question_label>
+  <stem>**Questions 139-142** refer to the following product information. > **Handmade Silk Blouse by Coreopsis Textiles, Size Medium, £45** > > Coreopsis Textiles' silk blouses are created from vintage fabrics and other recycled components that we sew together in a patchwork fashion. Because all 139. ______ garments are handcrafted, each is one of a kind. 140. ______. Unique variations within each piece are part of the charm of Coreopsis Textiles' products. The blouse you receive will be similar in style but not identical to the one pictured. > > Please note that this garment is 141. ______. It is recommended that you either hand-wash it or wash it in cold water on the gentle cycle in a mesh bag. While the item has been prewashed, dryer heat may cause it to shrink. 142. ______, it is important that it be hung to air dry.</stem>
+  <option_label>A.</option_label>
+  <option_text>Phương án A</option_text>
+  <option_label>B.</option_label>
+  <option_text>Phương án B</option_text>
+  <option_label>C.</option_label>
+  <option_text>Phương án C</option_text>
+  <option_label>D.</option_label>
+  <option_text>Phương án D</option_text>
+</question>
+
+<question id="chunk_0_q_regex_41">
+  <question_label>139.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>its</option_text>
+  <option_label>B.</option_label>
+  <option_text>our</option_text>
+  <option_label>C.</option_label>
+  <option_text>your</option_text>
+  <option_label>D.</option_label>
+  <option_text>their</option_text>
+</question>
+
+<question id="chunk_0_q_regex_42">
+  <question_label>140.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>This is a hassle-free return policy.</option_text>
+  <option_label>B.</option_label>
+  <option_text>Always check your receipt.</option_text>
+  <option_label>C.</option_label>
+  <option_text>They cannot be exactly replicated.</option_text>
+  <option_label>D.</option_label>
+  <option_text>Extra shipping charges may apply.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_43">
+  <question_label>141.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>popular</option_text>
+  <option_label>B.</option_label>
+  <option_text>delicate</option_text>
+  <option_label>C.</option_label>
+  <option_text>mild</option_text>
+  <option_label>D.</option_label>
+  <option_text>unavailable</option_text>
+</question>
+
+<question id="chunk_0_q_regex_44">
+  <question_label>142.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>If not</option_text>
+  <option_label>B.</option_label>
+  <option_text>Likewise</option_text>
+  <option_label>C.</option_label>
+  <option_text>Therefore</option_text>
+  <option_label>D.</option_label>
+  <option_text>On the contrary GO ON TO THE NEXT PAGE TEST 10 **297** **Questions 143-146** refer to the following e-mail. > To: Shu Jiang <sjiang@rowanatech.ca> > From: Maxwell Baschet <mbaschet@mapleroadstorage.ca> > Date: 4 April > Subject: Your contract > Attachment: Jiang contract > > Dear Ms. Jiang, > > We are pleased you 143. ______ Maple Road Storage for your storage needs. I have attached a copy of your signed contract. 144. ______. > > Do you know about our referral program? You will receive one free month of storage if someone you recommend signs a contract with us. The new tenant will receive a free month 145. ______. You can find more information about this program and all our special 146. ______ on our Web site at www.mapleroadstorage.ca. > > Sincerely, > > Maxwell Baschet, Site Manager</option_text>
+</question>
+
+<question id="chunk_0_q_regex_45">
+  <question_label>143.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>chooses</option_text>
+  <option_label>B.</option_label>
+  <option_text>will choose</option_text>
+  <option_label>C.</option_label>
+  <option_text>chosen</option_text>
+  <option_label>D.</option_label>
+  <option_text>have chosen</option_text>
+</question>
+
+<question id="chunk_0_q_regex_46">
+  <question_label>144.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>If your contact information changes, please let us know.</option_text>
+  <option_label>B.</option_label>
+  <option_text>We hope you will enjoy working here.</option_text>
+  <option_label>C.</option_label>
+  <option_text>We will reply as soon as possible.</option_text>
+  <option_label>D.</option_label>
+  <option_text>However, business contracts can be difficult to understand.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_47">
+  <question_label>145.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>after all</option_text>
+  <option_label>B.</option_label>
+  <option_text>again</option_text>
+  <option_label>C.</option_label>
+  <option_text>as well</option_text>
+  <option_label>D.</option_label>
+  <option_text>since</option_text>
+</question>
+
+<question id="chunk_0_q_regex_48">
+  <question_label>146.</question_label>
+  <stem></stem>
+  <option_label>A.</option_label>
+  <option_text>offers</option_text>
+  <option_label>B.</option_label>
+  <option_text>schedules</option_text>
+  <option_label>C.</option_label>
+  <option_text>classes</option_text>
+  <option_label>D.</option_label>
+  <option_text>amounts</option_text>
+</question>
+
+<question id="chunk_0_q_regex_49">
+  <question_label>298.</question_label>
+  <stem># PART 7 **Directions:** In this part you will read a selection of texts, such as magazine and newspaper articles, e-mails, and instant messages. Each text or set of texts is followed by several questions. Select the best answer for each question and mark the letter</stem>
+  <option_label>A.</option_label>
+  <option_text>,</option_text>
+  <option_label>B.</option_label>
+  <option_text>,</option_text>
+  <option_label>C.</option_label>
+  <option_text>, or</option_text>
+  <option_label>D.</option_label>
+  <option_text>on your answer sheet. **Questions 147-148** refer to the following notice. > **Cardinal Street Project—Update** > > Because of unusually wet and cold weather conditions, the road closure on Cardinal Street between Lee Drive and Petunia Lane will be extended until late spring. Construction will continue; however, final paving on Cardinal Street cannot occur until the weather conditions improve. Workers will begin the pavement work once construction of the bridge on Cardinal Street has been completed. If you have questions or comments, please contact Vy Nguyen in the city planning office at 615-555-0184.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_50">
+  <question_label>147.</question_label>
+  <stem>What is a purpose of the notice?</stem>
+  <option_label>A.</option_label>
+  <option_text>To report a change in weather patterns</option_text>
+  <option_label>B.</option_label>
+  <option_text>To announce a new detour route</option_text>
+  <option_label>C.</option_label>
+  <option_text>To explain a change in road construction plans</option_text>
+  <option_label>D.</option_label>
+  <option_text>To highlight causes of road deterioration</option_text>
+</question>
+
+<question id="chunk_0_q_regex_51">
+  <question_label>148.</question_label>
+  <stem>What is indicated about the Cardinal Street project?</stem>
+  <option_label>A.</option_label>
+  <option_text>It includes building a bridge.</option_text>
+  <option_label>B.</option_label>
+  <option_text>It is being handled by Ms. Nguyen's company.</option_text>
+  <option_label>C.</option_label>
+  <option_text>It does not involve street paving.</option_text>
+  <option_label>D.</option_label>
+  <option_text>It cannot be completed in hot weather. GO ON TO THE NEXT PAGE TEST 10 **299** **Questions 149-150** refer to the following sign. > **George's Orchard Farm** > **2232 Alpine Lane** > > Pick your own! Select from five varieties of juicy peaches in our orchard! Buckets provided at no cost. > > Stop by our market to purchase jams, pies, and sauces made from farm-fresh fruit. > We sell lunches to enjoy in our picnic area. > > Follow the signs ahead for designated parking areas. > > Wednesday to Friday, 12 noon to 5:00 P.M. > Saturday and Sunday, 10:00 A.M. to 6:00 P.M.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_52">
+  <question_label>149.</question_label>
+  <stem>What does George's Orchard Farm offer visitors?</stem>
+  <option_label>A.</option_label>
+  <option_text>Free buckets for fruit gathering</option_text>
+  <option_label>B.</option_label>
+  <option_text>Customized picnic baskets</option_text>
+  <option_label>C.</option_label>
+  <option_text>Samples of pies and jams</option_text>
+  <option_label>D.</option_label>
+  <option_text>Tours of the farm</option_text>
+</question>
+
+<question id="chunk_0_q_regex_53">
+  <question_label>150.</question_label>
+  <stem>What is indicated about the market?</stem>
+  <option_label>A.</option_label>
+  <option_text>It has a new parking area.</option_text>
+  <option_label>B.</option_label>
+  <option_text>It sells products made with peaches.</option_text>
+  <option_label>C.</option_label>
+  <option_text>It is under new management.</option_text>
+  <option_label>D.</option_label>
+  <option_text>It is open every day of the week.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_54">
+  <question_label>300.</question_label>
+  <stem>**Questions 151-152** refer to the following e-mail. | Field | Value | |---|---| | To: | Thandiwe Ngxongo <tngxongo@fancyandformal.co.uk> | | From: | Customer Service <service@homethings.co.uk> | | Date: | 26 October | | Subject: | Performa lint roller (Model PL293) | Dear Ms. Ngxongo, I am sorry to inform you that the Performa lint roller you selected is on back order because of a shortage of its ultra-strong adhesive. We expect a new shipment within three to four weeks. However, if you prefer not to wait, Home Things will be glad to ship the Extreme2 lint roller to you at no extra charge. The Extreme2 model includes a perforated sticky tape for ease of use and comes with two refills. Like the Performa model, it has a strong adhesive that effectively removes hair, fuzz, lint, and dust from most fabrics. You can request this similar product to be shipped to you in place of the one you ordered, as long as you make the change to your order before the original item ships. Thank you for your understanding. Sincerely, Glen McCraine Customer Service Specialist Home Things</stem>
+  <option_label>A.</option_label>
+  <option_text>Phương án A</option_text>
+  <option_label>B.</option_label>
+  <option_text>Phương án B</option_text>
+  <option_label>C.</option_label>
+  <option_text>Phương án C</option_text>
+  <option_label>D.</option_label>
+  <option_text>Phương án D</option_text>
+</question>
+
+<question id="chunk_0_q_regex_55">
+  <question_label>151.</question_label>
+  <stem>Why did Mr. McCraine write the e-mail?</stem>
+  <option_label>A.</option_label>
+  <option_text>To highlight a new product</option_text>
+  <option_label>B.</option_label>
+  <option_text>To apologize for a delay</option_text>
+  <option_label>C.</option_label>
+  <option_text>To respond to a question</option_text>
+  <option_label>D.</option_label>
+  <option_text>To provide details about a return</option_text>
+</question>
+
+<question id="chunk_0_q_regex_56">
+  <question_label>152.</question_label>
+  <stem>What is indicated about the Extreme2 lint roller?</stem>
+  <option_label>A.</option_label>
+  <option_text>It is less expensive than the Performa model.</option_text>
+  <option_label>B.</option_label>
+  <option_text>It comes with additional tape.</option_text>
+  <option_label>C.</option_label>
+  <option_text>It is more effective than the Performa model.</option_text>
+  <option_label>D.</option_label>
+  <option_text>It has received high user ratings. GO ON TO THE NEXT PAGE TEST 10 **301** **Questions 153-154** refer to the following text-message chain. > **Sen Chai</option_text>
+</question>
+
+<question id="chunk_0_q_regex_57">
+  <question_label>153.</question_label>
+  <stem>What is suggested about Mr. Geraci?</stem>
+  <option_label>A.</option_label>
+  <option_text>He owns a building.</option_text>
+  <option_label>B.</option_label>
+  <option_text>He recently renovated a facility.</option_text>
+  <option_label>C.</option_label>
+  <option_text>He will approve a loan.</option_text>
+  <option_label>D.</option_label>
+  <option_text>He will meet with Mr. Michelacci.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_58">
+  <question_label>154.</question_label>
+  <stem>At 6:53 P.M., what does Ms. Chai most likely mean when she writes, "I can't see that happening"?</stem>
+  <option_label>A.</option_label>
+  <option_text>She thinks that renters will be difficult to attract.</option_text>
+  <option_label>B.</option_label>
+  <option_text>She believes that an offer will still be rejected.</option_text>
+  <option_label>C.</option_label>
+  <option_text>She doubts that shipping will be easy to organize.</option_text>
+  <option_label>D.</option_label>
+  <option_text>She thinks that clients will have trouble finding a location.</option_text>
+</question>
+
+<question id="chunk_0_q_regex_59">
+  <question_label>302.</question_label>
+  <stem>**Questions 155-157** refer to the following advertisement. > **Blossom Sales Systems** > > Blossom Sales Systems (BSS) makes running your business a breeze with its sleek, intuitive point-of-sale devices. As a small business owner, you have many responsibilities and a reputation to build. BSS has all the tools needed to make transactions safe, seamless, and hassle-free. > > Enjoy the convenience of a system that has you covered wherever you conduct your business. Whether you sell in a store, over the phone, or online, BSS simplifies the transaction process while backing you with 24-7 technical expertise. Our innovative devices enable you to accept a variety of payment types—from magnetic-stripe and chip readers for credit cards to digital scanners for checks to popular mobile app payment services—ensuring that no potential sales are missed. > > Sign up for BSS today and enjoy a free ten-day trial. Registration takes just fifteen minutes to complete. Once approved, save $50 on the purchase of any BSS device that connects to your phone or tablet. Call 931-555-0148 to schedule a demonstration and see how BSS can make your sales bloom!</stem>
+  <option_label>A.</option_label>
+  <option_text>Phương án A</option_text>
+  <option_label>B.</option_label>
+  <option_text>Phương án B</option_text>
+  <option_label>C.</option_label>
+  <option_text>Phương án C</option_text>
+  <option_label>D.</option_label>
+  <option_text>Phương án D</option_text>
+</question>
+
+<question id="chunk_0_q_regex_60">
+  <question_label>155.</question_label>
+  <stem>The word "backing" in paragraph 2, line 3, is closest in meaning to -</stem>
+  <option_label>A.</option_label>
+  <option_text>favoring -</option_text>
+  <option_label>B.</option_label>
+  <option_text>reversing -</option_text>
+  <option_label>C.</option_label>
+  <option_text>supporting -</option_text>
+  <option_label>D.</option_label>
+  <option_text>establishing</option_text>
+</question>
+
+<question id="chunk_0_q_regex_61">
+  <question_label>156.</question_label>
+  <stem>What payment method is NOT mentioned in the advertisement? -</stem>
+  <option_label>A.</option_label>
+  <option_text>Cash -</option_text>
+  <option_label>B.</option_label>
+  <option_text>Check -</option_text>
+  <option_label>C.</option_label>
+  <option_text>Credit card -</option_text>
+  <option_label>D.</option_label>
+  <option_text>Mobile app</option_text>
+</question>
+
+<question id="chunk_0_q_regex_62">
+  <question_label>157.</question_label>
+  <stem>What is BSS offering as a sales promotion? -</stem>
+  <option_label>A.</option_label>
+  <option_text>A new mobile phone -</option_text>
+  <option_label>B.</option_label>
+  <option_text>A fifteen-day free trial -</option_text>
+  <option_label>C.</option_label>
+  <option_text>A free device for a tablet -</option_text>
+  <option_label>D.</option_label>
+  <option_text>A discount on equipment</option_text>
+</question>

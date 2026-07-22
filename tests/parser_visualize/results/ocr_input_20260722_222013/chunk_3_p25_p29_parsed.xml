@@ -1,0 +1,209 @@
+<!-- Chunk 3: Pages p25-p29 | Tokens: 2,355 | Method: regex_fallback -->
+
+<question id="chunk_2_q_regex_1">
+  <question_label>186.</question_label>
+  <stem>According to the first e-mail, what was previously sent to new employees?</stem>
+  <option_label>A.</option_label>
+  <option_text>An advertisement</option_text>
+  <option_label>B.</option_label>
+  <option_text>An application form</option_text>
+  <option_label>C.</option_label>
+  <option_text>An employee ID number</option_text>
+  <option_label>D.</option_label>
+  <option_text>Directions to an office complex</option_text>
+</question>
+
+<question id="chunk_2_q_regex_2">
+  <question_label>187.</question_label>
+  <stem>According to the first e-mail, what is the deadline to complete an online task?</stem>
+  <option_label>A.</option_label>
+  <option_text>June 8</option_text>
+  <option_label>B.</option_label>
+  <option_text>June 10</option_text>
+  <option_label>C.</option_label>
+  <option_text>June 15</option_text>
+  <option_label>D.</option_label>
+  <option_text>June 17</option_text>
+</question>
+
+<question id="chunk_2_q_regex_3">
+  <question_label>188.</question_label>
+  <stem>What step is Ms. Dimaano having trouble with?</stem>
+  <option_label>A.</option_label>
+  <option_text>Step 1</option_text>
+  <option_label>B.</option_label>
+  <option_text>Step 2</option_text>
+  <option_label>C.</option_label>
+  <option_text>Step 3</option_text>
+  <option_label>D.</option_label>
+  <option_text>Step 4</option_text>
+</question>
+
+<question id="chunk_2_q_regex_4">
+  <question_label>189.</question_label>
+  <stem>What department will Ms. Dimaano join?</stem>
+  <option_label>A.</option_label>
+  <option_text>Marketing</option_text>
+  <option_label>B.</option_label>
+  <option_text>Customer Service</option_text>
+  <option_label>C.</option_label>
+  <option_text>Engineering</option_text>
+  <option_label>D.</option_label>
+  <option_text>Technology Services</option_text>
+</question>
+
+<question id="chunk_2_q_regex_5">
+  <question_label>190.</question_label>
+  <stem>In the second e-mail, what is suggested about Ms. Dimaano?</stem>
+  <option_label>A.</option_label>
+  <option_text>She has just graduated from university.</option_text>
+  <option_label>B.</option_label>
+  <option_text>She has met Mr. Amos before.</option_text>
+  <option_label>C.</option_label>
+  <option_text>She is concerned about finding a building.</option_text>
+  <option_label>D.</option_label>
+  <option_text>She has recently moved to San Antonio. GO ON TO THE NEXT PAGE TEST 10 **315** **Questions 191-195** refer to the following e-mail, invoice, and memo. | | | |---|---| | **To:** | Felix Herman <felixh@videogenieproductions.com> | | **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> | | **Date:** | September 17 | | **Subject:** | Notes on rough cut of video | | **Attachment:** | Information | Dear Mr. Herman, Thank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version. - At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail. - At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot? - At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down? I look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work. Sincerely, Ms. Sapna Mathai, Project Manager The Hospital Equipment Company ### The Hospital Equipment Company Invoice 9984 **Billing date:** October 25 **Installation date:** October 26 Bill to: All-City Hospital</option_text>
+</question>
+
+<question id="chunk_2_q_regex_6">
+  <question_label>3.</question_label>
+  <stem>Shoreline Road Clear Lake, Minnesota 55319 | Quantity | Item Number | Description | Unit Price | Total | |----------|-------------|-------------|------------|-------| | 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 | | | | **Delivery and Installation** | | $2,350 | | | | **Total** | | **$486,950** | 316 ## MEMO **To:** All The Hospital Equipment Company Employees **From:** Marcia Oliver, Vice President of Sales **Date:** October 27 **Re:** Good work! Congratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered. I would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution.</stem>
+  <option_label>A.</option_label>
+  <option_text>Phương án A</option_text>
+  <option_label>B.</option_label>
+  <option_text>Phương án B</option_text>
+  <option_label>C.</option_label>
+  <option_text>Phương án C</option_text>
+  <option_label>D.</option_label>
+  <option_text>Phương án D</option_text>
+</question>
+
+<question id="chunk_2_q_regex_7">
+  <question_label>191.</question_label>
+  <stem>What is attached to the e-mail?</stem>
+  <option_label>A.</option_label>
+  <option_text>Details about an invoice</option_text>
+  <option_label>B.</option_label>
+  <option_text>Reviews of Video Genie Productions</option_text>
+  <option_label>C.</option_label>
+  <option_text>A timeline for completing a project</option_text>
+  <option_label>D.</option_label>
+  <option_text>A graphic outlining a company's history</option_text>
+</question>
+
+<question id="chunk_2_q_regex_8">
+  <question_label>192.</question_label>
+  <stem>Why does Ms. Mathai want to replace the scene at 1 minute?</stem>
+  <option_label>A.</option_label>
+  <option_text>Some content is not clearly visible.</option_text>
+  <option_label>B.</option_label>
+  <option_text>Some equipment is labeled incorrectly.</option_text>
+  <option_label>C.</option_label>
+  <option_text>The video of the scene moves too quickly.</option_text>
+  <option_label>D.</option_label>
+  <option_text>The medical technician speaks too quietly.</option_text>
+</question>
+
+<question id="chunk_2_q_regex_9">
+  <question_label>193.</question_label>
+  <stem>What does the invoice indicate about the Fluorolook Imagers?</stem>
+  <option_label>A.</option_label>
+  <option_text>They were sold at a discount.</option_text>
+  <option_label>B.</option_label>
+  <option_text>The delivery was free of charge.</option_text>
+  <option_label>C.</option_label>
+  <option_text>The purchaser ordered two of them.</option_text>
+  <option_label>D.</option_label>
+  <option_text>They were installed on October 25.</option_text>
+</question>
+
+<question id="chunk_2_q_regex_10">
+  <question_label>194.</question_label>
+  <stem>Whom does Ms. Oliver specifically praise?</stem>
+  <option_label>A.</option_label>
+  <option_text>A medical technician</option_text>
+  <option_label>B.</option_label>
+  <option_text>A hospital administrator</option_text>
+  <option_label>C.</option_label>
+  <option_text>A project manager</option_text>
+  <option_label>D.</option_label>
+  <option_text>A video producer</option_text>
+</question>
+
+<question id="chunk_2_q_regex_11">
+  <question_label>195.</question_label>
+  <stem>Where does Mr. Lamontagne most likely work?</stem>
+  <option_label>A.</option_label>
+  <option_text>At MDP Delivery</option_text>
+  <option_label>B.</option_label>
+  <option_text>At Video Genie Productions</option_text>
+  <option_label>C.</option_label>
+  <option_text>At The Hospital Equipment Company</option_text>
+  <option_label>D.</option_label>
+  <option_text>At All-City Hospital GO ON TO THE NEXT PAGE TEST 10 **317** **Questions 196-200** refer to the following packing slip and e-mails. ### Packing Slip | | | |---|---| | **From:** Reina Olive Oil Company | **To:** Best Products Supermarket | | Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu | | 18002 Granada, Spain | Incheon 22382, Republic of Korea | **Order Date:** 28 November **Order Number:** SK6224 | Item Number | Description | Quantity | |-------------|-------------|----------| | EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases | | EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases | | EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases | | EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases | | EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases | Celebrate the season with us! Place your next order by 31 January to receive 10 percent off. ### *E-mail* | | | |---|---| | **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> | | **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> | | **Date:** | 12 December | | **Subject:** | Order number SK6224 | Dear Mr. Nadal: We appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error. We would like to arrange to send these products back. Please inform us how to proceed. Thank you, Min Hae Seong Receiving and Distribution, Best Products Supermarket 318 | | | |---|---| | **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> | | **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> | | **Date:** | 14 December | | **Subject:** | RE: Order number SK6224 | Dear Ms. Seong, I apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake. We are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments. We hope to continue providing Best Products Supermarket with the finest olive oils. Sincerely yours, Pablo Nadal Export Division Manager, Reina Olive Oil Company</option_text>
+</question>
+
+<question id="chunk_2_q_regex_12">
+  <question_label>196.</question_label>
+  <stem>What is the purpose of the first e-mail?</stem>
+  <option_label>A.</option_label>
+  <option_text>To place an order</option_text>
+  <option_label>B.</option_label>
+  <option_text>To inquire about delivery costs</option_text>
+  <option_label>C.</option_label>
+  <option_text>To discuss a shipping mistake</option_text>
+  <option_label>D.</option_label>
+  <option_text>To make a payment</option_text>
+</question>
+
+<question id="chunk_2_q_regex_13">
+  <question_label>197.</question_label>
+  <stem>What item number does Ms. Seong refer to?</stem>
+  <option_label>A.</option_label>
+  <option_text>EVO160</option_text>
+  <option_label>B.</option_label>
+  <option_text>EVO161</option_text>
+  <option_label>C.</option_label>
+  <option_text>EVO162</option_text>
+  <option_label>D.</option_label>
+  <option_text>EVO163</option_text>
+</question>
+
+<question id="chunk_2_q_regex_14">
+  <question_label>198.</question_label>
+  <stem>What does the second e-mail suggest about Reina Olive Oil Company?</stem>
+  <option_label>A.</option_label>
+  <option_text>It is seeking new clients.</option_text>
+  <option_label>B.</option_label>
+  <option_text>It cannot accept returns.</option_text>
+  <option_label>C.</option_label>
+  <option_text>It is owned by Mr. Nadal.</option_text>
+  <option_label>D.</option_label>
+  <option_text>It distributes more than olive oil.</option_text>
+</question>
+
+<question id="chunk_2_q_regex_15">
+  <question_label>199.</question_label>
+  <stem>What does Mr. Nadal mention he will do for Ms. Seong?</stem>
+  <option_label>A.</option_label>
+  <option_text>Begin an investigation</option_text>
+  <option_label>B.</option_label>
+  <option_text>Send some company brochures</option_text>
+  <option_label>C.</option_label>
+  <option_text>Arrange for a refund</option_text>
+  <option_label>D.</option_label>
+  <option_text>Send a revised bill</option_text>
+</question>
+
+<question id="chunk_2_q_regex_16">
+  <question_label>200.</question_label>
+  <stem>Why was item number EVO001 included in the shipment?</stem>
+  <option_label>A.</option_label>
+  <option_text>To recognize and celebrate a festival</option_text>
+  <option_label>B.</option_label>
+  <option_text>To introduce a company's new product</option_text>
+  <option_label>C.</option_label>
+  <option_text>To replace an item that was out of stock</option_text>
+  <option_label>D.</option_label>
+  <option_text>To resolve an issue with a company's database **Stop! This is the end of the test. If you finish before time is called, you may go back to Parts 5, 6, and 7 and check your work.** TEST 10 **319**</option_text>
+</question>

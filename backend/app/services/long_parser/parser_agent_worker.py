@@ -43,7 +43,8 @@ class ParserAgentWorker:
                     "questions": structured_questions,
                     "stimuli": stimuli,
                     "spans_count": len(annotation_res.get("spans", [])),
-                    "method": "llm_xml"
+                    "method": "llm_xml",
+                    "raw_xml": annotation_res.get("annotated_text") or annotation_res.get("raw_text") or raw_chunk_text
                 }
 
             except Exception as e:
@@ -51,14 +52,25 @@ class ParserAgentWorker:
 
         # Fallback to zero-cost regex parser on missing annotator or LLM error
         structured_questions = regex_parse_questions(raw_chunk_text)
+        xml_lines = []
         for idx, q in enumerate(structured_questions):
             if isinstance(q, dict):
                 q["id"] = f"chunk_{chunk_index}_q_regex_{idx + 1}"
                 q["chunk_index"] = chunk_index
 
+                xml_lines.append(f'<question id="{q.get("id")}">')
+                xml_lines.append(f'  <question_label>{q.get("question_number")}.</question_label>')
+                xml_lines.append(f'  <stem>{q.get("stem")}</stem>')
+                for opt in q.get("options", []):
+                    xml_lines.append(f'  <option_label>{opt.get("label")}.</option_label>')
+                    xml_lines.append(f'  <option_text>{opt.get("text")}</option_text>')
+                xml_lines.append('</question>')
+                xml_lines.append("")
+
         return {
             "questions": structured_questions if isinstance(structured_questions, list) else [],
             "stimuli": {},
             "spans_count": 0,
-            "method": "regex_fallback"
+            "method": "regex_fallback",
+            "raw_xml": "\n".join(xml_lines) if xml_lines else raw_chunk_text
         }

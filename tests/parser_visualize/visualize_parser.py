@@ -205,6 +205,13 @@ def main():
     out_dir = os.path.join(base_code_dir, "results", input_stem)
     os.makedirs(out_dir, exist_ok=True)
 
+    # Clean up old .md chunk files if present
+    for fname in os.listdir(out_dir):
+        if fname.startswith("chunk_") and fname.endswith("_parsed.md"):
+            old_md_path = os.path.join(out_dir, fname)
+            os.remove(old_md_path)
+            print(f"Removed old md chunk file: {old_md_path}")
+
     print(f"Parsing OCR markdown: {ocr_file}")
     pages_data, full_text = parse_ocr_markdown(ocr_file)
 
@@ -229,16 +236,17 @@ def main():
         res = worker.process_chunk(raw_chunk_text, chunk_index=c_idx)
         parsed_results.append(res)
 
-        # Write per-chunk detailed parsed markdown file
-        fn = f"chunk_{c_idx+1}_p{start_p}_p{end_p}_parsed.md"
+        # Write per-chunk raw XML file
+        fn = f"chunk_{c_idx+1}_p{start_p}_p{end_p}_parsed.xml"
         chunk_filenames.append(fn)
-        chunk_md_content = render_chunk_parsed_markdown(
-            c_idx, start_p, end_p, chunk_tokens, chunk_pages, res
+        raw_xml_content = (
+            f"<!-- Chunk {c_idx + 1}: Pages p{start_p}-p{end_p} | Tokens: {chunk_tokens:,} | Method: {res.get('method')} -->\n\n"
+            + res.get("raw_xml", "")
         )
         chunk_file_path = os.path.join(out_dir, fn)
         with open(chunk_file_path, "w", encoding="utf-8") as f:
-            f.write(chunk_md_content)
-        print(f"  -> Generated parsed chunk file: {chunk_file_path}")
+            f.write(raw_xml_content)
+        print(f"  -> Generated raw XML chunk file: {chunk_file_path}")
 
     # 3. Generate Main Summary Report
     summary_md = generate_parser_summary_report(ocr_file, chunks, parsed_results, chunk_filenames)

@@ -20,9 +20,9 @@
 
 | Chunk # | Page Range | Est. Tokens | Questions | Stimuli Count | Extraction Method | Detailed Chunk Result Link |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Chunk 1** | `p1 - p13` | `4,473` | `62` | `0` | `regex_fallback` | 👉 [chunk_1_p1_p13_parsed.md](chunk_1_p1_p13_parsed.md) |
-| **Chunk 2** | `p14 - p24` | `4,505` | `28` | `0` | `regex_fallback` | 👉 [chunk_2_p14_p24_parsed.md](chunk_2_p14_p24_parsed.md) |
-| **Chunk 3** | `p25 - p29` | `2,355` | `16` | `0` | `regex_fallback` | 👉 [chunk_3_p25_p29_parsed.md](chunk_3_p25_p29_parsed.md) |
+| **Chunk 1** | `p1 - p13` | `4,473` | `62` | `0` | `regex_fallback` | 👉 [chunk_1_p1_p13_parsed.xml](chunk_1_p1_p13_parsed.xml) |
+| **Chunk 2** | `p14 - p24` | `4,505` | `28` | `0` | `regex_fallback` | 👉 [chunk_2_p14_p24_parsed.xml](chunk_2_p14_p24_parsed.xml) |
+| **Chunk 3** | `p25 - p29` | `2,355` | `16` | `0` | `regex_fallback` | 👉 [chunk_3_p25_p29_parsed.xml](chunk_3_p25_p29_parsed.xml) |
 
 ---
 
