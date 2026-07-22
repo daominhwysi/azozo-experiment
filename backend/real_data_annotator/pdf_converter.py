@@ -52,6 +52,17 @@ SYSTEM_PROMPTS = [
     ),
 ]
 
+SYSTEM_PROMPT_LONG_CONTEXT = (
+    "You are an expert Document OCR and Structural Layout Mining Assistant. "
+    "Transcribe the provided document page images into formatted Markdown AND emit a compact page boundary JSON header. "
+    "Formatting Rules:\n"
+    "1. Markdown Output: Extract text, headings, and lists. Merge multi-column layouts into single-column reading order.\n"
+    "2. LaTeX Normalization: Convert all math/formulas to standard LaTeX ($...$ inline, $$...$$ block).\n"
+    "3. Page Boundary Header: At the end of each page, output a strict JSON block enclosed in <|page_metadata|> ... <|end_metadata|>.\n"
+    "Schema: {\"p\": page_num, \"head\": \"CLEAN\"|\"CONT_GROUP\"|\"CONT_THEORY\", \"tail\": \"CLEAN\"|\"OPEN_GROUP\"|\"OPEN_THEORY\"|\"OPEN_STEM\"|\"OPEN_OPT\", \"seq\": [[\"THEORY_START\", title], [\"STIM_START\", id], [\"Q_START\", num], [\"Q_END\", num]]}"
+)
+
+
 
 def prune_think_tags(text: str) -> str:
     if not text:

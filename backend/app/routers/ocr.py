@@ -547,3 +547,42 @@ def delete_ocr_task(task_id: str):
     return {"success": True}
 
 
+@router.post("/parse-exam/long-context")
+async def parse_exam_long_context(
+    file: UploadFile = File(...),
+):
+    """
+    Azozo Engine v2.0 - High-Precision Long-Context PDF Exam Parser Endpoint.
+    Orchestrates OCR -> DocumentStateStack -> Passage-Locked Chunker -> Parser Swarm -> Graph Resolver Agent.
+    """
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Must provide a valid PDF file")
+
+    temp_pdf_path = TMP_DIR / f"upload_long_{uuid.uuid4().hex[:8]}.pdf"
+    temp_pdf_path.parent.mkdir(parents=True, exist_ok=True)
+
+    file_bytes = await file.read()
+    with open(temp_pdf_path, "wb") as f:
+        f.write(file_bytes)
+
+    try:
+        from backend.app.services.long_parser.pipeline import LongContextParserPipeline
+        pipeline = LongContextParserPipeline(
+            ocr_model=OCR_MODEL,
+            parser_model=PARSER_MODEL,
+            parser_provider=PARSER_PROVIDER,
+            batch_size=OCR_BATCH_SIZE,
+            concurrency=OCR_CONCURRENCY,
+        )
+        res = pipeline.parse_pdf_long_context(str(temp_pdf_path))
+        return res
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Long-context parsing failed: {str(e)}")
+    finally:
+        if temp_pdf_path.exists():
+            temp_pdf_path.unlink()
+
+
+
