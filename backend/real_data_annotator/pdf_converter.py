@@ -20,47 +20,26 @@ if hasattr(sys.stdout, "reconfigure"):
 workspace_dir = Path(__file__).resolve().parent.parent.parent
 load_dotenv(dotenv_path=workspace_dir / ".env")
 
-SYSTEM_PROMPTS = [
-    (
-        "You are an expert OCR assistant. Perform precise OCR on the provided pages. "
-        "Extract all text, headings, and structure. Format your output strictly in Markdown. "
-        "For any mathematical formulas, variables, and equations, convert them accurately to standard LaTeX format "
-        "(e.g. using $...$ for inline or $$...$$ for block formulas) so they are clean and readable. "
-        "Use styling tags when relevant to represent visual indicators: "
-        "use <u>...</u> to mark underlined text, <mark>...</mark> to represent highlighted/marked text, "
-        "**...** for bold text, and *...* for italicized text. "
-        "Separate each page using the delimiter '<|page|>' followed by the page indicator 'Page X'. "
-        "For example:\n"
-        "<|page|>Content of page 1<|page|>Content of page 2\n\n"
-        "Important Layout & Formatting Rules:\n"
-        "1. If the input page has multiple columns (e.g. two-column exam layout), you MUST convert and merge them into a single column following the logical reading order. Do NOT attempt to reconstruct columns side-by-side.\n"
-        "2. Format the output so it is clean, structured, and easy for readers and students to work with. Do NOT attempt to visually replicate the exact physical spacing or layout of the original document/image if it makes the output look cluttered or hard to read. Prioritize logical flow and standard spacing."
-    ),
-    (
-        "You are an expert OCR assistant. Perform precise OCR on the provided pages. "
-        "Extract all text, headings, and structure. Format your output strictly as PLAIN TEXT. "
-        "Do not use markdown formatting. For any mathematical formulas, variables, and equations, "
-        "convert them accurately to standard LaTeX format (e.g. using $...$ for inline or $$...$$ for block formulas). "
-        "Use styling tags when relevant to represent visual indicators: "
-        "use <u>...</u> to mark underlined text, <mark>...</mark> to represent highlighted/marked text. "
-        "Separate each page using the delimiter '<|page|>' followed by the page indicator 'Page X'. "
-        "For example:\n"
-        "<|page|>Content of page 1<|page|>Content of page 2\n\n"
-        "Important Layout & Formatting Rules:\n"
-        "1. If the input page has multiple columns (e.g. two-column exam layout), you MUST convert and merge them into a single column following the logical reading order. Do NOT attempt to reconstruct columns side-by-side.\n"
-        "2. Format the output so it is clean, structured, and easy for readers and students to work with. Do NOT attempt to visually replicate the exact physical spacing or layout of the original document/image if it makes the output look cluttered or hard to read. Prioritize logical flow and standard spacing."
-    ),
-]
 
 SYSTEM_PROMPT_LONG_CONTEXT = (
     "You are an expert Document OCR and Structural Layout Mining Assistant. "
-    "Transcribe the provided document page images into formatted Markdown AND emit a compact page boundary JSON header. "
-    "Formatting Rules:\n"
-    "1. Markdown Output: Extract text, headings, and lists. Merge multi-column layouts into single-column reading order.\n"
-    "2. LaTeX Normalization: Convert all math/formulas to standard LaTeX ($...$ inline, $$...$$ block).\n"
-    "3. Page Boundary Header: At the end of each page, output a strict JSON block enclosed in <|page_metadata|> ... <|end_metadata|>.\n"
-    "Schema: {\"p\": page_num, \"head\": \"CLEAN\"|\"CONT_GROUP\"|\"CONT_THEORY\", \"tail\": \"CLEAN\"|\"OPEN_GROUP\"|\"OPEN_THEORY\"|\"OPEN_STEM\"|\"OPEN_OPT\", \"seq\": [[\"THEORY_START\", title], [\"STIM_START\", id], [\"Q_START\", num], [\"Q_END\", num]]}"
+    "Perform precise OCR on the provided document page images into clean, structured Markdown AND emit a compact page boundary JSON header.\n\n"
+    "CRITICAL USABILITY RULES (Usability over Visual Reproduction):\n"
+    "1. NO ARTIFICIAL SPACING OR VISUAL REPRODUCTION: Do NOT attempt to visually replicate physical layout using spaces, tabs, or multiple consecutive empty spaces. Do NOT use whitespace to simulate multi-column layouts, align numbers under gaps, or pad text to match physical margins. Prioritize clean, usable text over visual reproduction.\n"
+    "2. SINGLE-COLUMN MERGING: If the input page has multiple columns, convert and merge them into a clean, single-column linear flow following logical reading order.\n"
+    "3. MARKDOWN & LATEX: Extract text, headings, and lists in standard Markdown. Convert all math formulas and equations to standard LaTeX ($...$ inline, $$...$$ block).\n"
+    "4. PAGE SEPARATOR: Wrap each page in '<page>..</page>'.\n"
+    "5. PAGE METADATA HEADER: At the end of each page, output a strict JSON block enclosed in <page_metadata> ... </page_metadata>.\n\n"
+    "JSON Schema:\n"
+    "{\n"
+    "  \"p\": page_num,\n"
+    "  \"head\": \"CLEAN\"|\"CONT_GROUP\"|\"CONT_THEORY\",\n"
+    "  \"tail\": \"CLEAN\"|\"OPEN_GROUP\"|\"OPEN_THEORY\"|\"OPEN_STEM\"|\"OPEN_OPT\",\n"
+    "  \"seq\": [[\"THEORY_START\", title], [\"STIM_START\", id], [\"Q_START\", num], [\"Q_END\", num]]\n"
+    "}"
 )
+
+
 
 
 

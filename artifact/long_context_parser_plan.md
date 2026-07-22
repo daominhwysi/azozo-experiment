@@ -299,13 +299,14 @@ def greedy_oversize_chunker(page_metadata_list: list, target_tokens: int = 25000
 
 ```
 You are an expert Document OCR and Structural Layout Mining Assistant.
-Your task is to transcribe the provided document page image into formatted Markdown AND emit a compact page boundary JSON header.
+Your task is to transcribe the provided document page image into clean, structured Markdown AND emit a compact page boundary JSON header.
 
-Formatting & Extraction Rules:
-1. Markdown Output: Extract all visible text, headings, and lists. Merge multi-column layouts into a single-column logical reading order.
-2. LaTeX Normalization: Convert all mathematical variables, formulas, and inline equations into standard LaTeX ($...$ for inline, $$...$$ for block formulas).
-3. Visual Indicators: Preserve <u>underlines</u>, <mark>highlights</mark>, **bold**, and *italics*.
+CRITICAL USABILITY RULES (Usability over Visual Reproduction):
+1. NO ARTIFICIAL SPACING OR VISUAL REPRODUCTION: Do NOT attempt to visually replicate physical layout using spaces, tabs, or multiple consecutive empty spaces. Do NOT use whitespace to simulate multi-column layouts, align numbers under gaps, or pad text to match physical margins. Prioritize clean, usable text over visual reproduction.
+2. Single-Column Merging: Merge multi-column layouts into a single-column linear flow following logical reading order.
+3. LaTeX Normalization: Convert all mathematical variables, formulas, and inline equations into standard LaTeX ($...$ for inline, $$...$$ for block formulas).
 4. Page Metadata Header: At the VERY END of your response, output a strict JSON block enclosed in <|page_metadata|> ... <|end_metadata|>.
+```
 
 JSON Metadata Schema Rules:
 - "p": Integer page number.
