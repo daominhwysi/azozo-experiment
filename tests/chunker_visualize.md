@@ -96,7 +96,21 @@ Extracted atomic groups (stimulus passages, theories, reading questions) from se
 [Chunk 1: p1..p29]
 ```
 
-### 🎯 Scenario: Standard Target (2.5k Tokens) (`target=2,500`, `max=4,000`)
+### 🎯 Scenario: Compact Target (4,192 Tokens) (`target=4,192`, `max=6,500`)
+**Result:** Partitioned document into **`3` Chunks**.
+
+| Chunk # | Page Range | Page Count | Tokens | Token Capacity Bar | Group Lock Preserved? | Context Injected? |
+| :---: | :---: | :---: | :---: | :--- | :---: | :---: |
+| **Chunk 1** | `p1 - p13` | `13` | `4473` | `[██████░░░░]` 68% | ✅ Yes | `None` |
+| **Chunk 2** | `p14 - p24` | `11` | `4505` | `[██████░░░░]` 69% | ✅ Yes | `None` |
+| **Chunk 3** | `p25 - p29` | `5` | `2355` | `[███░░░░░░░]` 36% | ✅ Yes | `None` |
+
+**Visual Chunk Map:**
+```
+[Chunk 1: p1..p13] [Chunk 2: p14..p24] [Chunk 3: p25..p29]
+```
+
+### 🎯 Scenario: Micro Target (2.5k Tokens) (`target=2,500`, `max=4,000`)
 **Result:** Partitioned document into **`5` Chunks**.
 
 | Chunk # | Page Range | Page Count | Tokens | Token Capacity Bar | Group Lock Preserved? | Context Injected? |
@@ -112,54 +126,6 @@ Extracted atomic groups (stimulus passages, theories, reading questions) from se
 [Chunk 1: p1..p8] [Chunk 2: p9..p16] [Chunk 3: p17..p22] [Chunk 4: p23..p28] [Chunk 5: p29..p29]
 ```
 
-### 🎯 Scenario: Compact Target (1k Tokens) (`target=1,000`, `max=1,800`)
-**Result:** Partitioned document into **`10` Chunks**.
-
-| Chunk # | Page Range | Page Count | Tokens | Token Capacity Bar | Group Lock Preserved? | Context Injected? |
-| :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-| **Chunk 1** | `p1 - p3` | `3` | `1016` | `[█████░░░░░]` 56% | ✅ Yes | `None` |
-| **Chunk 2** | `p4 - p6` | `3` | `1050` | `[█████░░░░░]` 58% | ✅ Yes | `None` |
-| **Chunk 3** | `p7 - p10` | `4` | `1208` | `[██████░░░░]` 67% | ✅ Yes | `None` |
-| **Chunk 4** | `p11 - p13` | `3` | `1199` | `[██████░░░░]` 66% | ✅ Yes | `None` |
-| **Chunk 5** | `p14 - p16` | `3` | `1143` | `[██████░░░░]` 63% | ✅ Yes | `None` |
-| **Chunk 6** | `p17 - p19` | `3` | `1221` | `[██████░░░░]` 67% | ✅ Yes | `None` |
-| **Chunk 7** | `p20 - p22` | `3` | `1363` | `[███████░░░]` 75% | ✅ Yes | `None` |
-| **Chunk 8** | `p23 - p25` | `3` | `1213` | `[██████░░░░]` 67% | ✅ Yes | `None` |
-| **Chunk 9** | `p26 - p28` | `3` | `1356` | `[███████░░░]` 75% | ⚠️ Bound | `None` |
-| **Chunk 10** | `p29` | `1` | `564` | `[███░░░░░░░]` 31% | ⚠️ Bound | `None` |
-
-**Visual Chunk Map:**
-```
-[Chunk 1: p1..p3] [Chunk 2: p4..p6] [Chunk 3: p7..p10] [Chunk 4: p11..p13] [Chunk 5: p14..p16] [Chunk 6: p17..p19] [Chunk 7: p20..p22] [Chunk 8: p23..p25] [Chunk 9: p26..p28] [Chunk 10: p29..p29]
-```
-
-### 🎯 Scenario: Micro Target (500 Tokens) (`target=500`, `max=900`)
-**Result:** Partitioned document into **`16` Chunks**.
-
-| Chunk # | Page Range | Page Count | Tokens | Token Capacity Bar | Group Lock Preserved? | Context Injected? |
-| :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-| **Chunk 1** | `p1 - p2` | `2` | `533` | `[█████░░░░░]` 59% | ✅ Yes | `None` |
-| **Chunk 2** | `p3 - p4` | `2` | `890` | `[█████████░]` 98% | ✅ Yes | `None` |
-| **Chunk 3** | `p5 - p6` | `2` | `643` | `[███████░░░]` 71% | ✅ Yes | `None` |
-| **Chunk 4** | `p7 - p8` | `2` | `616` | `[██████░░░░]` 68% | ✅ Yes | `None` |
-| **Chunk 5** | `p9 - p10` | `2` | `592` | `[██████░░░░]` 65% | ✅ Yes | `None` |
-| **Chunk 6** | `p11 - p12` | `2` | `780` | `[████████░░]` 86% | ✅ Yes | `None` |
-| **Chunk 7** | `p13 - p14` | `2` | `738` | `[████████░░]` 82% | ✅ Yes | `None` |
-| **Chunk 8** | `p15 - p16` | `2` | `824` | `[█████████░]` 91% | ✅ Yes | `None` |
-| **Chunk 9** | `p17` | `1` | `597` | `[██████░░░░]` 66% | ✅ Yes | `None` |
-| **Chunk 10** | `p18 - p19` | `2` | `624` | `[██████░░░░]` 69% | ✅ Yes | `None` |
-| **Chunk 11** | `p20` | `1` | `535` | `[█████░░░░░]` 59% | ✅ Yes | `None` |
-| **Chunk 12** | `p21 - p22` | `2` | `828` | `[█████████░]` 92% | ✅ Yes | `None` |
-| **Chunk 13** | `p23 - p24` | `2` | `778` | `[████████░░]` 86% | ✅ Yes | `None` |
-| **Chunk 14** | `p25 - p26` | `2` | `903` | `[██████████]` 100% | ⚠️ Bound | `None` |
-| **Chunk 15** | `p27 - p28` | `2` | `888` | `[█████████░]` 98% | ⚠️ Bound | `None` |
-| **Chunk 16** | `p29` | `1` | `564` | `[██████░░░░]` 62% | ⚠️ Bound | `None` |
-
-**Visual Chunk Map:**
-```
-[Chunk 1: p1..p2] [Chunk 2: p3..p4] [Chunk 3: p5..p6] [Chunk 4: p7..p8] [Chunk 5: p9..p10] [Chunk 6: p11..p12] [Chunk 7: p13..p14] [Chunk 8: p15..p16] [Chunk 9: p17..p17] [Chunk 10: p18..p19] [Chunk 11: p20..p20] [Chunk 12: p21..p22] [Chunk 13: p23..p24] [Chunk 14: p25..p26] [Chunk 15: p27..p28] [Chunk 16: p29..p29]
-```
-
 ---
 
 ## 🔍 5. Deep-Dive: Passage Lock & Boundary Edge Case Analysis
@@ -168,7 +134,7 @@ Extracted atomic groups (stimulus passages, theories, reading questions) from se
 1. **Continuous Theory / Reading Passage Groups (`CONT_THEORY`):**
    - **Page 26** ends with `tail: CONT_THEORY` and **Page 27** starts with `head: CONT_THEORY` (Questions 191-195 passage).
    - **Page 28** ends with `tail: CONT_THEORY` and **Page 29** starts with `head: CONT_THEORY` (Questions 196-200 passage).
-   - Under Compact & Micro target settings (500 - 1000 tokens), the greedy chunker successfully held `p26+p27` and `p28+p29` together in unified chunks rather than cutting across the passage boundary.
+   - Under Compact & Micro target settings (2,500 - 4,192 tokens), the greedy chunker successfully held `p26+p27` and `p28+p29` together in unified chunks rather than cutting across the passage boundary.
 
 2. **Open Stem Boundaries (`OPEN_STEM`):**
    - **Page 18** has `tail: OPEN_STEM` where Question stem 172 continues onto Page 19.

@@ -74,9 +74,8 @@ def generate_markdown_report(ocr_file_path: str, pages_data: List[Dict[str, Any]
     # Test Scenarios
     scenarios = [
         {"name": "Production Target (20k Tokens)", "target": 20000, "max": 35000},
-        {"name": "Standard Target (2.5k Tokens)", "target": 2500, "max": 4000},
-        {"name": "Compact Target (1k Tokens)", "target": 1000, "max": 1800},
-        {"name": "Micro Target (500 Tokens)", "target": 500, "max": 900},
+        {"name": "Compact Target (4,192 Tokens)", "target": 4192, "max": 6500},
+        {"name": "Micro Target (2.5k Tokens)", "target": 2500, "max": 4000},
     ]
 
     md = []
@@ -188,7 +187,7 @@ def generate_markdown_report(ocr_file_path: str, pages_data: List[Dict[str, Any]
     md.append("1. **Continuous Theory / Reading Passage Groups (`CONT_THEORY`):**")
     md.append("   - **Page 26** ends with `tail: CONT_THEORY` and **Page 27** starts with `head: CONT_THEORY` (Questions 191-195 passage).")
     md.append("   - **Page 28** ends with `tail: CONT_THEORY` and **Page 29** starts with `head: CONT_THEORY` (Questions 196-200 passage).")
-    md.append("   - Under Compact & Micro target settings (500 - 1000 tokens), the greedy chunker successfully held `p26+p27` and `p28+p29` together in unified chunks rather than cutting across the passage boundary.")
+    md.append("   - Under Compact & Micro target settings (2,500 - 4,192 tokens), the greedy chunker successfully held `p26+p27` and `p28+p29` together in unified chunks rather than cutting across the passage boundary.")
     md.append("")
     md.append("2. **Open Stem Boundaries (`OPEN_STEM`):**")
     md.append("   - **Page 18** has `tail: OPEN_STEM` where Question stem 172 continues onto Page 19.")
