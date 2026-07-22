@@ -10,7 +10,11 @@ class ParserAgentWorker:
     def __init__(self, model: Optional[str] = None, provider: Optional[str] = None):
         self.model = model
         self.provider = provider
-        self.annotator = OCRAnnotator(model=model, provider=provider)
+        try:
+            self.annotator = OCRAnnotator(model=model, provider=provider)
+        except Exception as e:
+            print(f"[ParserAgentWorker] OCRAnnotator init warning: {e}. Will fallback to regex parser.")
+            self.annotator = None
 
     def process_chunk(self, raw_chunk_text: str, chunk_index: int = 0) -> Dict[str, Any]:
         """
@@ -19,39 +23,42 @@ class ParserAgentWorker:
         if not raw_chunk_text.strip():
             return {"questions": [], "stimuli": {}, "method": "empty"}
 
-        try:
-            # 1. Run LLM XML sequence annotation via annotate_ocr.py
-            annotation_res = self.annotator.annotate_text(raw_chunk_text)
-            
-            # 2. Parse character spans into structured question objects via parser.py
-            structured_questions, stimuli = parse_spans_into_structured_questions(
-                annotation_res["raw_text"], annotation_res["spans"]
-            )
+        if self.annotator is not None:
+            try:
+                # 1. Run LLM XML sequence annotation via annotate_ocr.py
+                annotation_res = self.annotator.annotate_text(raw_chunk_text)
+                
+                # 2. Parse character spans into structured question objects via parser.py
+                structured_questions, stimuli = parse_spans_into_structured_questions(
+                    annotation_res["raw_text"], annotation_res["spans"]
+                )
 
-            # Assign chunk-scoped composite IDs if missing
-            for idx, q in enumerate(structured_questions):
-                if not q.get("id") or q["id"].startswith("q_"):
-                    q["id"] = f"chunk_{chunk_index}_q_{idx + 1}"
-                q["chunk_index"] = chunk_index
+                # Assign chunk-scoped composite IDs if missing
+                for idx, q in enumerate(structured_questions):
+                    if not q.get("id") or q["id"].startswith("q_"):
+                        q["id"] = f"chunk_{chunk_index}_q_{idx + 1}"
+                    q["chunk_index"] = chunk_index
 
-            return {
-                "questions": structured_questions,
-                "stimuli": stimuli,
-                "spans_count": len(annotation_res.get("spans", [])),
-                "method": "llm_xml"
-            }
+                return {
+                    "questions": structured_questions,
+                    "stimuli": stimuli,
+                    "spans_count": len(annotation_res.get("spans", [])),
+                    "method": "llm_xml"
+                }
 
-        except Exception as e:
-            # 3. Fallback to zero-cost regex parser on LLM error
-            print(f"[Parser Worker Chunk {chunk_index} Fallback] LLM XML parsing failed ({e}), using regex parser.")
-            structured_questions = regex_parse_questions(raw_chunk_text)
-            for idx, q in enumerate(structured_questions):
+            except Exception as e:
+                print(f"[Parser Worker Chunk {chunk_index} Fallback] LLM XML parsing failed ({e}), using regex parser.")
+
+        # Fallback to zero-cost regex parser on missing annotator or LLM error
+        structured_questions = regex_parse_questions(raw_chunk_text)
+        for idx, q in enumerate(structured_questions):
+            if isinstance(q, dict):
                 q["id"] = f"chunk_{chunk_index}_q_regex_{idx + 1}"
                 q["chunk_index"] = chunk_index
 
-            return {
-                "questions": structured_questions,
-                "stimuli": {},
-                "spans_count": 0,
-                "method": "regex_fallback"
-            }
+        return {
+            "questions": structured_questions if isinstance(structured_questions, list) else [],
+            "stimuli": {},
+            "spans_count": 0,
+            "method": "regex_fallback"
+        }

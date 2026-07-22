@@ -58,11 +58,11 @@ def get_tag_mappings() -> Tuple[Dict[str, int], Dict[int, str]]:
 
 TAG_TO_ID, ID_TO_TAG = get_tag_mappings()
 
-SYSTEM_PROMPT = """# [System Config] Mô tả vai trò & trách nhiệm
+SYSTEM_PROMPT = """# [System Config]
 Role: You are an expert NLP data annotator for Vietnamese educational exam papers.
 Your task is to annotate raw OCR text of exam papers by wrapping specific components in precise inline XML tags for sequence labelling.
 
-## [Operational Mode] — Chế độ hoạt động
+## [Operational Mode]
 
 ### Quy trình Gán nhãn XML:
 1. Wrap specific entities sequentially using the defined tag dictionary.
@@ -71,7 +71,7 @@ Your task is to annotate raw OCR text of exam papers by wrapping specific compon
 
 ---
 
-## 🏷️ Tag Dictionary (Danh Sách Thẻ XML)
+## 🏷️ Tag Dictionary (
 
 1. <question stimulus_id="...">...</question> or <question_label stimulus_id="...">...</question_label>: Wrap individual main question blocks or question prefix indicators (e.g. "Câu 1:", "Câu 12.", "Question 1:"). These tags accept optional parameters, including `stimulus_id="..."` (referencing an associated `<stimulus id="...">` block) and `id="..."`.
 2. <stem>...</stem>: Wrap the main text body of a question or main sub-question (including any ordering items or list of items to order). Note: If a question has sub-parts a), b), c) that are annotated as options, the introductory text (e.g. "Cho tam giác ABC...") is the <stem>, NOT <stimulus>.
@@ -344,8 +344,7 @@ def get_client_and_model(
             elif llm_key:
                 use_vilao = True
             else:
-                print("Error: Neither DEEPSEEK_API_KEY nor LLM_API_KEY is set.")
-                sys.exit(1)
+                raise ValueError("Neither DEEPSEEK_API_KEY nor LLM_API_KEY is set.")
         else:
             if model_name.startswith("phatchau036/") or model_name.startswith("mainnewnol/") or model_name.startswith("vpsnodelab/") or "xah" in model_name.lower():
                 use_xah = True
@@ -723,7 +722,7 @@ class OCRAnnotator:
             "annotated": True,
         }
 
-    
+
 def main():
     parser = argparse.ArgumentParser(
         description="Annotate raw OCR Vietnamese exams & generate sequence labelling datasets using LLMs"

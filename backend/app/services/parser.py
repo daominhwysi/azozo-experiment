@@ -147,14 +147,14 @@ def regex_parse_questions(raw_text: str) -> List[Dict[str, Any]]:
         if stim_match:
             line_stim_id = stim_match.group(1)
 
-        q_match = re.match(r"^(\*\*|\b)?((?:Câu|Question)\s*\d+[\.\:\*]*)(\*\*)?\s*(.*)", line_s, re.IGNORECASE)
-        if q_match:
+        q_match = re.match(r"^(?:\*\*)?(?:(?:Câu|Question)\s*)?(\d{1,4})[\.\:\)]*(?:\*\*)?\s*(.*)", line_s, re.IGNORECASE)
+        if q_match and len(line_s) > 3 and not re.match(r"^\d{1,4}$", line_s):
             if current_q and (current_q["stem"] or current_q["options"]):
                 questions.append(current_q)
-            q_num = q_match.group(2).replace("*", "").strip()
-            q_stem = q_match.group(4).strip()
+            q_num = q_match.group(1).strip()
+            q_stem = q_match.group(2).strip()
             current_q = {
-                "id": f"q_{len(questions) + 1}_{uuid.uuid4().hex[:6]}",
+                "id": f"q_{q_num}_{uuid.uuid4().hex[:6]}",
                 "question_number": q_num,
                 "stem": q_stem,
                 "options": [],
@@ -182,7 +182,13 @@ def regex_parse_questions(raw_text: str) -> List[Dict[str, Any]]:
         questions.append(current_q)
 
     for q in questions:
-        if not q["options"]:
+        inline_opts = re.findall(r'\(?([A-D])[\.\:\)]\s*([^(\n]+)', q["stem"])
+        if len(inline_opts) >= 2:
+            stem_parts = re.split(r'\(?[A-D][\.\:\)]', q["stem"], maxsplit=1)
+            if stem_parts:
+                q["stem"] = stem_parts[0].strip()
+            q["options"] = [{"label": label, "text": text.strip()} for label, text in inline_opts]
+        elif not q["options"]:
             q["options"] = [
                 {"label": "A", "text": "Phương án A"},
                 {"label": "B", "text": "Phương án B"},
