@@ -79,19 +79,14 @@ def chat(
     elif provider == "deepseek":
         pass
     else:
-        # Auto-detect routing
-        is_nvidia = model in ["deepseek-v4-pro", "deepseek-ai/deepseek-v4-pro"]
-        
-        # Check if we should route to Xah
-        if model.startswith("phatchau036/") or model.startswith("mainnewnol/") or "xah" in model.lower():
+        # Default auto-routing based on configured client credentials
+        if xah_client is not None:
             use_xah = True
-        # Check if we should route to Vilao.ai
-        elif "/" in model:
+        elif vilao_client is not None:
             use_vilao = True
-        elif "minimax" in model.lower() or model.startswith("mn/"):
-            use_vilao = True
-        elif not os.environ.get("DEEPSEEK_API_KEY") and os.environ.get("LLM_API_KEY"):
-            use_vilao = True
+        elif nvidia_client is not None and model in ["deepseek-v4-pro", "deepseek-ai/deepseek-v4-pro"]:
+            is_nvidia = True
+
 
     kwargs = {
         "messages": [

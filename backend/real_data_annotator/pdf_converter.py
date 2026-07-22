@@ -96,23 +96,18 @@ class PDFOCRConverter:
         self,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
-        model: str = "mn/Minimax-M3",
-        batch_size: int = 3,
+        model: str = "phatchau036/minimax-m3",
+        provider: Optional[str] = None,
+        batch_size: int = 6,
         concurrency: int = 5,
         examples_dir: Optional[Union[str, Path]] = None,
     ):
-        if base_url is None or base_url == "https://api.vilao.ai/v1":
-            if model.startswith("phatchau036/") or model.startswith("mainnewnol/") or "xah" in model.lower():
-                self.base_url = "https://api.xah.io/v1"
-                self.api_key = api_key or os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY")
-            else:
-                self.base_url = "https://api.vilao.ai/v1"
-                self.api_key = api_key or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
-        else:
-            self.base_url = base_url
-            self.api_key = api_key or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
+        self.base_url = base_url or os.environ.get("OPENAI_BASE_URL") or os.environ.get("LLM_BASE_URL") or "https://api.xah.io/v1"
+        self.api_key = api_key or os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
+
 
         self.model = model
+
         self.batch_size = batch_size
         self.concurrency = concurrency
         self.client = None
@@ -188,8 +183,9 @@ class PDFOCRConverter:
 
             if self.client is not None:
                 try:
-                    system_prompt = random.choice(SYSTEM_PROMPTS)
+                    system_prompt = SYSTEM_PROMPT_LONG_CONTEXT
                     content_parts = [{"type": "text", "text": system_prompt}]
+
 
                     for idx in range(s_idx, e_idx):
                         page_num = idx + 1
