@@ -76,9 +76,9 @@ class DocumentStateStack:
 
 def extract_metadata_headers_from_markdown(full_markdown_text: str) -> List[Dict[str, Any]]:
     """
-    Extracts <|page_metadata|> JSON blocks embedded in OCR markdown text.
+    Extracts <page_metadata> or <|page_metadata|> JSON blocks embedded in OCR markdown text.
     """
-    pattern = re.compile(r"<\|page_metadata\|>\s*(\{.*?\})\s*<\|end_metadata\|>", re.DOTALL)
+    pattern = re.compile(r"(?:<\|page_metadata\|>|<page_metadata>)\s*(\{.*?\})\s*(?:<\|end_metadata\|>|</page_metadata>)", re.DOTALL)
     headers = []
     
     for match in pattern.finditer(full_markdown_text):
