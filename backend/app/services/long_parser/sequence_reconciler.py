@@ -89,3 +89,65 @@ def extract_metadata_headers_from_markdown(full_markdown_text: str) -> List[Dict
             pass
             
     return headers
+
+
+def merge_chunk_xmls(chunk_xml_contents: List[str]) -> Dict[str, Any]:
+    """
+    Stitches multiple per-chunk XML sequence-annotated outputs into a single,
+    unified 100% annotated XML document, deduplicating boundary questions and stimuli
+    across safety-net overlap pages.
+    """
+    seen_question_nums = set()
+    seen_stimulus_signatures = set()
+    deduplicated_count = 0
+    merged_lines = []
+
+    for c_idx, raw_xml in enumerate(chunk_xml_contents):
+        cleaned_chunk = re.sub(r"<!--\s*Chunk\s*\d+:.*?-->", "", raw_xml).strip()
+        lines = cleaned_chunk.splitlines()
+        
+        in_skip_block = False
+
+        for line in lines:
+            line_s = line.strip()
+            
+            # Check for question label
+            q_match = re.search(r"<question_label>\s*\*\*?(\d{1,4})\.\*\*?\s*</question_label>", line)
+            if q_match:
+                q_num = q_match.group(1)
+                if q_num in seen_question_nums:
+                    deduplicated_count += 1
+                    in_skip_block = True
+                    continue
+                else:
+                    seen_question_nums.add(q_num)
+                    in_skip_block = False
+
+            if in_skip_block:
+                if line_s.startswith("<question_label>") or line_s.startswith("<section>") or line_s.startswith("<stimulus>"):
+                    in_skip_block = False
+                else:
+                    continue
+
+            # Check for stimulus block deduplication
+            stim_match = re.search(r"<stimulus>(.*?)</stimulus>", line, re.DOTALL)
+            if stim_match:
+                stim_content = stim_match.group(1).strip()
+                stim_sig = stim_content[:80]
+                if stim_sig in seen_stimulus_signatures:
+                    deduplicated_count += 1
+                    continue
+                seen_stimulus_signatures.add(stim_sig)
+
+            merged_lines.append(line)
+
+    merged_xml = "\n".join(merged_lines)
+    all_questions_sorted = sorted(list(seen_question_nums), key=lambda x: int(x))
+
+    return {
+        "merged_xml": merged_xml,
+        "total_questions": len(seen_question_nums),
+        "deduplicated_count": deduplicated_count,
+        "chunks_processed": len(chunk_xml_contents),
+        "question_range": f"{all_questions_sorted[0]} - {all_questions_sorted[-1]}" if all_questions_sorted else "N/A"
+    }
