@@ -8,16 +8,16 @@
 
 ```mermaid
 flowchart TD
-    A[Million-Token Input Document] --> B[Phase 1: Vision OCR & Metadata Extraction]
+    A[Million-Token Input Document] --> B[Phase 1: Vision OCR & Metadata Extraction - pdf_converter.py]
     
     B -->|Page Markdown + Boundary JSON| C[Phase 2: Sequence Reconstruction & Stack Machine]
     C -->|Stitched 1D Global Graph| D[Phase 3: Passage-Locked Chunk Partitioning]
     
-    D -->|Self-Contained Chunks| E1[Parser Worker 1]
-    D -->|Self-Contained Chunks| E2[Parser Worker 2]
-    D -->|Self-Contained Chunks| E3[Parser Worker N]
+    D -->|Self-Contained Chunks| E1[Parser Worker 1 - annotate_ocr.py + parser.py]
+    D -->|Self-Contained Chunks| E2[Parser Worker 2 - annotate_ocr.py + parser.py]
+    D -->|Self-Contained Chunks| E3[Parser Worker N - annotate_ocr.py + parser.py]
     
-    E1 -->|Raw Questions & Stems| F[Phase 4: Raw Extracted JSON Stream]
+    E1 -->|Raw Questions & Stems| F[Phase 4: Extracted Entity JSON Stream]
     E2 -->|Raw Questions & Stems| F
     E3 -->|Raw Questions & Stems| F
     
@@ -28,14 +28,29 @@ flowchart TD
 
 ---
 
-## 2. The 5 Core Pipeline Steps
+## 2. Integration of Existing Azozo Parser Stack
+
+The new Long-Context Parser Agent is built directly on top of our existing, proven parser codebase:
+
+1. **`backend/real_data_annotator/pdf_converter.py`**:
+   - Executes parallel multi-page Vision OCR (`Minimax-M3`) and emits page text + `<|page_metadata|>` JSON headers.
+2. **`backend/real_data_annotator/annotate_ocr.py`**:
+   - `OCRAnnotator`: Performs sequence labeling using XML tag dictionary (`<question>`, `<stem>`, `<option_label>`, `<option_text>`, `<stimulus>`).
+   - `parse_xml_annotations(tagged_text)`: Extracts character offset spans and tag parameters (`stimulus_id="..."`).
+3. **`backend/app/services/parser.py`**:
+   - `parse_spans_into_structured_questions(raw_text, spans)`: Deterministically compiles raw character spans into structured question objects in pure Python.
+   - `regex_parse_questions(raw_text)`: Instant zero-cost regex fallback parser.
+
+---
+
+## 3. The 5 Core Pipeline Steps
 
 ```
 [ Input PDF ] 
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ STEP 1: Vision OCR & Page Metadata Mining                               │
+│ STEP 1: Vision OCR & Page Metadata Mining (pdf_converter.py)            │
 │ • Runs parallel OCR (Minimax-M3) on page images.                        │
 │ • Emits Page Markdown AND a 30-token boundary header (<|page_metadata|>).│
 └─────────────────────────────────────────────────────────────────────────┘
@@ -49,7 +64,7 @@ flowchart TD
      │
      ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ STEP 3: Passage-Locked Chunk Partitioning                               │
+│ STEP 3: Passage-Locked Chunk Partitioning (greedy_chunker.py)           │
 │ • Partitions pages into ~25k token chunks.                              │
 │ • Never cuts inside an active passage or question (0% split risk).     │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -57,9 +72,10 @@ flowchart TD
      ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ STEP 4: Parallel Text Extraction (Parser Agent Swarm)                   │
-│ • Workers process chunks concurrently using DeepSeek V4 Flash.           │
-│ • Extracts raw questions, stems, options A-D, and LaTeX formulas.        │
-│ • DOES NOT perform distant passage linking (0% hallucination risk).    │
+│ • Prompts OCRAnnotator (annotate_ocr.py) using DeepSeek V4 Flash.       │
+│ • Executes parse_xml_annotations() to extract character spans.          │
+│ • Calls parse_spans_into_structured_questions() (parser.py).           │
+│ • Regex fallback via regex_parse_questions() on LLM failure.            │
 └─────────────────────────────────────────────────────────────────────────┘
      │
      ▼
@@ -76,7 +92,7 @@ flowchart TD
 
 ---
 
-## 3. Data Flow Example (From Raw Page to Final Graph)
+## 4. Data Flow Example (From Raw Page to Final Graph)
 
 ### Step 1 Output: Page Metadata Header (`<|page_metadata|>`)
 During OCR, `Minimax-M3` returns page text plus a 30-token boundary header for every page:
@@ -99,8 +115,8 @@ During OCR, `Minimax-M3` returns page text plus a 30-token boundary header for e
 
 ---
 
-### Step 4 Output: Raw Extracted Question (Parser Swarm)
-Parser Workers extract clean text and LaTeX math formulas into standardized JSON **without attempting to link distant passages**:
+### Step 4 Output: Raw Extracted Question (Parser Swarm via `parser.py`)
+Parser Workers use `annotate_ocr.py` XML annotation and `parser.py` span processing to build clean JSON **without attempting to link distant passages**:
 
 ```json
 {
@@ -159,9 +175,43 @@ Parser Workers extract clean text and LaTeX math formulas into standardized JSON
 
 ---
 
-## 4. Key Python Implementations
+## 5. Key Python Implementations
 
-### 4.1 State Machine Reconstruction (`DocumentStateStack`)
+### 5.1 Parser Worker Composition (`parser_agent_worker.py`)
+
+```python
+from backend.real_data_annotator.annotate_ocr import OCRAnnotator, parse_xml_annotations
+from backend.app.services.parser import parse_spans_into_structured_questions, regex_parse_questions
+
+class ParserAgentWorker:
+    """
+    Parser Agent Worker leveraging existing annotate_ocr.py and parser.py functions.
+    Extracts structured questions from raw chunk text without attempting graph linking.
+    """
+    def __init__(self, model: str = "deepseek-chat", provider: str = "deepseek"):
+        self.annotator = OCRAnnotator(model=model, provider=provider)
+
+    def process_chunk(self, raw_chunk_text: str) -> dict:
+        try:
+            # 1. Run LLM XML annotation via annotate_ocr.py
+            annotation_res = self.annotator.annotate_text(raw_chunk_text)
+            
+            # 2. Parse character spans into structured question objects via parser.py
+            structured_questions, stimuli = parse_spans_into_structured_questions(
+                annotation_res["raw_text"], annotation_res["spans"]
+            )
+            return {"questions": structured_questions, "stimuli": stimuli, "method": "llm_xml"}
+            
+        except Exception as e:
+            # 3. Fallback to instant regex parser on failure
+            print(f"[Parser Worker Fallback] Using regex parser: {e}")
+            structured_questions = regex_parse_questions(raw_chunk_text)
+            return {"questions": structured_questions, "stimuli": {}, "method": "regex_fallback"}
+```
+
+---
+
+### 5.2 State Machine Reconstruction (`DocumentStateStack`)
 
 ```python
 class DocumentStateStack:
@@ -203,14 +253,10 @@ class DocumentStateStack:
 
 ---
 
-### 4.2 Passage-Locked Partitioning (`greedy_oversize_chunker`)
+### 5.3 Passage-Locked Partitioning (`greedy_oversize_chunker`)
 
 ```python
 def greedy_oversize_chunker(page_metadata_list: list, target_tokens: int = 25000, max_tokens: int = 35000) -> list:
-    """
-    Splits pages into target-sized chunks.
-    NEVER cuts inside an active passage or question group unless forced by max_tokens.
-    """
     chunks = []
     current_chunk = []
     current_tokens = 0
@@ -222,7 +268,6 @@ def greedy_oversize_chunker(page_metadata_list: list, target_tokens: int = 25000
         if current_tokens >= target_tokens:
             is_in_group = page["tail"] in ("OPEN_GROUP", "OPEN_THEORY")
 
-            # Finalize chunk ONLY at clean boundary or max token threshold
             if not is_in_group or current_tokens >= max_tokens:
                 chunks.append(current_chunk)
                 current_chunk = []
@@ -236,7 +281,7 @@ def greedy_oversize_chunker(page_metadata_list: list, target_tokens: int = 25000
 
 ---
 
-## 5. Cost Breakdown per 10 Million Tokens (~20,000 Pages)
+## 6. Cost Breakdown per 10 Million Tokens (~20,000 Pages)
 
 | Pipeline Stage | Model Used | Input Cost | Output Cost | Total Stage Cost |
 | :--- | :--- | :--- | :--- | :--- |
@@ -245,16 +290,6 @@ def greedy_oversize_chunker(page_metadata_list: list, target_tokens: int = 25000
 | **Total 10M Token Pipeline** | — | **$1.749** | **$1.907** | **$3.66 USD** |
 
 *Cost per page: **$0.00018** (less than 1/50th of a cent per page).*
-
----
-
-## 6. Implementation Roadmap for Azozo Platform
-
-1. **`backend/real_data_annotator/pdf_converter.py`**: Update `Minimax-M3` system prompt to emit `<|page_metadata|>` JSON headers.
-2. **`backend/app/services/long_parser/sequence_reconciler.py`**: Add `DocumentStateStack` linear state machine.
-3. **`backend/app/services/long_parser/greedy_chunker.py`**: Add `greedy_oversize_chunker`.
-4. **`backend/app/services/long_parser/linking_agent.py`**: Add `CompactGraphResolverAgent` patch solver.
-5. **`backend/app/routers/ocr.py`**: Expose `/api/parse-exam/long-context` streaming SSE endpoint.
 
 ---
 
@@ -305,45 +340,12 @@ Theory text here with formula $F = ma$...
 
 ---
 
-### 7.2 Parser Agent System Prompt (`DeepSeek V4 Flash`)
+### 7.2 Parser Agent System Prompt (`SYSTEM_PROMPT` in `annotate_ocr.py`)
 
-```
-You are a High-Precision Sequence Labeling and Question Extraction Assistant.
-Your task is to convert raw OCR Markdown into structured JSON lists of questions, lecture theory, and worked examples.
-
-STRICT BOUNDARY RULES:
-1. DO NOT infer distant reading passages or attempt to assign "context_id" to questions unless explicitly specified inline on the page.
-2. DO NOT paraphrase or alter question stems, option text, or equations. Extract text with 100% literal fidelity.
-3. Standardize LaTeX equations cleanly using standard $...$ and $$...$$ syntax.
-4. Extract options as a JSON array of objects [{"label": "A", "text": "..."}, ...].
-
-OUTPUT JSON SCHEMA:
-{
-  "questions": [
-    {
-      "id": "doc:sec:p14:q15",
-      "question_number": "Câu 15",
-      "stem": "Exact question stem text...",
-      "options": [{"label": "A", "text": "Option A"}, {"label": "B", "text": "Option B"}],
-      "implicit_trigger": "đoạn văn trên"
-    }
-  ],
-  "contexts": [
-    {
-      "id": "doc:sec:p14:stim_1",
-      "title_or_snippet": "Snippet of passage...",
-      "text": "Full text of reading passage..."
-    }
-  ],
-  "solutions": [
-    {
-      "question_num": "15",
-      "answer": "A",
-      "explanation": "Detailed explanation..."
-    }
-  ]
-}
-```
+Uses the existing, battle-tested system prompt from `backend/real_data_annotator/annotate_ocr.py`:
+- Emits inline XML tags (`<question>`, `<stem>`, `<option_label>`, `<option_text>`, `<stimulus>`, `<section>`, `<explanation>`).
+- Enforces 100% literal text preservation without paraphrasing or character omission.
+- Emits `<|END|>` upon chunk completion.
 
 ---
 
