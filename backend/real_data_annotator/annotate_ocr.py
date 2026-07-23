@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from tqdm import tqdm
 
-from backend.app.config import PARSER_THINKING
+from backend.app.config import PARSER_MODEL, PARSER_PROVIDER, PARSER_THINKING
 
 try:
     from src.token_tracker import log_response
@@ -338,7 +338,7 @@ def get_client_and_model(
         return OpenAI(api_key=llm_key, base_url="https://api.vilao.ai/v1"), target_model
     elif target_provider == "commandcode":
         print(f"Routing to CommandCode API with model: {target_model}")
-        return OpenAI(api_key=cmd_key, base_url="https://api.commandcode.ai/provider/v1"), target_model
+        return OpenAI(api_key=cmd_key, base_url="http://127.0.0.1:8787/v1"), target_model
     else:
         print(f"Routing to DeepSeek API with model: {target_model}")
         return OpenAI(
@@ -491,7 +491,23 @@ class OCRAnnotator:
         if extra_body:
             kwargs["extra_body"] = extra_body
 
+        import time
+        start_time = time.time()
         response = self.client.chat.completions.create(**kwargs)
+        duration_sec = time.time() - start_time
+
+        try:
+            from backend.app.services.llm_logger import log_llm_call
+            log_llm_call(
+                messages=messages,
+                response=response,
+                model=self.model_name,
+                provider=getattr(self, "provider", ""),
+                duration_sec=duration_sec
+            )
+        except Exception as e:
+            print(f"[LLM Logger Warning] Failed to log LLM request: {e}")
+
         raw_result = response.choices[0].message.content
         tagged_text = clean_llm_response(raw_result)
 
@@ -612,6 +628,14 @@ class OCRAnnotator:
         full_chunks = []
         streamed_token_count = streamed_base
 
+        from backend.app.services.llm_logger import StreamingLLMLogger
+        stream_logger = StreamingLLMLogger(
+            messages=messages,
+            model=self.model_name,
+            provider=getattr(self, "provider", ""),
+            flush_interval_sec=5.0
+        )
+
         for attempt in range(max_retries):
             try:
                 response = self.client.chat.completions.create(**kwargs)
@@ -621,12 +645,19 @@ class OCRAnnotator:
                     if chunk.choices and len(chunk.choices) > 0:
                         delta = chunk.choices[0].delta
                         content = getattr(delta, "content", None) or ""
+                        reasoning = getattr(delta, "reasoning_content", None) or ""
+                        usage = getattr(chunk, "usage", None)
+
+                        if content or reasoning or usage:
+                            stream_logger.append_chunk(content=content, reasoning=reasoning, usage=usage)
+
                         if content:
                             full_chunks.append(content)
                             chunk_tokens = max(1, len(content.split()))
                             streamed_token_count += chunk_tokens
                             if callback:
                                 callback(streamed_token_count, estimated_total, content)
+                stream_logger.finalize()
                 break
             except Exception as e:
                 print(f"  [Warning] OCR annotation stream error on attempt {attempt + 1}: {e}")

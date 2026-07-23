@@ -14,7 +14,7 @@ providers:
     base_url: "https://api.deepseek.com/v1"
     api_key_env: "DEEPSEEK_API_KEY"
   commandcode:
-    base_url: "https://api.commandcode.ai/provider/v1"
+    base_url: "http://127.0.0.1:8787/v1"
     api_key_env: "CMD_API_KEY"
 
 models:
@@ -27,7 +27,7 @@ models:
     description: "Vision LLM model for converting PDF pages to markdown text"
 
   parser:
-    model_name: "deepseek/deepseek-v4-pro"
+    model_name: "poolside/laguna-s-2.1-free"
     provider: "commandcode"
     thinking: disabled
     description: "Sequence labeling LLM model for question stem and option annotation"
@@ -44,7 +44,7 @@ models:
     description: "LLM model for mapping unstructured answer keys to questions"
 
 logging:
-  dir: "ocr_logs"
+  dir: "logs/ocr_logs"
   enabled: true
 
 server:

@@ -56,7 +56,7 @@ commandcode_client = None
 if os.environ.get("CMD_API_KEY") or os.environ.get("COMMANDCODE_API_KEY") or os.environ.get("DEEPSEEK_API_KEY"):
     commandcode_client = OpenAI(
         api_key=os.environ.get("CMD_API_KEY") or os.environ.get("COMMANDCODE_API_KEY") or os.environ.get("DEEPSEEK_API_KEY"),
-        base_url="https://api.commandcode.ai/provider/v1",
+        base_url="http://127.0.0.1:8787/v1",
     )
 
 from backend.app.config import PARSER_MODEL, PARSER_PROVIDER
@@ -131,8 +131,19 @@ def chat(
         if effort is not None:
             kwargs["reasoning_effort"] = effort
 
+    import time
+    start_time = time.time()
     response = active_client.chat.completions.create(**kwargs)
-    log_response(response, model=model)
+    duration_sec = time.time() - start_time
+
+    from backend.app.services.llm_logger import log_llm_call
+    log_llm_call(
+        messages=kwargs.get("messages", []),
+        response=response,
+        model=target_model,
+        provider=target_provider,
+        duration_sec=duration_sec
+    )
 
     return response.choices[0].message.content
 
