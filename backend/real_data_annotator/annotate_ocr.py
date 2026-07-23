@@ -59,38 +59,30 @@ def get_tag_mappings() -> Tuple[Dict[str, int], Dict[int, str]]:
 TAG_TO_ID, ID_TO_TAG = get_tag_mappings()
 
 SYSTEM_PROMPT = """# [System Config]
-Role: You are an expert NLP data annotator for Vietnamese educational exam papers.
+Role: You are an expert NLP sequence annotator for educational exam papers (TOEIC, SAT, High School Exams).
 Your task is to annotate raw OCR text of exam papers by wrapping specific components in precise inline XML tags for sequence labelling.
 
-## [Operational Mode]
+## 🏷️ Tag Dictionary:
 
-### Quy trình Gán nhãn XML:
-1. Wrap specific entities sequentially using the defined tag dictionary.
-2. Preserve 100% of input text without modifying, rephrasing, or omitting any characters.
-3. Keep non-entity text (page headers, page markers like `<|page|>Page X`, footers, separators) outside XML tags.
-
----
-
-## 🏷️ Tag Dictionary (
-
-1. <question stimulus_id="...">...</question> or <question_label stimulus_id="...">...</question_label>: Wrap individual main question blocks or question prefix indicators (e.g. "Câu 1:", "Câu 12.", "Question 1:"). These tags accept optional parameters, including `stimulus_id="..."` (referencing an associated `<stimulus id="...">` block) and `id="..."`.
-2. <stem>...</stem>: Wrap the main text body of a question or main sub-question (including any ordering items or list of items to order). Note: If a question has sub-parts a), b), c) that are annotated as options, the introductory text (e.g. "Cho tam giác ABC...") is the <stem>, NOT <stimulus>.
-3. <option_label>...</option_label>: Wrap options letters/prefixes or sub-question letters/prefixes (e.g. "A.", "B.", "C.", "D.", "a)", "b)", "c)", "d.", "a.", "b.", "c.", "d."). Include bold asterisks "**" inside if present. Do NOT wrap correct answer letters in reference explanations here.
-4. <option_text>...</option_text>: Wrap the textual content of options or sub-questions.
-5. <stimulus id="...">...</stimulus>: Wrap shared passages, reading texts, diagrams, or situational context blocks used for 2 or more questions. Can optionally include an `id="..."` attribute (e.g., `id="stim_1"`). Do NOT use stimulus for single-question stems with parts a), b), c).
-6. <section>...</section>: Wrap section headers, subheaders, directions, and reference answer/explanation titles (e.g., "PHẦN I. Câu trắc nghiệm...", "Mark the letter A, B, C, or D...", "ĐÁP ÁN THAM KHẢO", "LỜI GIẢI THAM KHẢO").
-7. <explanation>...</explanation>: Wrap reference explanations, answers explanation texts, and solutions for questions. Do NOT wrap the question label prefix itself.
+1. <section>...</section>: Wrap section headers, subheaders, test directions, part titles, and instructions (e.g. "## PART 5", "## PART 6", "READING TEST", "Directions: ...").
+2. <stimulus>...</stimulus>: Wrap shared reading passages, articles, emails, letters, notices, text-message chains, tables, and passage headers (e.g., "Questions 131-134 refer to the following advertisement."). Do NOT leave reading passages untagged!
+3. <question_label>...</question_label>: Wrap question prefix indicators (e.g. "**101.**", "**131.**", "101.", "Câu 1:").
+4. <stem>...</stem>: Wrap the main text body of a question following the question label.
+5. <option_label>...</option_label>: Wrap choice letters/prefixes (e.g. "(A)", "(B)", "(C)", "(D)", "A.", "B.").
+6. <option_text>...</option_text>: Wrap the textual content of choices.
+7. <explanation>...</explanation>: Wrap reference explanations, answers explanation texts, and solutions for questions.
 
 ---
 
-## ⛔ [Content Constraints] Strict Rules & Errors to Avoid
+## ⛔ Strict Rules:
 
-1. **NO TEXT MODIFICATION:** Do NOT alter, correct, spell-check, or omit any character, typo, LaTeX expression ($...$ or $$...$$), or page marker (`<|page|>Page X`).
-2. **COMPLETE COVERAGE:** Output the ENTIRE input text from start to end. Do NOT omit headers, footers, page markers, end markers ("HẾT"), or answer key tables.
-3. **ORDERING QUESTIONS:** Scrambled items (a. b. c. d. e.) in arrangement questions belong inside the <stem> tag. Only the final choice letters (A. B. C. D.) with sequences (e.g., "a – c – b") are <option_label> and <option_text>.
+1. **NO TEXT MODIFICATION:** Do NOT alter, correct, spell-check, or omit any character, typo, LaTeX expression ($...$ or $$...$$), or page marker (`<|page|>Page X`). Preserve 100% of input text layout.
+2. **NO ATTRIBUTE TAGS:** Do NOT output attribute parameters like `stimulus_id="..."` or `id="..."`. Use clean XML tags (`<stimulus>`, `<section>`, `<question_label>`, `<stem>`, `<option_label>`, `<option_text>`).
+3. **COMPLETE COVERAGE:** Output the ENTIRE input text from start to end. Wrap reading passages in `<stimulus>...</stimulus>` tags without exception.
 4. **NO MARKDOWN CODEBLOCKS:** Output ONLY the annotated text directly. Do not wrap the output in ```xml codeblocks.
 5. **CONCISE THINKING TRACE:** Use `<think>` block for concise reasoning (< 60 words) highlighting layout, edge cases, and verification.
-6. **END DELIMITER:** Append `<|END|>` at the very end of your output to indicate the annotation is complete. Do NOT add `<|END|>` anywhere else.
+6. **END DELIMITER:** Append `<|END|>` at the very end of your output to indicate the annotation is complete.
+7. **STRICT STOP RULE:** Annotate ONLY the text provided in the user input prompt. DO NOT generate, invent, or hallucinate questions or reading passages beyond the provided input text. Stop immediately and append `<|END|>` as soon as you reach the last character of the input text.
 """
 
 
@@ -315,91 +307,75 @@ def export_conll(tokens: List[str], tags: List[str]) -> str:
 
 
 def get_client_and_model(
-    model_name: Optional[str],
-    deepseek_key: Optional[str],
-    llm_key: Optional[str],
+    model_name: Optional[str] = None,
+    deepseek_key: Optional[str] = None,
+    llm_key: Optional[str] = None,
+    xah_key: Optional[str] = None,
     provider: Optional[str] = None,
 ) -> Tuple[OpenAI, str]:
+    """
+    Initializes OpenAI client routed to the appropriate provider (Xah, NVIDIA, Vilao, DeepSeek) based on config.
+    """
+    target_model = model_name or PARSER_MODEL
+    target_provider = (provider or PARSER_PROVIDER or "xah").lower()
+
+    deepseek_key = deepseek_key or os.environ.get("DEEPSEEK_API_KEY")
     nvidia_key = os.environ.get("NVIDIA_API_KEY") or deepseek_key
-    xah_key = os.environ.get("XAH_API_KEY") or llm_key
-    is_nvidia = False
-    use_vilao = False
-    use_xah = False
-    is_deepseek = False
+    llm_key = llm_key or os.environ.get("LLM_API_KEY")
+    xah_key = xah_key or os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY")
+    cmd_key = os.environ.get("CMD_API_KEY") or os.environ.get("COMMANDCODE_API_KEY") or deepseek_key
 
-    if provider == "nvidia":
-        is_nvidia = True
-    elif provider == "vilao":
-        use_vilao = True
-    elif provider == "xah":
-        use_xah = True
-    elif provider == "deepseek":
-        is_deepseek = True
-    else:
-        if model_name in ["deepseek-v4-pro", "deepseek-ai/deepseek-v4-pro"]:
-            is_nvidia = True
-        elif not model_name:
-            if deepseek_key:
-                is_deepseek = True
-            elif llm_key:
-                use_vilao = True
-            else:
-                raise ValueError("Neither DEEPSEEK_API_KEY nor LLM_API_KEY is set.")
-        else:
-            if model_name.startswith("phatchau036/") or model_name.startswith("mainnewnol/") or model_name.startswith("vpsnodelab/") or "xah" in model_name.lower():
-                use_xah = True
-            elif "/" in model_name or "minimax" in model_name.lower():
-                use_vilao = True
-            elif not deepseek_key and llm_key:
-                use_vilao = True
-            else:
-                is_deepseek = True
-
-    if is_nvidia:
-        target_model = model_name or "deepseek-ai/deepseek-v4-pro"
+    if target_provider == "nvidia":
         print(f"Routing to NVIDIA NIM with model: {target_model}")
         return OpenAI(
             api_key=nvidia_key, base_url="https://integrate.api.nvidia.com/v1"
         ), target_model
-    elif use_xah:
-        target_model = model_name
+    elif target_provider == "xah":
         print(f"Routing to Xah.io API with model: {target_model}")
         return OpenAI(api_key=xah_key, base_url="https://api.xah.io/v1"), target_model
-    elif use_vilao:
-        final_model = model_name or "op/deepseek/deepseek-v4-pro"
-        if "/" not in final_model:
-            if "minimax" in final_model.lower():
-                final_model = f"mn/{final_model}"
-            elif "deepseek" in final_model.lower():
-                final_model = f"deepseek/{final_model}"
-        print(f"Routing to Vilao.ai API with model: {final_model}")
-        return OpenAI(api_key=llm_key, base_url="https://api.vilao.ai/v1"), final_model
+    elif target_provider == "vilao":
+        print(f"Routing to Vilao.ai API with model: {target_model}")
+        return OpenAI(api_key=llm_key, base_url="https://api.vilao.ai/v1"), target_model
+    elif target_provider == "commandcode":
+        print(f"Routing to CommandCode API with model: {target_model}")
+        return OpenAI(api_key=cmd_key, base_url="https://api.commandcode.ai/provider/v1"), target_model
     else:
-        target_model = model_name or "deepseek-chat"
         print(f"Routing to DeepSeek API with model: {target_model}")
         return OpenAI(
             api_key=deepseek_key, base_url="https://api.deepseek.com"
         ), target_model
 
 
-def load_few_shot_messages(example_dir: Path) -> List[Dict[str, str]]:
+def load_few_shot_messages(example_dir: Path, max_pairs: int = 2) -> List[Dict[str, str]]:
+    """Loads few-shot example pairs from in_X.md and out_X.md files."""
     messages = []
-    if not example_dir.exists():
-        return messages
-
     i = 1
-    while True:
+    loaded_count = 0
+    # Prioritize in_7.md if it exists (TOEIC passage example)
+    priority_in_7 = example_dir / "in_7.md"
+    priority_out_7 = example_dir / "out_7.md"
+    if priority_in_7.exists() and priority_out_7.exists():
+        try:
+            with open(priority_in_7, "r", encoding="utf-8") as f_in, open(priority_out_7, "r", encoding="utf-8") as f_out:
+                messages.append({"role": "user", "content": f_in.read()})
+                messages.append({"role": "assistant", "content": f_out.read()})
+                loaded_count += 1
+        except Exception:
+            pass
+
+    while loaded_count < max_pairs:
+        if i == 7:
+            i += 1
+            continue
         in_file = example_dir / f"in_{i}.md"
         out_file = example_dir / f"out_{i}.md"
         if not (in_file.exists() and out_file.exists()):
             break
         try:
-            with open(in_file, "r", encoding="utf-8") as f_in:
-                in_content = f_in.read()
-            with open(out_file, "r", encoding="utf-8") as f_out:
-                out_content = f_out.read()
-            messages.append({"role": "user", "content": in_content})
-            messages.append({"role": "assistant", "content": out_content})
+            with open(in_file, "r", encoding="utf-8") as f_in, open(out_file, "r", encoding="utf-8") as f_out:
+                messages.append({"role": "user", "content": f_in.read()})
+                messages.append({"role": "assistant", "content": f_out.read()})
+                loaded_count += 1
         except Exception:
             pass
         i += 1
@@ -407,6 +383,31 @@ def load_few_shot_messages(example_dir: Path) -> List[Dict[str, str]]:
     if messages:
         print(f"  Loaded {len(messages) // 2} few-shot example pair(s).")
     return messages
+
+
+def prune_hallucinated_xml_tail(raw_xml: str, raw_ocr_text: str) -> str:
+    """
+    Prunes hallucinated questions/passages emitted by the LLM beyond the end of the input OCR text string.
+    """
+    lines = raw_xml.splitlines()
+    pruned_lines = []
+    
+    for line in lines:
+        line_s = line.strip()
+        if not line_s or line_s.startswith("<!--"):
+            pruned_lines.append(line)
+            continue
+            
+        clean_text = re.sub(r"<[^>]+>", "", line_s).strip()
+        q_match = re.search(r"\*\*?(\d{1,4})\.\*\*?", clean_text)
+        if q_match:
+            q_num = q_match.group(1)
+            if f"**{q_num}.**" not in raw_ocr_text and f"{q_num}." not in raw_ocr_text:
+                break
+        
+        pruned_lines.append(line)
+        
+    return "\n".join(pruned_lines)
 
 
 class OCRAnnotator:
@@ -701,7 +702,7 @@ class OCRAnnotator:
 
             previous_tagged = chunk_result["tagged_text"]
 
-        raw_xml = "\n".join(all_tagged_texts)
+        raw_xml = prune_hallucinated_xml_tail("\n".join(all_tagged_texts), raw_ocr_text)
 
         tokens, offsets = tokenize_raw_text(raw_ocr_text)
         bio_tags, label_ids = align_spans_to_bio_tags(
@@ -753,7 +754,7 @@ def main():
     )
     parser.add_argument("--model", default=None, help="Model identifier")
     parser.add_argument(
-        "--provider", choices=["deepseek", "nvidia", "vilao"], default=None
+        "--provider", choices=["deepseek", "nvidia", "vilao", "xah", "commandcode"], default=None
     )
 
     args = parser.parse_args()

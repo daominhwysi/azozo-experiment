@@ -52,6 +52,15 @@ if os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY"):
         base_url="https://api.xah.io/v1",
     )
 
+commandcode_client = None
+if os.environ.get("CMD_API_KEY") or os.environ.get("COMMANDCODE_API_KEY") or os.environ.get("DEEPSEEK_API_KEY"):
+    commandcode_client = OpenAI(
+        api_key=os.environ.get("CMD_API_KEY") or os.environ.get("COMMANDCODE_API_KEY") or os.environ.get("DEEPSEEK_API_KEY"),
+        base_url="https://api.commandcode.ai/provider/v1",
+    )
+
+from backend.app.config import PARSER_MODEL, PARSER_PROVIDER
+
 # Alias client for test mocking compatibility
 client = deepseek_client
 
@@ -59,82 +68,50 @@ client = deepseek_client
 def chat(
     prompt: str,
     system: str = "You are a helpful assistant",
-    model: str = "deepseek-v4-flash",
+    model: Optional[str] = None,
     thinking: Optional[Any] = None,
     provider: Optional[str] = None,
 ) -> str:
     """
-    Call the DeepSeek (or NVIDIA NIM DeepSeek, or Vilao.ai, or Xah.io) chat API and return the assistant reply text.
+    Call the LLM chat API using model and provider configured in config.yaml.
     """
-    is_nvidia = False
-    use_vilao = False
-    use_xah = False
-    
-    if provider == "nvidia":
-        is_nvidia = True
-    elif provider == "vilao":
-        use_vilao = True
-    elif provider == "xah":
-        use_xah = True
-    elif provider == "deepseek":
-        pass
-    else:
-        # Default auto-routing based on configured client credentials
-        if xah_client is not None:
-            use_xah = True
-        elif vilao_client is not None:
-            use_vilao = True
-        elif nvidia_client is not None and model in ["deepseek-v4-pro", "deepseek-ai/deepseek-v4-pro"]:
-            is_nvidia = True
-
+    target_model = model or PARSER_MODEL
+    target_provider = (provider or PARSER_PROVIDER or "xah").lower()
 
     kwargs = {
         "messages": [
             {"role": "system", "content": system},
             {"role": "user", "content": prompt},
         ],
+        "model": target_model,
         "stream": False,
     }
     
-    if is_nvidia:
+    if target_provider == "nvidia":
         if nvidia_client is None:
-            raise ValueError("Error: Provider requires NVIDIA_API_KEY or DEEPSEEK_API_KEY but neither is set.")
+            raise ValueError("Error: Provider requires NVIDIA_API_KEY but it is not set.")
         active_client = nvidia_client
-        target_model = model
-        if model in ["deepseek-v4-pro", "deepseek-ai/deepseek-v4-pro"]:
-            target_model = "deepseek-ai/deepseek-v4-pro"
-        kwargs["model"] = target_model
-        
         thinking_bool = False
         if thinking is True or (isinstance(thinking, str) and thinking in ["high", "max"]):
             thinking_bool = True
         elif thinking is None:
             thinking_bool = True
-            
         kwargs["extra_body"] = {"chat_template_kwargs": {"thinking": thinking_bool}}
         
-    elif use_xah:
+    elif target_provider == "xah":
         if xah_client is None:
-            raise ValueError("Error: Model routes to xah.io but neither XAH_API_KEY nor LLM_API_KEY is set.")
+            raise ValueError("Error: Model routes to Xah.io but neither XAH_API_KEY nor LLM_API_KEY is set.")
         active_client = xah_client
-        kwargs["model"] = model
 
-    elif use_vilao:
+    elif target_provider == "vilao":
         if vilao_client is None:
-            if deepseek_client is not None:
-                active_client = deepseek_client
-                kwargs["model"] = model
-            else:
-                raise ValueError("Error: Model routes to Vilao.ai but LLM_API_KEY is not set, and DEEPSEEK_API_KEY is also not set.")
-        else:
-            active_client = vilao_client
-            final_model = model
-            if "/" not in final_model:
-                if "minimax" in final_model.lower():
-                    final_model = f"mn/{final_model}"
-                elif "deepseek" in final_model.lower():
-                    final_model = f"deepseek/{final_model}"
-            kwargs["model"] = final_model
+            raise ValueError("Error: Model routes to Vilao.ai but LLM_API_KEY is not set.")
+        active_client = vilao_client
+
+    elif target_provider == "commandcode":
+        if commandcode_client is None:
+            raise ValueError("Error: Model routes to CommandCode but neither CMD_API_KEY nor COMMANDCODE_API_KEY is set.")
+        active_client = commandcode_client
             
     else:
         if deepseek_client is None:

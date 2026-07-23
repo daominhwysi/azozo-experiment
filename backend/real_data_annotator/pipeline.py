@@ -12,6 +12,8 @@ script_dir = Path(__file__).resolve().parent
 sys.path.append(str(script_dir))
 
 from backend.real_data_annotator.pdf_converter import PDFOCRConverter
+from backend.app.config import OCR_MODEL, PARSER_MODEL
+from backend.real_data_annotator.pdf_converter import PDFOCRConverter
 from backend.real_data_annotator.annotate_ocr import OCRAnnotator, export_conll
 
 
@@ -19,8 +21,8 @@ def process_pdf_exam_to_sequence_labelled_dataset(
     pdf_path: Union[str, Path],
     output_dir: Optional[Union[str, Path]] = None,
     export_conll_file: bool = True,
-    ocr_model: str = "mn/Minimax-M3",
-    annotator_model: str = "op/deepseek/deepseek-v4-pro",
+    ocr_model: Optional[str] = None,
+    annotator_model: Optional[str] = None,
     provider: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
@@ -130,13 +132,13 @@ def main():
         "--no-conll", action="store_true", help="Disable CoNLL file export"
     )
     parser.add_argument(
-        "--ocr-model", default="mn/Minimax-M3", help="Vision LLM model identifier for OCR"
+        "--ocr-model", default=None, help="Vision LLM model identifier for OCR"
     )
     parser.add_argument(
         "--model", default=None, help="LLM model identifier for sequence annotation"
     )
     parser.add_argument(
-        "--provider", choices=["deepseek", "nvidia", "vilao"], default=None
+        "--provider", choices=["deepseek", "nvidia", "vilao", "xah", "commandcode"], default=None
     )
 
     args = parser.parse_args()
