@@ -1,5 +1,3 @@
-<|page|>Page 1
-
 **SỞ GIÁO DỤC VÀ ĐÀO TẠO**
 **HẢI PHÒNG**
 **ĐỀ CHÍNH THỨC**
@@ -12,7 +10,7 @@ _Thời gian làm bài: 90 phút (không tính thời gian phát đề)_
 
 Họ và tên: ............................................................. Số báo danh: ....... **Mã đề 0101**
 
-<section>**Phần I. Câu trắc nghiệm nhiều phương án lựa chọn (3,0 điểm).** *(Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.)*</section>
+<section>**Phần I. Câu trắc nghiệm nhiều phương án lựa chọn (3,0 điểm).** _(Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.)_</section>
 
 <question_label>**Câu 1.**</question_label> <stem>Trong không gian với hệ trục tọa độ $Oxyz$, cho các điểm $A(2;2;3), B(2;-2;-1)$. Tọa độ của điểm $M$ thoả mãn hệ thức $\overrightarrow{MA}+3\overrightarrow{MB}=\vec{0}$ là</stem>
 
@@ -58,7 +56,7 @@ _(Hình vẽ: Hình chóp S.ABC với S ở trên, tam giác đáy ABC có góc 
 - <option_label>**C.**</option_label> <option_text>$16a^3$.</option_text>
 - <option_label>**D.**</option_label> <option_text>$24a^3$.</option_text>
 
-<section>**Phần II. Câu trắc nghiệm đúng sai (4,0 điểm).** *(Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.)*</section>
+<section>**Phần II. Câu trắc nghiệm đúng sai (4,0 điểm).** _(Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.)_</section>
 
 <question_label>**Câu 1.**</question_label> <stem>Trong không gian với hệ trục tọa độ $Oxyz$, cho $\vec{u}=(3;2;-6)$, mặt phẳng $(P): 2x+2y+z-10=0$ và mặt cầu $(S): x^2+y^2+z^2+4x+2y-2z-3=0$.</stem>
 
@@ -67,8 +65,14 @@ _(Hình vẽ: Hình chóp S.ABC với S ở trên, tam giác đáy ABC có góc 
 - <option_label>**c)**</option_label> <option_text>Gọi $\alpha$ là góc giữa giá của $\vec{u}$ và mặt phẳng $(P)$. Khi đó $\cos\alpha=\dfrac{4}{21}$.</option_text>
 - <option_label>**d)**</option_label> <option_text>Gọi $M, N$ là hai điểm lần lượt thuộc mặt cầu $(S)$ và mặt phẳng $(P)$. Biết đường thẳng $MN$ có vectơ chỉ phương là $\vec{u}$. Khi đoạn $MN$ đạt giá trị lớn nhất thì tọa độ $M(a;b;c)$ với $a-2b+3c=4$.</option_text>
 
-<section>**Phần III. Câu trắc nghiệm trả lời ngắn (1,5 điểm).** *(Thí sinh trả lời từ câu 1 đến câu 6.)*</section>
+<section>**Phần III. Câu trắc nghiệm trả lời ngắn (1,5 điểm).** _(Thí sinh trả lời từ câu 1 đến câu 6.)_</section>
 
 <question_label>**Câu 1.**</question_label> <stem>Trong không gian với hệ tọa độ $Oxyz$, đài kiểm soát không lưu đặt tại gốc tọa độ $O(0;0;0)$. Mỗi đơn vị trên trục tọa độ ứng với $1km$. Một máy bay đang ở vị trí $A(-506;-35;8)$, chuyển động theo đường thẳng có vectơ chỉ phương $\vec{u}(91;75;0)$ và bay theo hướng về phía đài kiểm soát không lưu. Máy bay sẽ được hiển thị trên màn hình ra-đa nếu nằm trong phạm vi cách đài kiểm soát không lưu không quá $417$ $km$. Gọi $M$ là vị trí đầu tiên mà máy bay xuất hiện trên màn hình ra-đa. Thời gian máy bay di chuyển từ vị trí $A$ đến $M$ là bao nhiêu biết rằng vận tốc của máy bay là $800$ $km/h$. _(Kết quả làm tròn đến hàng đơn vị của phút)_</stem>
+
+<section>**Phần IV. Câu hỏi tự luận (1,5 điểm).**</section>
+
+<question_label>**Câu 1.**</question_label> <stem>Cho hàm số $y = f(x)$.</stem>
+- <option_label>**a)**</option_label> <option_text>Tìm tập xác định của hàm số $y = f(x)$.</option_text>
+- <option_label>**b)**</option_label> <option_text>Tính đạo hàm của hàm số tại $x = 1$.</option_text>
 
 ---------- **HẾT** ----------

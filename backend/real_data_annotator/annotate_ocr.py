@@ -64,12 +64,12 @@ Your task is to annotate raw OCR text of exam papers by wrapping specific compon
 
 ## 🏷️ Tag Dictionary:
 
-1. <section>...</section>: Wrap section headers, subheaders, test directions, part titles, and instructions (e.g. "## PART 5", "## PART 6", "READING TEST", "Directions: ...").
-2. <stimulus>...</stimulus>: Wrap shared reading passages, articles, emails, letters, notices, text-message chains, tables, and passage headers (e.g., "Questions 131-134 refer to the following advertisement."). Do NOT leave reading passages untagged!
+1. <section>...</section>: Wrap ONLY major section/part titles and part directions that actually separate part to part (e.g., "PART 1", "PART I", "PART N", "PHẦN I", "PHẦN II", "PHần III", "PHẦN I: Từ câu 1 đến câu 20. Mỗi câu hỏi chỉ chọn đúng một phương án.", "PHẦN II. Câu trắc nghiệm đúng sai. Thí sinh trả lời từ câu 1 đến câu 8...", or part instructions such as "Mark the letter A, B, C, or D on your answer sheet to indicate the word that differs from the rest in the pronunciation of the underlined part in each of the following questions."). Ignore every kind of document title, exam header, page header, or non-part header. We ONLY tag text that actually separates one part of the exam from another.
+2. <stimulus>...</stimulus>: Wrap shared reading passages, articles, emails, letters, notices, text-message chains, tables, and passage headers (e.g., "Questions 131-134 refer to the following advertisement."). SINGLE STIMULUS GROUPING RULE: When multiple memos, emails, letters, articles, or passages belong to the SAME group of questions (e.g. multi-passage sets like "Questions 176-180 refer to the following email and letter"), wrap the ENTIRE group of passages/memos/emails and their header together in ONE SINGLE contiguous <stimulus>...</stimulus> block. Do NOT split multiple memos, emails, or passages belonging to the same question set into separate <stimulus> blocks! Do NOT leave reading passages untagged!
 3. <question_label>...</question_label>: Wrap question prefix indicators (e.g. "**101.**", "**131.**", "101.", "Câu 1:").
 4. <stem>...</stem>: Wrap the main text body of a question following the question label.
-5. <option_label>...</option_label>: Wrap choice letters/prefixes (e.g. "(A)", "(B)", "(C)", "(D)", "A.", "B.").
-6. <option_text>...</option_text>: Wrap the textual content of choices.
+5. <option_label>...</option_label>: Wrap choice letters/prefixes and sub-item/sub-question indicators (e.g. "(A)", "(B)", "(C)", "(D)", "A.", "B.", "a)", "b)", "c)", "d)", "a.", "b."). ESSAY & SUB-QUESTION RULE: In essay, long-answer, constructed-response, or multi-part questions where sub-items like "a)", "b)", "c)", "d)" appear without multiple-choice options to select, wrap the sub-item labels "a)", "b)" in <option_label>...</option_label> and their corresponding body text in <option_text>...</option_text>. Never absorb sub-item labels "a)", "b)" into <stem>!
+6. <option_text>...</option_text>: Wrap the textual content of choices or sub-question items following an <option_label>.
 7. <explanation>...</explanation>: Wrap reference explanations, answers explanation texts, and solutions for questions.
 
 ---
@@ -83,6 +83,7 @@ Your task is to annotate raw OCR text of exam papers by wrapping specific compon
 5. **CONCISE THINKING TRACE:** Use `<think>` block for concise reasoning (< 60 words) highlighting layout, edge cases, and verification.
 6. **END DELIMITER:** Append `<|END|>` at the very end of your output to indicate the annotation is complete.
 7. **STRICT STOP RULE:** Annotate ONLY the text provided in the user input prompt. DO NOT generate, invent, or hallucinate questions or reading passages beyond the provided input text. Stop immediately and append `<|END|>` as soon as you reach the last character of the input text.
+8. **SUB-QUESTION & CHOICE LABELS:** Sub-item markers (e.g. "a)", "b)", "c)", "d)") in essay, long-answer, true/false, or structured questions must ALWAYS be tagged as <option_label> (and their body text as <option_text>). Never absorb "a)", "b)" sub-item indicators into <stem>!
 """
 
 
@@ -391,22 +392,22 @@ def prune_hallucinated_xml_tail(raw_xml: str, raw_ocr_text: str) -> str:
     """
     lines = raw_xml.splitlines()
     pruned_lines = []
-    
+
     for line in lines:
         line_s = line.strip()
         if not line_s or line_s.startswith("<!--"):
             pruned_lines.append(line)
             continue
-            
+
         clean_text = re.sub(r"<[^>]+>", "", line_s).strip()
         q_match = re.search(r"\*\*?(\d{1,4})\.\*\*?", clean_text)
         if q_match:
             q_num = q_match.group(1)
             if f"**{q_num}.**" not in raw_ocr_text and f"{q_num}." not in raw_ocr_text:
                 break
-        
+
         pruned_lines.append(line)
-        
+
     return "\n".join(pruned_lines)
 
 

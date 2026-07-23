@@ -1,5 +1,3 @@
-<|page|>Page 1
-
 **SỞ GIÁO DỤC VÀ ĐÀO TẠO**
 **HẢI PHÒNG**
 **ĐỀ CHÍNH THỨC**
@@ -70,5 +68,11 @@ _(Hình vẽ: Hình chóp S.ABC với S ở trên, tam giác đáy ABC có góc 
 **Phần III. Câu trắc nghiệm trả lời ngắn (1,5 điểm).** _(Thí sinh trả lời từ câu 1 đến câu 6.)_
 
 **Câu 1.** Trong không gian với hệ tọa độ $Oxyz$, đài kiểm soát không lưu đặt tại gốc tọa độ $O(0;0;0)$. Mỗi đơn vị trên trục tọa độ ứng với $1km$. Một máy bay đang ở vị trí $A(-506;-35;8)$, chuyển động theo đường thẳng có vectơ chỉ phương $\vec{u}(91;75;0)$ và bay theo hướng về phía đài kiểm soát không lưu. Máy bay sẽ được hiển thị trên màn hình ra-đa nếu nằm trong phạm vi cách đài kiểm soát không lưu không quá $417$ $km$. Gọi $M$ là vị trí đầu tiên mà máy bay xuất hiện trên màn hình ra-đa. Thời gian máy bay di chuyển từ vị trí $A$ đến $M$ là bao nhiêu biết rằng vận tốc của máy bay là $800$ $km/h$. _(Kết quả làm tròn đến hàng đơn vị của phút)_
+
+**Phần IV. Câu hỏi tự luận (1,5 điểm).**
+
+**Câu 1.** Cho hàm số $y = f(x)$.
+- **a)** Tìm tập xác định của hàm số $y = f(x)$.
+- **b)** Tính đạo hàm của hàm số tại $x = 1$.
 
 ---------- **HẾT** ----------
