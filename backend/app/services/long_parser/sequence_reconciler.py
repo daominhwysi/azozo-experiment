@@ -1,6 +1,6 @@
 import json
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 class DocumentStateStack:
     """
@@ -91,11 +91,14 @@ def extract_metadata_headers_from_markdown(full_markdown_text: str) -> List[Dict
     return headers
 
 
-def merge_chunk_xmls(chunk_xml_contents: List[str]) -> Dict[str, Any]:
+def merge_chunk_xmls(
+    chunk_xml_contents: List[str],
+    raw_chunk_inputs: Optional[List[str]] = None
+) -> Dict[str, Any]:
     """
     Stitches multiple per-chunk XML sequence-annotated outputs into a single,
     unified 100% annotated XML document, deduplicating boundary questions and stimuli
-    across safety-net overlap pages.
+    across safety-net overlap pages, and pruning hallucinated question tails.
     """
     seen_question_nums = set()
     seen_stimulus_signatures = set()
@@ -104,17 +107,51 @@ def merge_chunk_xmls(chunk_xml_contents: List[str]) -> Dict[str, Any]:
 
     for c_idx, raw_xml in enumerate(chunk_xml_contents):
         cleaned_chunk = re.sub(r"<!--\s*Chunk\s*\d+:.*?-->", "", raw_xml).strip()
+
+        # Deduplicate multi-line <stimulus>...</stimulus> blocks across chunk overlap boundaries
+        def replace_stim(match):
+            nonlocal deduplicated_count
+            full_block = match.group(0)
+            content = match.group(1).strip()
+            sig = re.sub(r"\s+", "", content[:120])
+            if sig in seen_stimulus_signatures:
+                deduplicated_count += 1
+                return ""
+            seen_stimulus_signatures.add(sig)
+            return full_block
+
+        cleaned_chunk = re.sub(r"<stimulus>(.*?)</stimulus>", replace_stim, cleaned_chunk, flags=re.DOTALL)
         lines = cleaned_chunk.splitlines()
+        
+        raw_input = raw_chunk_inputs[c_idx] if raw_chunk_inputs and c_idx < len(raw_chunk_inputs) else None
         
         in_skip_block = False
 
         for line in lines:
             line_s = line.strip()
+            if not line_s:
+                continue
             
             # Check for question label
             q_match = re.search(r"<question_label>\s*\*\*?(\d{1,4})\.\*\*?\s*</question_label>", line)
+            if not q_match:
+                # Also match untagged question label e.g. **158.**
+                q_match_raw = re.search(r"(?:^|\s)\*\*?(\d{1,4})\.\*\*?\s*", line_s)
+                if q_match_raw and not line_s.startswith("<") and not line_s.startswith("#"):
+                    q_num = q_match_raw.group(1)
+                    if raw_input and f"**{q_num}.**" not in raw_input and f"{q_num}." not in raw_input:
+                        # Prune hallucinated tail
+                        continue
+
             if q_match:
                 q_num = q_match.group(1)
+                # Verify if this question actually exists in raw chunk input (if provided)
+                if raw_input and (f"**{q_num}.**" not in raw_input and f"{q_num}." not in raw_input):
+                    # Hallucinated question not in raw chunk input
+                    deduplicated_count += 1
+                    in_skip_block = True
+                    continue
+
                 if q_num in seen_question_nums:
                     deduplicated_count += 1
                     in_skip_block = True
@@ -128,16 +165,6 @@ def merge_chunk_xmls(chunk_xml_contents: List[str]) -> Dict[str, Any]:
                     in_skip_block = False
                 else:
                     continue
-
-            # Check for stimulus block deduplication
-            stim_match = re.search(r"<stimulus>(.*?)</stimulus>", line, re.DOTALL)
-            if stim_match:
-                stim_content = stim_match.group(1).strip()
-                stim_sig = stim_content[:80]
-                if stim_sig in seen_stimulus_signatures:
-                    deduplicated_count += 1
-                    continue
-                seen_stimulus_signatures.add(stim_sig)
 
             merged_lines.append(line)
 
