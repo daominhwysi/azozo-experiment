@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from tqdm import tqdm
 
-from backend.app.config import PARSER_MODEL, PARSER_PROVIDER, PARSER_THINKING
+from backend.app.config import PARSER_MODEL, PARSER_PROVIDER, PARSER_THINKING, get_provider_base_url
 
 try:
     from src.token_tracker import log_response
@@ -82,8 +82,10 @@ Your task is to annotate raw OCR text of exam papers by wrapping specific compon
 4. **NO MARKDOWN CODEBLOCKS:** Output ONLY the annotated text directly. Do not wrap the output in ```xml codeblocks.
 5. **CONCISE THINKING TRACE:** Use `<think>` block for concise reasoning (< 300 words) highlighting layout, edge cases, and verification.
 6. **END DELIMITER:** Append `<|END|>` at the very end of your output to indicate the annotation is complete.
-7. **STRICT STOP RULE:** Annotate ONLY the text provided in the user input prompt. DO NOT generate, invent, or hallucinate questions or reading passages beyond the provided input text. Stop immediately and append `<|END|>` as soon as you reach the last character of the input text.
+7. **STRICT TARGET BOUNDARY RULE:** Annotate ONLY the raw text provided inside the boundary delimiters `<<<TARGET_TEXT_START>>>` and `<<<TARGET_TEXT_END>>>` in the user prompt. DO NOT repeat, re-print, or output any text from previous turns or from the `<example>` blocks. Start outputting directly with the first character of the target text. Stop immediately and append `<|END|>` as soon as you reach the last character of the target text.
 8. **SUB-QUESTION & CHOICE LABELS:** Sub-item markers (e.g. "a)", "b)", "c)", "d)") in essay, long-answer, true/false, or structured questions must ALWAYS be tagged as <option_label> (and their body text as <option_text>). Never absorb "a)", "b)" sub-item indicators into <stem>!
+9. **FEW-SHOT EXAMPLES NOTICE:** The `<example>` blocks provided at the bottom of this system prompt are for reference and formatting demonstration ONLY. Never repeat, copy, or output text from any example blocks in your response.
+10. **MULTI-TURN CONTINUATION RULE:** When requested to continue in a multi-turn conversation ("Continue from the very exact next token..."), resume outputting directly from the exact next character where your previous turn left off. Do NOT repeat or re-print any previously generated content, section headers, or tags from earlier turns. Continue annotating until the end of the input text and append `<|END|>`.
 """
 
 
@@ -101,6 +103,108 @@ def clean_llm_response(text: str) -> str:
             else:
                 text = "\n".join(lines[1:])
     return text.strip()
+
+
+def trim_unclosed_annotation_tag(raw_result: str, raw_ocr_text: str) -> str:
+    """
+    Safely trims unclosed LLM annotation tags (e.g. '<option_label', '</stem') at cutoff boundary.
+    Distinguishes LLM-added annotation tags from literal original OCR text (e.g. '$x < y$')
+    by checking against allowed schema tags and verifying if the trailing string exists in raw_ocr_text.
+    """
+    match = re.search(r"(</?([a-zA-Z_0-9]*))$", raw_result)
+    if not match:
+        return raw_result
+
+    full_match = match.group(1)      # e.g. "<option_label" or "</stem" or "<"
+    tag_prefix = match.group(2)      # e.g. "option_label" or "stem" or ""
+
+    # Check if tag_prefix matches any allowed schema tag name or prefix of allowed tag
+    is_schema_tag = False
+    if tag_prefix == "":
+        is_schema_tag = True  # Opening '<'
+    else:
+        for allowed in BASE_TAGS:
+            if allowed.startswith(tag_prefix.lower()):
+                is_schema_tag = True
+                break
+
+    if not is_schema_tag:
+        # Not a prefix of any allowed XML tag -> must be original OCR text (e.g. '$x < y$')
+        return raw_result
+
+    # Strip XML tags from consumed output to compute position in raw_ocr_text
+    raw_without_trailing = raw_result[:-len(full_match)]
+    cleaned_consumed = clean_llm_response(raw_without_trailing)
+    cleaned_consumed_no_tags = re.sub(r"</?[a-zA-Z_0-9]+>", "", cleaned_consumed)
+    consumed_len = len(cleaned_consumed_no_tags.strip())
+
+    # Look at remaining OCR text starting from current offset
+    remaining_ocr_text = raw_ocr_text[consumed_len:].lstrip()
+
+    # If remaining_ocr_text starts with full_match, then full_match is literal text in original OCR!
+    if remaining_ocr_text.startswith(full_match):
+        return raw_result
+
+    # Otherwise, full_match is an unclosed LLM annotation tag that was cut off mid-generation. Trim it!
+    return raw_without_trailing
+
+
+def _to_int(value: Any) -> Optional[int]:
+    """Convert token-like values to int when possible."""
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value)
+    if isinstance(value, str):
+        cleaned = value.strip()
+        if not cleaned:
+            return None
+        try:
+            return int(cleaned)
+        except ValueError:
+            return None
+    return None
+
+
+def _extract_usage_tokens(usage: Any) -> Dict[str, Optional[int]]:
+    """Extract usage token fields from dict/object usage payloads."""
+    if usage is None:
+        return {"prompt_tokens": None, "completion_tokens": None, "total_tokens": None}
+
+    usage_dict = usage
+    if not isinstance(usage, dict):
+        if hasattr(usage, "model_dump") and callable(usage.model_dump):
+            try:
+                dumped = usage.model_dump()
+                if isinstance(dumped, dict):
+                    usage_dict = dumped
+            except Exception:
+                usage_dict = usage
+        elif hasattr(usage, "dict") and callable(usage.dict):
+            try:
+                dumped = usage.dict()
+                if isinstance(dumped, dict):
+                    usage_dict = dumped
+            except Exception:
+                usage_dict = usage
+
+    if not isinstance(usage_dict, dict):
+        usage_dict = {
+            "prompt_tokens": getattr(usage, "prompt_tokens", None),
+            "completion_tokens": None,
+            "total_tokens": None,
+            "completion_tokens_details": getattr(usage, "completion_tokens_details", None),
+        }
+
+    return {
+        "prompt_tokens": _to_int(usage_dict.get("prompt_tokens")),
+        "completion_tokens": _to_int(usage_dict.get("completion_tokens")),
+        "total_tokens": _to_int(usage_dict.get("total_tokens")),
+    }
 
 
 def parse_xml_annotations(tagged_text: str) -> Tuple[str, List[Dict[str, Any]]]:
@@ -338,8 +442,9 @@ def get_client_and_model(
         print(f"Routing to Vilao.ai API with model: {target_model}")
         return OpenAI(api_key=llm_key, base_url="https://api.vilao.ai/v1"), target_model
     elif target_provider == "commandcode":
-        print(f"Routing to CommandCode API with model: {target_model}")
-        return OpenAI(api_key=cmd_key, base_url="http://127.0.0.1:8787/v1"), target_model
+        cmd_base_url = get_provider_base_url("commandcode")
+        print(f"Routing to CommandCode API with model: {target_model} at {cmd_base_url}")
+        return OpenAI(api_key=cmd_key, base_url=cmd_base_url), target_model
     else:
         print(f"Routing to DeepSeek API with model: {target_model}")
         return OpenAI(
@@ -347,44 +452,62 @@ def get_client_and_model(
         ), target_model
 
 
-def load_few_shot_messages(example_dir: Path, max_pairs: int = 2) -> List[Dict[str, str]]:
-    """Loads few-shot example pairs from in_X.md and out_X.md files."""
-    messages = []
+def load_few_shot_examples_xml(example_dir: Path, max_pairs: int = 3) -> str:
+    """Loads few-shot example pairs from in_X.md and out_X.md files and packs them into XML templates."""
+    examples_xml = []
     i = 1
     loaded_count = 0
-    # Prioritize in_7.md if it exists (TOEIC passage example)
-    priority_in_7 = example_dir / "in_7.md"
-    priority_out_7 = example_dir / "out_7.md"
-    if priority_in_7.exists() and priority_out_7.exists():
-        try:
-            with open(priority_in_7, "r", encoding="utf-8") as f_in, open(priority_out_7, "r", encoding="utf-8") as f_out:
-                messages.append({"role": "user", "content": f_in.read()})
-                messages.append({"role": "assistant", "content": f_out.read()})
-                loaded_count += 1
-        except Exception:
-            pass
 
     while loaded_count < max_pairs:
-        if i == 7:
-            i += 1
-            continue
         in_file = example_dir / f"in_{i}.md"
         out_file = example_dir / f"out_{i}.md"
         if not (in_file.exists() and out_file.exists()):
             break
         try:
             with open(in_file, "r", encoding="utf-8") as f_in, open(out_file, "r", encoding="utf-8") as f_out:
-                messages.append({"role": "user", "content": f_in.read()})
-                messages.append({"role": "assistant", "content": f_out.read()})
+                in_txt = f_in.read().strip()
+                out_txt = f_out.read().strip()
+                examples_xml.append("<example>\n<input>\n" + in_txt + "\n</input>\n<output>\n" + out_txt + "\n</output>\n</example>")
                 loaded_count += 1
         except Exception:
             pass
         i += 1
 
-    if messages:
-        print(f"  Loaded {len(messages) // 2} few-shot example pair(s).")
-    return messages
+    continuation_example = (
+        "<example>"
+        "<!-- Demonstration of multi-turn continuation when output token limit is reached mid-sequence -->\n"
+        "<input_turn_1>"
+        "Annotate ONLY the raw OCR text:\n"
+        "**101.** Question stem text.\n"
+        "A. Option 1\n"
+        "B. Option 2\n\n"
+        "**102.** Second question stem.\n"
+        "A. Choice A\n"
+        "B. Choice B\n"
+        "</input_turn_1>\n"
+        "<output_turn_1>\n"
+        "<question_label>**101.**</question_label> <stem>Question stem text.</stem>\n"
+        "- <option_label>A.</option_label> <option_text>Option 1</option_text>\n"
+        "- <option_label>B.</option_label> <option_text>Option 2</option_text>\n\n"
+        "<question_label>**102.**</question_label> <"
+        "</output_turn_1>\n"
+        "<input_turn_2>"
+        "Continue from the very exact next token where you left off. Start outputting directly from the next character without repeating any previously generated content or tags.\n"
+        "</input_turn_2>"
+        "<output_turn_2>"
+        "stem>Second question stem.</stem>\n"
+        "- <option_label>A.</option_label> <option_text>Choice A</option_text>\n"
+        "- <option_label>B.</option_label> <option_text>Choice B</option_text>\n"
+        "<|END|>\n"
+        "</output_turn_2>"
+        "</example>"
+    )
+    examples_xml.append(continuation_example)
 
+    if examples_xml:
+        print(f"  Loaded {len(examples_xml)} few-shot XML example(s) for system prompt.")
+        return "\n\n## 💡 Demonstration Examples (FOR REFERENCE ONLY):\n\n" + "\n\n".join(examples_xml)
+    return ""
 
 def prune_hallucinated_xml_tail(raw_xml: str, raw_ocr_text: str) -> str:
     """
@@ -426,10 +549,12 @@ class OCRAnnotator:
     ):
         self.deepseek_key = deepseek_key or os.environ.get("DEEPSEEK_API_KEY")
         self.llm_key = llm_key or os.environ.get("LLM_API_KEY")
+        self.provider = provider or PARSER_PROVIDER or "xah"
         self.client, self.model_name = get_client_and_model(
             model, self.deepseek_key, self.llm_key, provider=provider
         )
-        self.few_shot_messages = load_few_shot_messages(script_dir / "examples" / "annotator")
+        self.few_shot_xml = load_few_shot_examples_xml(script_dir / "examples" / "annotator")
+        self.system_prompt = SYSTEM_PROMPT.strip() + "\n" + self.few_shot_xml
         self.thinking_disabled = PARSER_THINKING == "disabled"
 
     def _make_extra_body(self) -> Optional[Dict[str, Any]]:
@@ -437,139 +562,105 @@ class OCRAnnotator:
             return {"thinking": {"type": "disabled"}}
         return None
 
-    def _find_continuation_offset(
-        self, prev_raw_text: str, cont_raw_text: str, full_text: str
-    ) -> int:
-        """Find where cont_raw_text starts in full_text, after prev_raw_text."""
-        prev_len = len(prev_raw_text)
-        search_start = max(0, prev_len - 80)
-        search_end = min(len(full_text), prev_len + 80)
-
-        anchor = cont_raw_text[:min(100, len(cont_raw_text))]
-        if not anchor:
-            return prev_len
-
-        idx = full_text.find(anchor, search_start, search_end)
-        if idx != -1:
-            return idx
-
-        anchor_stripped = anchor.strip()
-        if anchor_stripped and anchor_stripped != anchor:
-            idx = full_text.find(anchor_stripped, search_start, search_end)
-            if idx != -1:
-                return idx
-
-        return prev_len
-
-    def _llm_annotate_chunk(
-        self, text_chunk: str, previous_tagged: Optional[str] = None,
+    def annotate_text(
+        self,
+        raw_ocr_text: str,
+        request_id: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """
-        Sends text to the LLM for annotation.
-        On continuation rounds, sends the full original text together with the
-        previous assistant output as conversation context so the LLM knows
-        exactly where to continue from.
-        """
-        messages = [
-            {"role": "system", "content": SYSTEM_PROMPT},
-        ] + self.few_shot_messages
-
-        if previous_tagged:
-            messages.append({"role": "user", "content": text_chunk})
-            messages.append({"role": "assistant", "content": previous_tagged})
-            messages.append({
-                "role": "user",
-                "content": (
-                    "Continue annotating from the exact point where your previous "
-                    "output ended. Append <|END|> when the annotation is complete."
-                ),
-            })
-        else:
-            messages.append({"role": "user", "content": text_chunk})
-
-        kwargs = dict(model=self.model_name, messages=messages, temperature=0.0)
-        extra_body = self._make_extra_body()
-        if extra_body:
-            kwargs["extra_body"] = extra_body
-
-        import time
-        start_time = time.time()
-        response = self.client.chat.completions.create(**kwargs)
-        duration_sec = time.time() - start_time
-
-        try:
-            from backend.app.services.llm_logger import log_llm_call
-            log_llm_call(
-                messages=messages,
-                response=response,
-                model=self.model_name,
-                provider=getattr(self, "provider", ""),
-                duration_sec=duration_sec
-            )
-        except Exception as e:
-            print(f"[LLM Logger Warning] Failed to log LLM request: {e}")
-
-        raw_result = response.choices[0].message.content
-        tagged_text = clean_llm_response(raw_result)
-
-        is_complete = "<|END|>" in tagged_text
-        tagged_text_clean = tagged_text.replace("<|END|>", "")
-
-        raw_text, spans = parse_xml_annotations(tagged_text_clean)
-
-        return {
-            "raw_text": raw_text,
-            "spans": spans,
-            "tagged_text": tagged_text,
-            "is_complete": is_complete,
-        }
-
-    def annotate_text(self, raw_ocr_text: str) -> Dict[str, Any]:
         """
         Annotates raw OCR text with LLM and aligns character spans to BIO sequence labels.
         Automatically handles output truncation by continuing annotation in multiple rounds
-        until the <|END|> delimiter is found.
-        Each continuation round sends the full original text together with the previous
-        assistant output so the LLM continues from the exact next token.
+        using chat conversation history until the <|END|> delimiter is found.
         """
         if not raw_ocr_text.strip():
             raise ValueError("Input OCR text is empty.")
 
-        all_tagged_texts = []
-        all_spans = []
-        previous_tagged = None
-        accumulated_raw = ""
+        messages = [
+            {"role": "system", "content": self.system_prompt},
+            {
+                "role": "user",
+                "content": (
+                    "Annotate ONLY the raw OCR text contained between the boundary delimiters below:\n\n"
+                    "<<<TARGET_TEXT_START>>>\n"
+                    f"{raw_ocr_text}\n"
+                    "<<<TARGET_TEXT_END>>>"
+                ),
+            },
+        ]
+
+        all_raw_results = []
+        total_prompt_tokens = 0
+        total_completion_tokens = 0
         max_iterations = 5
 
         for iteration in range(max_iterations):
-            chunk_result = self._llm_annotate_chunk(raw_ocr_text, previous_tagged)
+            iteration_request_id = (
+                f"{request_id}_iter_{iteration + 1}" if request_id else None
+            )
+            kwargs = dict(
+                model=self.model_name,
+                messages=messages,
+                temperature=0.3,
+                frequency_penalty=0.2,
+            )
+            extra_body = self._make_extra_body()
+            if extra_body:
+                kwargs["extra_body"] = extra_body
 
-            if iteration == 0:
-                accumulated_raw = chunk_result["raw_text"]
-            else:
-                actual_offset = self._find_continuation_offset(
-                    accumulated_raw, chunk_result["raw_text"], raw_ocr_text,
+            import time
+            start_time = time.time()
+            response = self.client.chat.completions.create(**kwargs)
+            duration_sec = time.time() - start_time
+
+            if hasattr(response, "usage") and response.usage:
+                usage_counts = _extract_usage_tokens(response.usage)
+                total_prompt_tokens += usage_counts["prompt_tokens"] or 0
+                total_completion_tokens += usage_counts["completion_tokens"] or 0
+
+            try:
+                from backend.app.services.llm_logger import log_llm_call
+                log_llm_call(
+                    messages=messages,
+                    response=response,
+                    model=self.model_name,
+                    provider=self.provider,
+                    request_id=iteration_request_id,
+                    duration_sec=duration_sec,
                 )
-                for span in chunk_result["spans"]:
-                    span["start"] += actual_offset
-                    span["end"] += actual_offset
-                accumulated_raw = raw_ocr_text[
-                    :actual_offset + len(chunk_result["raw_text"])
-                ]
+            except Exception as e:
+                print(f"[LLM Logger Warning] Failed to log LLM request: {e}")
 
-            all_tagged_texts.append(chunk_result["tagged_text"])
-            all_spans.extend(chunk_result["spans"])
+            raw_result = response.choices[0].message.content or ""
 
-            if chunk_result["is_complete"]:
+            if "<|END|>" in raw_result:
+                all_raw_results.append(raw_result)
                 break
 
-            previous_tagged = chunk_result["tagged_text"]
+            # Safely trim unclosed trailing XML tag if present, preserving literal OCR text
+            raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
+            all_raw_results.append(raw_result_trimmed)
 
-        raw_xml = "\n".join(all_tagged_texts)
+            messages.append({"role": "assistant", "content": raw_result_trimmed})
+            messages.append(
+                {
+                    "role": "user",
+                    "content": (
+                        "Continue from the very exact next token where you left off. "
+                        "Start outputting directly from the next character without repeating any previously generated content or tags."
+                    )
+                }
+            )
+
+        full_raw_response = "".join(all_raw_results)
+        cleaned_tagged_text = clean_llm_response(full_raw_response)
+        cleaned_tagged_text = cleaned_tagged_text.replace("<|END|>", "")
+
+        raw_xml = prune_hallucinated_xml_tail(cleaned_tagged_text, raw_ocr_text)
+        parsed_raw_text, spans = parse_xml_annotations(cleaned_tagged_text)
 
         tokens, offsets = tokenize_raw_text(raw_ocr_text)
         bio_tags, label_ids = align_spans_to_bio_tags(
-            raw_ocr_text, tokens, offsets, all_spans, TAG_TO_ID
+            raw_ocr_text, tokens, offsets, spans, TAG_TO_ID
         )
 
         validate_bio_sequence(bio_tags)
@@ -577,118 +668,29 @@ class OCRAnnotator:
         return {
             "raw_text": raw_ocr_text,
             "raw_xml": raw_xml,
-            "spans": all_spans,
+            "spans": spans,
             "tokens": tokens,
             "offsets": offsets,
             "tags": bio_tags,
             "labels": label_ids,
             "label_mapping": TAG_TO_ID,
             "annotated": True,
+            "total_tokens": total_prompt_tokens + total_completion_tokens,
+            "prompt_tokens": total_prompt_tokens,
+            "completion_tokens": total_completion_tokens,
         }
 
-    def _llm_annotate_chunk_stream(
-        self, text_chunk: str, callback=None,
-        streamed_base: int = 0, estimated_total: int = 0,
-        previous_tagged: Optional[str] = None,
+    def annotate_text_stream(
+        self,
+        raw_ocr_text: str,
+        callback=None,
+        request_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
-        Streams text to the LLM for annotation, invoking callback.
-        On continuation rounds, sends the full original text together with the
-        previous assistant output as conversation context.
-        """
-        messages = [
-            {"role": "system", "content": SYSTEM_PROMPT},
-        ] + self.few_shot_messages
-
-        if previous_tagged:
-            messages.append({"role": "user", "content": text_chunk})
-            messages.append({"role": "assistant", "content": previous_tagged})
-            messages.append({
-                "role": "user",
-                "content": (
-                    "Continue annotating from the exact point where your previous "
-                    "output ended. Append <|END|> when the annotation is complete."
-                ),
-            })
-        else:
-            messages.append({"role": "user", "content": text_chunk})
-
-        kwargs = dict(
-            model=self.model_name,
-            messages=messages,
-            temperature=0.0,
-            stream=True,
-        )
-        extra_body = self._make_extra_body()
-        if extra_body:
-            kwargs["extra_body"] = extra_body
-
-        import time
-        max_retries = 3
-        retry_delay = 2.0
-        full_chunks = []
-        streamed_token_count = streamed_base
-
-        from backend.app.services.llm_logger import StreamingLLMLogger
-        stream_logger = StreamingLLMLogger(
-            messages=messages,
-            model=self.model_name,
-            provider=getattr(self, "provider", ""),
-            flush_interval_sec=5.0
-        )
-
-        for attempt in range(max_retries):
-            try:
-                response = self.client.chat.completions.create(**kwargs)
-                full_chunks = []
-                streamed_token_count = streamed_base
-                for chunk in response:
-                    if chunk.choices and len(chunk.choices) > 0:
-                        delta = chunk.choices[0].delta
-                        content = getattr(delta, "content", None) or ""
-                        reasoning = getattr(delta, "reasoning_content", None) or ""
-                        usage = getattr(chunk, "usage", None)
-
-                        if content or reasoning or usage:
-                            stream_logger.append_chunk(content=content, reasoning=reasoning, usage=usage)
-
-                        if content:
-                            full_chunks.append(content)
-                            chunk_tokens = max(1, len(content.split()))
-                            streamed_token_count += chunk_tokens
-                            if callback:
-                                callback(streamed_token_count, estimated_total, content)
-                stream_logger.finalize()
-                break
-            except Exception as e:
-                print(f"  [Warning] OCR annotation stream error on attempt {attempt + 1}: {e}")
-                if attempt == max_retries - 1:
-                    raise e
-                time.sleep(retry_delay)
-
-        raw_result = "".join(full_chunks)
-        tagged_text = clean_llm_response(raw_result)
-
-        is_complete = "<|END|>" in tagged_text
-        tagged_text_clean = tagged_text.replace("<|END|>", "")
-
-        raw_text, spans = parse_xml_annotations(tagged_text_clean)
-
-        return {
-            "raw_text": raw_text,
-            "spans": spans,
-            "tagged_text": tagged_text,
-            "is_complete": is_complete,
-            "streamed_token_count": streamed_token_count,
-        }
-
-    def annotate_text_stream(self, raw_ocr_text: str, callback=None) -> Dict[str, Any]:
-        """
         Annotates raw OCR text with LLM using token streaming,
-        invoking callback(streamed_tokens, estimated_total_tokens, content_chunk)
-        on each stream chunk.
+        invoking callback on each stream chunk.
         Automatically handles output truncation by continuing annotation in
-        multiple rounds until the <|END|> delimiter is found.
+        multiple rounds using chat conversation history until <|END|> is found.
         """
         if not raw_ocr_text.strip():
             raise ValueError("Input OCR text is empty.")
@@ -697,48 +699,158 @@ class OCRAnnotator:
         original_input_tokens = max(30, int(len(words) * 1.3))
         estimated_total_tokens = int(original_input_tokens * 1.8)
 
-        all_tagged_texts = []
-        all_spans = []
-        streamed_total = 0
-        previous_tagged = None
-        accumulated_raw = ""
+        messages = [
+            {"role": "system", "content": self.system_prompt},
+            {
+                "role": "user",
+                "content": (
+                    "Annotate ONLY the raw OCR text contained between the boundary delimiters below:\n\n"
+                    "<<<TARGET_TEXT_START>>>\n"
+                    f"{raw_ocr_text}\n"
+                    "<<<TARGET_TEXT_END>>>"
+                ),
+            },
+        ]
+
+        all_raw_results = []
+        streamed_token_count = 0
+        total_prompt_tokens = 0
         max_iterations = 5
 
+        from backend.app.services.llm_logger import StreamingLLMLogger
+        import time
+
+        max_retries = 3
+        retry_delay = 2.0
+
         for iteration in range(max_iterations):
-            chunk_result = self._llm_annotate_chunk_stream(
-                raw_ocr_text,
-                callback=callback, streamed_base=streamed_total,
-                estimated_total=estimated_total_tokens,
-                previous_tagged=previous_tagged,
+            iteration_request_id = (
+                f"{request_id}_iter_{iteration + 1}" if request_id else None
             )
 
-            if iteration == 0:
-                accumulated_raw = chunk_result["raw_text"]
-            else:
-                actual_offset = self._find_continuation_offset(
-                    accumulated_raw, chunk_result["raw_text"], raw_ocr_text,
+            kwargs = dict(
+                model=self.model_name,
+                messages=messages,
+                temperature=0.3,
+                frequency_penalty=0.2,
+                stream=True,
+            )
+            extra_body = self._make_extra_body()
+            if extra_body:
+                kwargs["extra_body"] = extra_body
+
+            full_chunks = []
+            iteration_base_tokens = streamed_token_count
+
+            for attempt in range(max_retries):
+                attempt_request_id = (
+                    f"{iteration_request_id}_attempt_{attempt + 1}" if iteration_request_id else None
                 )
-                for span in chunk_result["spans"]:
-                    span["start"] += actual_offset
-                    span["end"] += actual_offset
-                accumulated_raw = raw_ocr_text[
-                    :actual_offset + len(chunk_result["raw_text"])
-                ]
+                stream_logger = StreamingLLMLogger(
+                    messages=messages,
+                    model=self.model_name,
+                    provider=self.provider,
+                    request_id=attempt_request_id,
+                    flush_interval_sec=5.0,
+                )
 
-            all_tagged_texts.append(chunk_result["tagged_text"])
-            all_spans.extend(chunk_result["spans"])
-            streamed_total = chunk_result["streamed_token_count"]
+                try:
+                    response = self.client.chat.completions.create(**kwargs)
+                    full_chunks = []
+                    current_attempt_tokens = iteration_base_tokens
+                    saw_any_chunk = False
+                    finish_reason = None
+                    for chunk in response:
+                        if chunk.choices and len(chunk.choices) > 0:
+                            saw_any_chunk = True
+                            choice = chunk.choices[0]
+                            delta = choice.delta
+                            chunk_finish = getattr(choice, "finish_reason", None)
+                            if chunk_finish:
+                                finish_reason = chunk_finish
+                            content = getattr(delta, "content", None) or ""
+                            reasoning = getattr(delta, "reasoning_content", None) or ""
+                            usage = getattr(chunk, "usage", None)
 
-            if chunk_result["is_complete"]:
+                            if usage:
+                                usage_counts = _extract_usage_tokens(usage)
+                                if usage_counts["prompt_tokens"] is not None:
+                                    total_prompt_tokens = max(
+                                        total_prompt_tokens,
+                                        usage_counts["prompt_tokens"],
+                                    )
+
+                            if content or reasoning or usage:
+                                stream_logger.append_chunk(
+                                    content=content,
+                                    reasoning=reasoning,
+                                    usage=usage,
+                                )
+
+                            if content:
+                                full_chunks.append(content)
+                                chunk_tokens = max(1, len(content.split()))
+                                current_attempt_tokens += chunk_tokens
+                                if callback:
+                                    callback(current_attempt_tokens, estimated_total_tokens, content)
+
+                    if finish_reason in ("length", "max_tokens"):
+                        print(f"  [Notice] Stream reached max output token limit (finish_reason='{finish_reason}') on iteration {iteration + 1}. Preserving {len(full_chunks)} content chunks for continuation.")
+
+                    if not full_chunks and saw_any_chunk:
+                        raise RuntimeError("LLM streaming response had no content chunks.")
+                    if not full_chunks:
+                        raise RuntimeError("LLM streaming response was empty (no chunks received).")
+
+                    streamed_token_count = current_attempt_tokens
+                    break
+                except Exception as e:
+                    # If content chunks were already accumulated before the stream error/limit drop,
+                    # preserve them so the continuation loop can resume generation seamlessly.
+                    if full_chunks:
+                        print(f"  [Notice] Stream interrupted mid-output on attempt {attempt + 1} ({len(full_chunks)} content chunks collected). Preserving output for continuation. Cause: {e}")
+                        streamed_token_count = current_attempt_tokens
+                        break
+
+                    streamed_token_count = iteration_base_tokens
+                    print(f"  [Warning] OCR annotation stream error on attempt {attempt + 1}: {e}")
+                    if attempt == max_retries - 1:
+                        raise e
+                    time.sleep(retry_delay)
+                finally:
+                    stream_logger.finalize()
+
+            raw_result = "".join(full_chunks)
+
+            if "<|END|>" in raw_result:
+                all_raw_results.append(raw_result)
                 break
 
-            previous_tagged = chunk_result["tagged_text"]
+            # Safely trim unclosed trailing XML tag if present, preserving literal OCR text
+            raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
+            all_raw_results.append(raw_result_trimmed)
 
-        raw_xml = prune_hallucinated_xml_tail("\n".join(all_tagged_texts), raw_ocr_text)
+            messages.append({"role": "assistant", "content": raw_result_trimmed})
+            messages.append(
+                {
+                    "role": "user",
+                    "content": (
+                        "Continue from the very exact next token where you left off. "
+                        "Start outputting directly from the next character without repeating any previously generated content or tags."
+                    )
+                }
+            )
+
+        full_raw_response = "".join(all_raw_results)
+        cleaned_tagged_text = clean_llm_response(full_raw_response)
+        cleaned_tagged_text = cleaned_tagged_text.replace("<|END|>", "")
+
+        raw_xml = prune_hallucinated_xml_tail(cleaned_tagged_text, raw_ocr_text)
+        parsed_raw_text, spans = parse_xml_annotations(cleaned_tagged_text)
 
         tokens, offsets = tokenize_raw_text(raw_ocr_text)
         bio_tags, label_ids = align_spans_to_bio_tags(
-            raw_ocr_text, tokens, offsets, all_spans, TAG_TO_ID
+            raw_ocr_text, tokens, offsets, spans, TAG_TO_ID
         )
 
         validate_bio_sequence(bio_tags)
@@ -746,13 +858,16 @@ class OCRAnnotator:
         return {
             "raw_text": raw_ocr_text,
             "raw_xml": raw_xml,
-            "spans": all_spans,
+            "spans": spans,
             "tokens": tokens,
             "offsets": offsets,
             "tags": bio_tags,
             "labels": label_ids,
             "label_mapping": TAG_TO_ID,
             "annotated": True,
+            "total_tokens": total_prompt_tokens + streamed_token_count,
+            "prompt_tokens": total_prompt_tokens,
+            "completion_tokens": streamed_token_count,
         }
 
 

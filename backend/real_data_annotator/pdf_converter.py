@@ -20,6 +20,13 @@ if hasattr(sys.stdout, "reconfigure"):
 workspace_dir = Path(__file__).resolve().parent.parent.parent
 load_dotenv(dotenv_path=workspace_dir / ".env")
 
+from backend.app.config import (
+    OCR_MODEL,
+    OCR_PROVIDER,
+    get_provider_base_url,
+    get_provider_api_key,
+)
+
 
 SYSTEM_PROMPT_LONG_CONTEXT = (
     "You are an expert Document OCR and Structural Layout Mining Assistant. "
@@ -28,8 +35,9 @@ SYSTEM_PROMPT_LONG_CONTEXT = (
     "1. PAGES WRAPPER: Wrap the entire response in <pages> ... </pages>. Inside <pages>, wrap each individual page in <page> ... </page>.\n"
     "2. NO ARTIFICIAL SPACING OR VISUAL REPRODUCTION: Do NOT attempt to visually replicate physical layout using spaces, tabs, or multiple consecutive empty spaces. Do NOT use whitespace to simulate multi-column layouts, align numbers under gaps, or pad text to match physical margins. Prioritize clean, usable text over visual reproduction.\n"
     "3. SINGLE-COLUMN MERGING: If the input page has multiple columns, convert and merge them into a clean, single-column linear flow following logical reading order.\n"
-    "4. MARKDOWN & LATEX: Extract text, headings, and lists in standard Markdown. Convert all math formulas and equations to standard LaTeX ($...$ inline, $$...$$ block).\n"
-    "5. PAGE METADATA HEADER: At the bottom of the page content (just before </page>), output a strict JSON block enclosed in <page_metadata> ... </page_metadata>.\n\n"
+    "4. STRICT HTML TABLES ONLY: Convert ALL tables (including data tables, option choice grids, matrices, and side-by-side structures) strictly to standard HTML <table>...</table> elements (e.g. <table><tr><th>...</th></tr><tr><td>...</td></tr></table>). NEVER use Markdown pipe tables (| col | col |).\n"
+    "5. MARKDOWN & LATEX: Extract text, headings, and lists in standard Markdown. Convert all math formulas and equations to standard LaTeX ($...$ inline, $$...$$ block).\n"
+    "6. PAGE METADATA HEADER: At the bottom of the page content (just before </page>), output a strict JSON block enclosed in <page_metadata> ... </page_metadata>.\n\n"
     "JSON Schema:\n"
     "{\n"
     "  \"p\": page_num,\n"
@@ -142,26 +150,34 @@ def load_few_shot_messages(example_dir: Path) -> List[Dict[str, Any]]:
 
 class PDFOCRConverter:
     """
-    Complete PDF OCR System for Exam Documents.
-    Supports Vision LLM (Minimax-M3 / OpenAI vision) with automatic PyMuPDF fallback.
-    Processes pages in batches (default: 3 images/batch) with parallel concurrency (default: 5 workers).
+    Renders PDF pages to high-resolution PNG images using PyMuPDF (fitz)
+    and passes them to a Vision LLM API (MiniMax / DeepSeek Vision / Qwen-VL) to produce Markdown OCR.
     """
 
     def __init__(
         self,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
-        model: str = "phatchau036/minimax-m3",
+        model: Optional[str] = None,
         provider: Optional[str] = None,
         batch_size: int = 6,
         concurrency: int = 5,
         examples_dir: Optional[Union[str, Path]] = None,
     ):
-        self.base_url = base_url or os.environ.get("OPENAI_BASE_URL") or os.environ.get("LLM_BASE_URL") or "https://api.xah.io/v1"
-        self.api_key = api_key or os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
+        self.model = model or OCR_MODEL
+        self.provider = provider or OCR_PROVIDER or "xah"
 
-
-        self.model = model
+        self.base_url = (
+            base_url
+            or os.environ.get("OPENAI_BASE_URL")
+            or os.environ.get("LLM_BASE_URL")
+            or get_provider_base_url(self.provider)
+        )
+        self.api_key = (
+            api_key
+            or get_provider_api_key(self.provider)
+            or os.environ.get("OPENAI_API_KEY")
+        )
 
         self.batch_size = batch_size
         self.concurrency = concurrency
@@ -379,7 +395,7 @@ def main():
         "--force", "-f", action="store_true", help="Force reprocessing even if output exists"
     )
     parser.add_argument(
-        "--model", default="mn/Minimax-M3", help="Vision LLM model identifier"
+        "--model", default=None, help="Vision LLM model identifier"
     )
     parser.add_argument(
         "--batch-size", type=int, default=3, help="Number of images per OCR batch request (default: 3)"

@@ -14,7 +14,7 @@ providers:
     base_url: "https://api.deepseek.com/v1"
     api_key_env: "DEEPSEEK_API_KEY"
   commandcode:
-    base_url: "http://127.0.0.1:8787/v1"
+    base_url: "http://127.0.0.1:3050/v1"
     api_key_env: "CMD_API_KEY"
 
 models:
@@ -27,13 +27,14 @@ models:
     description: "Vision LLM model for converting PDF pages to markdown text"
 
   parser:
-    model_name: "poolside/laguna-s-2.1-free"
+    model_name: "deepseek/deepseek-v4-flash"
     provider: "commandcode"
     thinking: disabled
+    max_tokens: 64000
     description: "Sequence labeling LLM model for question stem and option annotation"
 
   linker:
-    model_name: "deepseek/deepseek-v4-pro"
+    model_name: "deepseek/deepseek-v4-flash"
     provider: "commandcode"
     thinking: disabled
     description: "Graph resolver agent for entity resolution and passage linking"
