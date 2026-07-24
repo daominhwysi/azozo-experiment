@@ -100,10 +100,12 @@ def merge_chunk_xmls(
     unified 100% annotated XML document, deduplicating boundary questions and stimuli
     across safety-net overlap pages, and pruning hallucinated question tails.
     """
-    seen_question_nums = set()
+    seen_question_keys = set()
     seen_stimulus_signatures = set()
     deduplicated_count = 0
     merged_lines = []
+    current_exam_code = "default"
+    question_numbers_all = []
 
     for c_idx, raw_xml in enumerate(chunk_xml_contents):
         cleaned_chunk = re.sub(r"<!--\s*Chunk\s*\d+:.*?-->", "", raw_xml).strip()
@@ -131,33 +133,50 @@ def merge_chunk_xmls(
             line_s = line.strip()
             if not line_s:
                 continue
-            
-            # Check for question label
-            q_match = re.search(r"<question_label>\s*\*\*?(\d{1,4})\.\*\*?\s*</question_label>", line)
+
+            # Update current exam code variant if detected
+            code_match = re.search(r"Mã\s+đề(?:\s+thi)?\s*:?\s*(\d+)", line_s, re.IGNORECASE)
+            if code_match:
+                current_exam_code = code_match.group(1)
+
+            # Auto-wrap untagged question label if line starts with **Question X.** or **Câu X.** or **X.** followed by XML tag like <option_label> or <stem>
+            if not line_s.startswith("<question_label>") and not line_s.startswith("<section>") and not line_s.startswith("<stimulus>"):
+                line = re.sub(
+                    r"^(\*\*?(?:Question|Câu|Q)?\s*\d{1,4}\.\*\*?)\s*(?=<option_label>|<stem>|<option_text>)",
+                    r"<question_label>\1</question_label> ",
+                    line,
+                    flags=re.IGNORECASE
+                )
+                line_s = line.strip()
+
+            # Check for question label tag or untagged pattern
+            q_match = re.search(r"<question_label>\s*\*\*?(?:Question|Câu|Q)?\s*(\d{1,4})\.\*\*?\s*</question_label>", line, re.IGNORECASE)
             if not q_match:
-                # Also match untagged question label e.g. **158.**
-                q_match_raw = re.search(r"(?:^|\s)\*\*?(\d{1,4})\.\*\*?\s*", line_s)
-                if q_match_raw and not line_s.startswith("<") and not line_s.startswith("#"):
-                    q_num = q_match_raw.group(1)
-                    if raw_input and f"**{q_num}.**" not in raw_input and f"{q_num}." not in raw_input:
+                q_match = re.search(r"(?:^|\s)\*\*?(?:Question|Câu|Q)?\s*(\d{1,4})\.\*\*?\s*", line_s, re.IGNORECASE)
+                if q_match and not line_s.startswith("<") and not line_s.startswith("#"):
+                    q_num = q_match.group(1)
+                    if raw_input and f"**{q_num}.**" not in raw_input and f"{q_num}." not in raw_input and f"Question {q_num}." not in raw_input and f"Câu {q_num}." not in raw_input:
                         # Prune hallucinated tail
                         continue
 
             if q_match:
                 q_num = q_match.group(1)
+                q_key = f"{current_exam_code}:{q_num}"
+                
                 # Verify if this question actually exists in raw chunk input (if provided)
-                if raw_input and (f"**{q_num}.**" not in raw_input and f"{q_num}." not in raw_input):
+                if raw_input and (f"**{q_num}.**" not in raw_input and f"{q_num}." not in raw_input and f"Question {q_num}" not in raw_input and f"Câu {q_num}" not in raw_input):
                     # Hallucinated question not in raw chunk input
                     deduplicated_count += 1
                     in_skip_block = True
                     continue
 
-                if q_num in seen_question_nums:
+                if q_key in seen_question_keys:
                     deduplicated_count += 1
                     in_skip_block = True
                     continue
                 else:
-                    seen_question_nums.add(q_num)
+                    seen_question_keys.add(q_key)
+                    question_numbers_all.append(int(q_num))
                     in_skip_block = False
 
             if in_skip_block:
@@ -169,12 +188,13 @@ def merge_chunk_xmls(
             merged_lines.append(line)
 
     merged_xml = "\n".join(merged_lines)
-    all_questions_sorted = sorted(list(seen_question_nums), key=lambda x: int(x))
+    all_questions_sorted = sorted(list(set(question_numbers_all)))
 
     return {
         "merged_xml": merged_xml,
-        "total_questions": len(seen_question_nums),
+        "total_questions": len(seen_question_keys),
         "deduplicated_count": deduplicated_count,
         "chunks_processed": len(chunk_xml_contents),
         "question_range": f"{all_questions_sorted[0]} - {all_questions_sorted[-1]}" if all_questions_sorted else "N/A"
     }
+

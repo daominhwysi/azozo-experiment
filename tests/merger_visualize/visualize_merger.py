@@ -46,7 +46,7 @@ def generate_merger_summary_report(
     md.append("## 🛠️ Verification & Reconciler Metrics")
     md.append(f"- **100% Sequence Coverage:** Successfully merged all sequence-tagged XML chunks without loss.")
     md.append(f"- **Boundary Safety-Net Deduplication:** Automatically removed overlap entries across boundary pages.")
-    md.append(f"- **Final Document Integrity:** Unified document `merged_full_document.xml` contains all 100 TOEIC questions (101 - 200).")
+    md.append(f"- **Final Document Integrity:** Unified document `merged_full_document.xml` contains all `{merge_result.get('total_questions')}` parsed questions (`{merge_result.get('question_range')}`).")
 
     return "\n".join(md)
 
