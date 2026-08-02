@@ -5,7 +5,7 @@ from typing import Dict, Any, List, Optional
 
 from backend.app.domains.ocr.annotator.annotate_ocr import OCRAnnotator
 from backend.app.domains.ocr.parser.parser import parse_spans_into_structured_questions
-from backend.app.domains.ocr.parser.long_parser.anchored_llm_parser import AnchoredLLMExamParser
+from backend.app.domains.ocr.parser.long_parser.anchored_xml_llm_parser import AnchoredXMLLLMExamParser
 
 
 _ALLOWED_XML_TAGS = {
@@ -22,14 +22,14 @@ _ALLOWED_XML_TAGS = {
 
 class ParserAgentWorker:
     """
-    Parser Agent Worker utilizing Two-Pass Multi-Role LLM Parsing with Compact Text Anchors.
+    Parser Agent Worker utilizing Two-Pass Multi-Role XML Sequence Annotation with Compact Anchors.
     Extracts structured questions from raw chunk text using Role A (Parser) & Role B (Validator).
     """
     def __init__(self, model: Optional[str] = None, provider: Optional[str] = None):
         self.model = model
         self.provider = provider
         self.max_attempts = 4
-        self.anchored_parser = AnchoredLLMExamParser(model=model, provider=provider)
+        self.anchored_parser = AnchoredXMLLLMExamParser(model=model, provider=provider)
         try:
             self.annotator = OCRAnnotator(model=model, provider=provider)
             self.annotator_ready = True
