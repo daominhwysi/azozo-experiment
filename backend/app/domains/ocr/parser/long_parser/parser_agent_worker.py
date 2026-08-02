@@ -5,6 +5,7 @@ from typing import Dict, Any, List, Optional
 
 from backend.app.domains.ocr.annotator.annotate_ocr import OCRAnnotator
 from backend.app.domains.ocr.parser.parser import parse_spans_into_structured_questions
+from backend.app.domains.ocr.parser.long_parser.anchored_llm_parser import AnchoredLLMExamParser
 
 
 _ALLOWED_XML_TAGS = {
@@ -21,13 +22,14 @@ _ALLOWED_XML_TAGS = {
 
 class ParserAgentWorker:
     """
-    Parser Agent Worker utilizing existing annotate_ocr.py and parser.py stack.
-    Extracts structured questions from raw chunk text using 100% LLM sequence annotation.
+    Parser Agent Worker utilizing Two-Pass Multi-Role LLM Parsing with Compact Text Anchors.
+    Extracts structured questions from raw chunk text using Role A (Parser) & Role B (Validator).
     """
     def __init__(self, model: Optional[str] = None, provider: Optional[str] = None):
         self.model = model
         self.provider = provider
         self.max_attempts = 4
+        self.anchored_parser = AnchoredLLMExamParser(model=model, provider=provider)
         try:
             self.annotator = OCRAnnotator(model=model, provider=provider)
             self.annotator_ready = True
@@ -80,7 +82,7 @@ class ParserAgentWorker:
         page_offset_ranges: Optional[List[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         """
-        Process a single document chunk into structured questions and stimuli blocks via 100% LLM sequence annotation.
+        Process a single document chunk into structured questions and stimuli blocks via 2-Pass Multi-Role LLM Parsing.
         """
         if not raw_chunk_text.strip():
             return {
@@ -98,44 +100,49 @@ class ParserAgentWorker:
                 "method": "empty",
             }
 
-        if not self.annotator_ready or self.annotator is None:
-            raise RuntimeError("LLM annotator unavailable")
-
-        annotation_res = {}
-        tagged_text = ""
+        structured_questions: List[Dict[str, Any]] = []
+        stimuli: Dict[str, str] = {}
+        annotation_res: Dict[str, Any] = {}
         chunk_request_id = uuid.uuid4().hex[:10]
         validation_errors: List[str] = []
         attempts_used = 0
+        method = "llm_two_pass_anchored"
 
-        for attempt in range(1, self.max_attempts + 1):
-            attempts_used = attempt
-            try:
-                attempt_request_id = f"{chunk_request_id}_attempt_{attempt}"
-                annotation_res = self.annotator.annotate_text_stream(
-                    raw_chunk_text,
-                    request_id=attempt_request_id,
-                )
-                tagged_text = annotation_res.get("raw_xml") or annotation_res.get("tagged_text", "")
+        # Attempt 1: Two-Pass Multi-Role Anchored LLM Parsing
+        try:
+            attempts_used = 1
+            anchored_res = self.anchored_parser.parse_exam_chunk(
+                raw_chunk_text, chunk_index=chunk_index
+            )
+            structured_questions = anchored_res.get("questions") or []
+            stimuli = anchored_res.get("stimuli") or {}
+        except Exception as e:
+            validation_errors.append(f"Two-pass anchored LLM parsing failed: {e}")
+            print(f"[Parser Worker Warning] Two-pass anchored parser error: {e}")
+            structured_questions = []
 
-                if not self._is_valid_annotation_xml(raw_chunk_text, tagged_text):
-                    validation_errors.append("Invalid or malformed XML annotation output.")
-                    raise ValueError("Invalid or malformed XML annotation output.")
-
-                # Parse character spans into structured objects
-                structured_questions, stimuli = parse_spans_into_structured_questions(
-                    annotation_res["raw_text"], annotation_res.get("spans", [])
-                )
-                method = "llm_xml"
-                break
-            except Exception as e:
-                err_msg = str(e)
-                print(f"[Parser Worker Warning] LLM annotation attempt {attempt} failed for chunk_{chunk_index}: {e}")
-                if attempt >= self.max_attempts:
-                    raise RuntimeError(
-                        f"LLM annotation failed after {self.max_attempts} attempts for chunk_{chunk_index}: {e}"
-                    ) from e
-                sleep_time = 15.0 if ("429" in err_msg or "rate_limit" in err_msg.lower() or "connection" in err_msg.lower()) else (3.0 * attempt)
-                time.sleep(sleep_time)
+        # Fallback to XML Sequence Annotator if two-pass anchored returned no questions
+        if not structured_questions and self.annotator_ready and self.annotator is not None:
+            for attempt in range(1, self.max_attempts + 1):
+                attempts_used += 1
+                try:
+                    attempt_request_id = f"{chunk_request_id}_fallback_{attempt}"
+                    annotation_res = self.annotator.annotate_text_stream(
+                        raw_chunk_text,
+                        request_id=attempt_request_id,
+                    )
+                    tagged_text = annotation_res.get("raw_xml") or annotation_res.get("tagged_text", "")
+                    if self._is_valid_annotation_xml(raw_chunk_text, tagged_text):
+                        structured_questions, stimuli = parse_spans_into_structured_questions(
+                            annotation_res["raw_text"], annotation_res.get("spans", [])
+                        )
+                        method = "llm_xml_fallback"
+                        break
+                except Exception as e:
+                    validation_errors.append(f"Fallback XML attempt {attempt} failed: {e}")
+                    if attempt >= self.max_attempts:
+                        break
+                    time.sleep(2.0 * attempt)
 
 
         # Ensure chunk-local IDs are globally unique across chunks.

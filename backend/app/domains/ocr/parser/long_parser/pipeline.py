@@ -23,7 +23,6 @@ from backend.app.domains.ocr.parser.long_parser.greedy_chunker import (
     greedy_oversize_chunker,
 )
 from backend.app.domains.ocr.parser.long_parser.parser_agent_worker import ParserAgentWorker
-from backend.app.domains.ocr.parser.long_parser.det_anchor_worker import DetAnchorParserWorker
 from backend.app.domains.ocr.parser.long_parser.linking_agent import CompactGraphResolverAgent
 
 class LongContextParserPipeline:
@@ -41,7 +40,7 @@ class LongContextParserPipeline:
         batch_size: int = 3,
         concurrency: int = 5,
         overlap_pages: int = 1,
-        use_det_anchor: bool = True,
+        use_det_anchor: bool = False,
     ):
         self.ocr_model = ocr_model or OCR_MODEL
         self.parser_model = parser_model or PARSER_MODEL
@@ -262,6 +261,7 @@ class LongContextParserPipeline:
             progress_callback(52, 100, f"Đang chạy {worker_label} ({len(chunks)} Chunks)...")
 
         if self.use_det_anchor:
+            from backend.app.domains.ocr.parser.long_parser.old.det_anchor_worker import DetAnchorParserWorker
             worker = DetAnchorParserWorker(model=self.parser_model, provider=self.parser_provider)
         else:
             worker = ParserAgentWorker(model=self.parser_model, provider=self.parser_provider)

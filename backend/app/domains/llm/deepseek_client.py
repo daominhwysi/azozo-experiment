@@ -72,25 +72,32 @@ client = deepseek_client
 
 
 def chat(
-    prompt: str,
+    prompt: Optional[str] = None,
     system: str = "You are a helpful assistant",
     model: Optional[str] = None,
     thinking: Optional[Any] = None,
     provider: Optional[str] = None,
     max_tokens: Optional[int] = None,
+    messages: Optional[Any] = None,
 ) -> str:
     """
     Call the LLM chat API using model and provider configured in config.yaml.
+    Supports either single prompt string or multi-turn messages list.
     """
     target_model = model or PARSER_MODEL
     target_provider = (provider or PARSER_PROVIDER or "xah").lower()
     target_max_tokens = max_tokens or PARSER_MAX_TOKENS
 
-    kwargs = {
-        "messages": [
+    if messages is not None:
+        chat_messages = list(messages)
+    else:
+        chat_messages = [
             {"role": "system", "content": system},
-            {"role": "user", "content": prompt},
-        ],
+            {"role": "user", "content": prompt or ""},
+        ]
+
+    kwargs = {
+        "messages": chat_messages,
         "model": target_model,
         "stream": False,
     }
