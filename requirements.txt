@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+pymupdf
+openai
+python-dotenv
+tqdm
+pyyaml

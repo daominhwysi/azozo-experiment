@@ -11,8 +11,8 @@
 | Metric | Value |
 | :--- | :--- |
 | **Total Chunks Received** | `3` |
-| **Total Extracted Questions** | `106` questions |
-| **Total Extracted Stimuli** | `0` passages |
+| **Total Extracted Questions** | `108` questions |
+| **Total Extracted Stimuli** | `20` passages |
 
 ---
 
@@ -20,9 +20,9 @@
 
 | Chunk # | Page Range | Est. Tokens | Questions | Stimuli Count | Extraction Method | Detailed Chunk Result Link |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Chunk 1** | `p1 - p13` | `4,473` | `62` | `0` | `regex_fallback` | 👉 [chunk_1_p1_p13_parsed.xml](chunk_1_p1_p13_parsed.xml) |
-| **Chunk 2** | `p14 - p24` | `4,505` | `28` | `0` | `regex_fallback` | 👉 [chunk_2_p14_p24_parsed.xml](chunk_2_p14_p24_parsed.xml) |
-| **Chunk 3** | `p25 - p29` | `2,355` | `16` | `0` | `regex_fallback` | 👉 [chunk_3_p25_p29_parsed.xml](chunk_3_p25_p29_parsed.xml) |
+| **Chunk 1** | `p1 - p13` | `4,473` | `57` | `9` | `llm_xml` | 👉 [chunk_1_p1_p13_parsed.xml](chunk_1_p1_p13_parsed.xml) |
+| **Chunk 2** | `p13 - p23` | `4,375` | `31` | `8` | `llm_xml` | 👉 [chunk_2_p13_p23_parsed.xml](chunk_2_p13_p23_parsed.xml) |
+| **Chunk 3** | `p23 - p29` | `3,133` | `20` | `3` | `llm_xml` | 👉 [chunk_3_p23_p29_parsed.xml](chunk_3_p23_p29_parsed.xml) |
 
 ---
 

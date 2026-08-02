@@ -4,7 +4,7 @@
 - **Parsed Chunks Merged:** `3` chunks
 - **Total Unique Questions Parsed:** `100` questions
 - **Question Range:** `101 - 200`
-- **Boundary Items Deduplicated:** `48` duplicate entries
+- **Boundary Items Deduplicated:** `8` duplicate entries
 - **Merged Unified Output File:** 👉 [merged_full_document.xml](merged_full_document.xml)
 
 ---
@@ -20,6 +20,7 @@
 ---
 
 ## 🛠️ Verification & Reconciler Metrics
-- **100% Sequence Coverage:** Successfully merged all sequence-tagged XML chunks without loss.
-- **Boundary Safety-Net Deduplication:** Automatically removed overlap entries across boundary pages.
-- **Final Document Integrity:** Unified document `merged_full_document.xml` contains all 100 TOEIC questions (101 - 200).
+- **Source Fidelity:** `True`
+- **Balanced Tags:** `True`
+- **Source Authority:** `original_chunk_text`
+- **Conflicts Resolved:** `74`

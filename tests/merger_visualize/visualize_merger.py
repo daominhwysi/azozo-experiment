@@ -1,6 +1,7 @@
 import os
 import sys
 import glob
+import json
 from typing import List, Dict, Any
 
 # Ensure workspace root is in sys.path
@@ -8,7 +9,10 @@ workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "
 if workspace_root not in sys.path:
     sys.path.insert(0, workspace_root)
 
-from backend.app.services.long_parser.sequence_reconciler import merge_chunk_xmls
+from backend.app.domains.ocr.parser.long_parser.sequence_reconciler import (
+    merge_chunk_xmls,
+    reconcile_parser_chunk_results,
+)
 
 
 def generate_merger_summary_report(
@@ -44,9 +48,12 @@ def generate_merger_summary_report(
     md.append("---")
     md.append("")
     md.append("## 🛠️ Verification & Reconciler Metrics")
-    md.append(f"- **100% Sequence Coverage:** Successfully merged all sequence-tagged XML chunks without loss.")
-    md.append(f"- **Boundary Safety-Net Deduplication:** Automatically removed overlap entries across boundary pages.")
-    md.append(f"- **Final Document Integrity:** Unified document `merged_full_document.xml` contains all `{merge_result.get('total_questions')}` parsed questions (`{merge_result.get('question_range')}`).")
+    diagnostics = merge_result.get("diagnostics", {})
+    validation = diagnostics.get("validation", {})
+    md.append(f"- **Source Fidelity:** `{validation.get('source_fidelity_ok', False)}`")
+    md.append(f"- **Balanced Tags:** `{validation.get('balanced_ok', False)}`")
+    md.append(f"- **Source Authority:** `{merge_result.get('source_authority', 'original_chunk_text')}`")
+    md.append(f"- **Conflicts Resolved:** `{len(diagnostics.get('conflicts', []))}`")
 
     return "\n".join(md)
 
@@ -73,9 +80,36 @@ def main():
         with open(fpath, "r", encoding="utf-8") as f:
             chunk_contents.append(f.read())
 
-    # 2. Run Sequence Merger
-    print("Running merge_chunk_xmls()...")
-    merge_result = merge_chunk_xmls(chunk_contents)
+    manifest_path = os.path.join(parser_dir, "parser_chunks_manifest.json")
+    if os.path.exists(manifest_path):
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            manifest = json.load(f)
+        chunk_results = []
+        for item in manifest["chunks"]:
+            with open(os.path.join(parser_dir, item["raw_chunk_text_file"]), "r", encoding="utf-8") as f:
+                raw_text = f.read()
+            with open(os.path.join(parser_dir, item["parsed_xml_file"]), "r", encoding="utf-8") as f:
+                parsed_xml = f.read()
+            chunk_results.append({
+                **item,
+                "raw_chunk_text": raw_text,
+                "raw_xml": parsed_xml,
+            })
+        merge_result = reconcile_parser_chunk_results(chunk_results)
+        merge_result["total_questions"] = len(merge_result["structured_questions"])
+        merge_result["question_range"] = "source-scoped"
+        merge_result["deduplicated_count"] = len(
+            merge_result["diagnostics"].get("conflicts", [])
+        )
+        merge_result["source_authority"] = "original_chunk_text"
+    else:
+        print("Warning: parser manifest missing; parsing raw text via _strip_xml for source-grounded merging.")
+        from backend.app.domains.ocr.parser.long_parser.source_merger.canonical_source import _strip_xml
+        raw_inputs = [_strip_xml(c) for c in chunk_contents]
+        merge_result = merge_chunk_xmls(
+            chunk_contents,
+            raw_chunk_inputs=raw_inputs,
+        )
 
     # 3. Output merged_full_document.xml
     merged_xml_path = os.path.join(out_dir, "merged_full_document.xml")

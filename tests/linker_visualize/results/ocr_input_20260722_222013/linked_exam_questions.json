@@ -1,0 +1,777 @@
+{
+  "doc_id": "ocr_input_20260722_222013",
+  "total_questions": 100,
+  "total_stimuli": 19,
+  "questions": [
+    {
+      "id": "q_101",
+      "question_number": "101",
+      "stem": "Aberdeen Bank offers a range of financial services ------ the needs of its customers.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_102",
+      "question_number": "102",
+      "stem": "------ staff are asked to provide a backup cell phone number and e-mail address.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_103",
+      "question_number": "103",
+      "stem": "Today, Mr. Rahn will present ------ ideas to improve the company's accounting software.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_104",
+      "question_number": "104",
+      "stem": "The firm's one-hour lunch policy is ------ enforced, so do not return late.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_105",
+      "question_number": "105",
+      "stem": "Ms. Martinova's promotion to chief financial officer is contingent ------ approval by our board of executives.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_106",
+      "question_number": "106",
+      "stem": "The peninsula's southernmost portion is rarely visited because it is not ------ accessible to travelers.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_107",
+      "question_number": "107",
+      "stem": "The Vaknis Group ------ all clients a flat consultation fee, to be paid in advance.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_108",
+      "question_number": "108",
+      "stem": "On August 19, employees will not be able to access their e-mail account ------ time sheet.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_109",
+      "question_number": "109",
+      "stem": "Walk-in clients are ------ a reliable source of business for the Auburn Hair Salon.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_110",
+      "question_number": "110",
+      "stem": "By the end of the year, all packaging used for Schaefer's food products will be ------ recyclable.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_111",
+      "question_number": "111",
+      "stem": "Highbrook Hotel staff are trained to provide each guest with an exceptional ------.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_112",
+      "question_number": "112",
+      "stem": "In ------ for their help, volunteers at the library's book sale were given personalized tea mugs.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_113",
+      "question_number": "113",
+      "stem": "Because employees must learn to use the new software, several training sessions will take place ------ the next two weeks.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_114",
+      "question_number": "114",
+      "stem": "Flight attendants asked passengers to take their seats ------ upon boarding the plane.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_115",
+      "question_number": "115",
+      "stem": "Last July, Rojas Rieper LLC ------ a grand opening celebration.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_116",
+      "question_number": "116",
+      "stem": "Mr. Kim was one ------ three people who received the firm's Competitive Edge award.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_117",
+      "question_number": "117",
+      "stem": "Interviews begin today for the production manager ------ at Zhu Pharmaceuticals.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_118",
+      "question_number": "118",
+      "stem": "Tours of the historic courthouse are offered twice a week ------ the summer.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_119",
+      "question_number": "119",
+      "stem": "------ the next few months, Abundi Ltd. will open its fourth pharmaceutical laboratory in New Zealand.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_120",
+      "question_number": "120",
+      "stem": "The ------ at Yohanan Company organizes the delivery of supplies to all conference locations.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_121",
+      "question_number": "121",
+      "stem": "The owners of Rowecroft Porcelain ------ to begin production of casual dinnerware sets next month.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_122",
+      "question_number": "122",
+      "stem": "Mykos Auto Makers agreed to grant long-term factory employees ------ vacation time.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_123",
+      "question_number": "123",
+      "stem": "The customer ------ believed that the coat he had purchased was waterproof.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_124",
+      "question_number": "124",
+      "stem": "All cars built by Roadway Motors come ------ with an alarm reminding drivers to buckle their seat belts.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_125",
+      "question_number": "125",
+      "stem": "The components of the CT640 dishwasher are largely the same as ------ of earlier models.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_126",
+      "question_number": "126",
+      "stem": "The Nakato Group has won several industry awards for its innovative marketing ------.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_127",
+      "question_number": "127",
+      "stem": "Krit Pinthong's new mystery novel is the most widely ------ book of the year.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_128",
+      "question_number": "128",
+      "stem": "The leadership team was quite relieved ------ the Toyvar building project was completed under budget.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_129",
+      "question_number": "129",
+      "stem": "------ two floors of offices, the building offers several retail spaces.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_130",
+      "question_number": "130",
+      "stem": "------ regarding construction noise and traffic delays should be directed to Mr. Jasdi, the project manager.",
+      "options": [],
+      "stimulus_id": null
+    },
+    {
+      "id": "q_131",
+      "question_number": "131",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1",
+      "stimulus_text": "**Questions 131-134** refer to the following advertisement.\n> **JOIN THE RGBS AUTOMOTIVE TEAM**\n>\n> RGBS Automotive is ------ hiring full-time and part-time workers. Apply today! ------ could become part of our manufacturing team! We make high-tech products ------ found in cars and trucks of all kinds.\n>\n> RGBS Automotive pays well, and we provide ongoing training plus opportunities for promotion.\n>\n> ------ . Go to www.rgbsautomotive.com for more details and to fill out an application."
+    },
+    {
+      "id": "q_132",
+      "question_number": "132",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1",
+      "stimulus_text": "**Questions 131-134** refer to the following advertisement.\n> **JOIN THE RGBS AUTOMOTIVE TEAM**\n>\n> RGBS Automotive is ------ hiring full-time and part-time workers. Apply today! ------ could become part of our manufacturing team! We make high-tech products ------ found in cars and trucks of all kinds.\n>\n> RGBS Automotive pays well, and we provide ongoing training plus opportunities for promotion.\n>\n> ------ . Go to www.rgbsautomotive.com for more details and to fill out an application."
+    },
+    {
+      "id": "q_133",
+      "question_number": "133",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1",
+      "stimulus_text": "**Questions 131-134** refer to the following advertisement.\n> **JOIN THE RGBS AUTOMOTIVE TEAM**\n>\n> RGBS Automotive is ------ hiring full-time and part-time workers. Apply today! ------ could become part of our manufacturing team! We make high-tech products ------ found in cars and trucks of all kinds.\n>\n> RGBS Automotive pays well, and we provide ongoing training plus opportunities for promotion.\n>\n> ------ . Go to www.rgbsautomotive.com for more details and to fill out an application."
+    },
+    {
+      "id": "q_134",
+      "question_number": "134",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1",
+      "stimulus_text": "**Questions 131-134** refer to the following advertisement.\n> **JOIN THE RGBS AUTOMOTIVE TEAM**\n>\n> RGBS Automotive is ------ hiring full-time and part-time workers. Apply today! ------ could become part of our manufacturing team! We make high-tech products ------ found in cars and trucks of all kinds.\n>\n> RGBS Automotive pays well, and we provide ongoing training plus opportunities for promotion.\n>\n> ------ . Go to www.rgbsautomotive.com for more details and to fill out an application."
+    },
+    {
+      "id": "q_135",
+      "question_number": "135",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2",
+      "stimulus_text": "**Questions 135-138** refer to the following memo.\n> **MEMO**\n>\n> To: Marketing Team\n> From: Alyssa Jacobs, Project Manager\n> Date: 27 September\n> Subject: Meeting wrap-up\n>\n> Thank you again to all of you for your fine work on the upcoming marketing campaign for the Turbo Omega 2 smartphone. As ------ during yesterday's meeting, our goal is to launch the television, radio, and social media advertisements on 1 November. The phone itself will be in stores by 1 December. ------ .\n>\n> ------ , Gary Carollo will draft the press release and post it on our shared drive, where all of you will be able to read it. Please e-mail any ------ for changes to Gary within one week. He will present his final draft at our next regular meeting. We will also tie up any loose ends at that time."
+    },
+    {
+      "id": "q_136",
+      "question_number": "136",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2",
+      "stimulus_text": "**Questions 135-138** refer to the following memo.\n> **MEMO**\n>\n> To: Marketing Team\n> From: Alyssa Jacobs, Project Manager\n> Date: 27 September\n> Subject: Meeting wrap-up\n>\n> Thank you again to all of you for your fine work on the upcoming marketing campaign for the Turbo Omega 2 smartphone. As ------ during yesterday's meeting, our goal is to launch the television, radio, and social media advertisements on 1 November. The phone itself will be in stores by 1 December. ------ .\n>\n> ------ , Gary Carollo will draft the press release and post it on our shared drive, where all of you will be able to read it. Please e-mail any ------ for changes to Gary within one week. He will present his final draft at our next regular meeting. We will also tie up any loose ends at that time."
+    },
+    {
+      "id": "q_137",
+      "question_number": "137",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2",
+      "stimulus_text": "**Questions 135-138** refer to the following memo.\n> **MEMO**\n>\n> To: Marketing Team\n> From: Alyssa Jacobs, Project Manager\n> Date: 27 September\n> Subject: Meeting wrap-up\n>\n> Thank you again to all of you for your fine work on the upcoming marketing campaign for the Turbo Omega 2 smartphone. As ------ during yesterday's meeting, our goal is to launch the television, radio, and social media advertisements on 1 November. The phone itself will be in stores by 1 December. ------ .\n>\n> ------ , Gary Carollo will draft the press release and post it on our shared drive, where all of you will be able to read it. Please e-mail any ------ for changes to Gary within one week. He will present his final draft at our next regular meeting. We will also tie up any loose ends at that time."
+    },
+    {
+      "id": "q_138",
+      "question_number": "138",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2",
+      "stimulus_text": "**Questions 135-138** refer to the following memo.\n> **MEMO**\n>\n> To: Marketing Team\n> From: Alyssa Jacobs, Project Manager\n> Date: 27 September\n> Subject: Meeting wrap-up\n>\n> Thank you again to all of you for your fine work on the upcoming marketing campaign for the Turbo Omega 2 smartphone. As ------ during yesterday's meeting, our goal is to launch the television, radio, and social media advertisements on 1 November. The phone itself will be in stores by 1 December. ------ .\n>\n> ------ , Gary Carollo will draft the press release and post it on our shared drive, where all of you will be able to read it. Please e-mail any ------ for changes to Gary within one week. He will present his final draft at our next regular meeting. We will also tie up any loose ends at that time."
+    },
+    {
+      "id": "q_139",
+      "question_number": "139",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_3",
+      "stimulus_text": "**Questions 139-142** refer to the following product information.\n> **Handmade Silk Blouse by Coreopsis Textiles, Size Medium, £45**\n>\n> Coreopsis Textiles' silk blouses are created from vintage fabrics and other recycled components that we sew together in a patchwork fashion. Because all 139. ______ garments are handcrafted, each is one of a kind. 140. ______. Unique variations within each piece are part of the charm of Coreopsis Textiles' products. The blouse you receive will be similar in style but not identical to the one pictured.\n>\n> Please note that this garment is 141. ______. It is recommended that you either hand-wash it or wash it in cold water on the gentle cycle in a mesh bag. While the item has been prewashed, dryer heat may cause it to shrink. 142. ______, it is important that it be hung to air dry."
+    },
+    {
+      "id": "q_140",
+      "question_number": "140",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_3",
+      "stimulus_text": "**Questions 139-142** refer to the following product information.\n> **Handmade Silk Blouse by Coreopsis Textiles, Size Medium, £45**\n>\n> Coreopsis Textiles' silk blouses are created from vintage fabrics and other recycled components that we sew together in a patchwork fashion. Because all 139. ______ garments are handcrafted, each is one of a kind. 140. ______. Unique variations within each piece are part of the charm of Coreopsis Textiles' products. The blouse you receive will be similar in style but not identical to the one pictured.\n>\n> Please note that this garment is 141. ______. It is recommended that you either hand-wash it or wash it in cold water on the gentle cycle in a mesh bag. While the item has been prewashed, dryer heat may cause it to shrink. 142. ______, it is important that it be hung to air dry."
+    },
+    {
+      "id": "q_141",
+      "question_number": "141",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_3",
+      "stimulus_text": "**Questions 139-142** refer to the following product information.\n> **Handmade Silk Blouse by Coreopsis Textiles, Size Medium, £45**\n>\n> Coreopsis Textiles' silk blouses are created from vintage fabrics and other recycled components that we sew together in a patchwork fashion. Because all 139. ______ garments are handcrafted, each is one of a kind. 140. ______. Unique variations within each piece are part of the charm of Coreopsis Textiles' products. The blouse you receive will be similar in style but not identical to the one pictured.\n>\n> Please note that this garment is 141. ______. It is recommended that you either hand-wash it or wash it in cold water on the gentle cycle in a mesh bag. While the item has been prewashed, dryer heat may cause it to shrink. 142. ______, it is important that it be hung to air dry."
+    },
+    {
+      "id": "q_142",
+      "question_number": "142",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_3",
+      "stimulus_text": "**Questions 139-142** refer to the following product information.\n> **Handmade Silk Blouse by Coreopsis Textiles, Size Medium, £45**\n>\n> Coreopsis Textiles' silk blouses are created from vintage fabrics and other recycled components that we sew together in a patchwork fashion. Because all 139. ______ garments are handcrafted, each is one of a kind. 140. ______. Unique variations within each piece are part of the charm of Coreopsis Textiles' products. The blouse you receive will be similar in style but not identical to the one pictured.\n>\n> Please note that this garment is 141. ______. It is recommended that you either hand-wash it or wash it in cold water on the gentle cycle in a mesh bag. While the item has been prewashed, dryer heat may cause it to shrink. 142. ______, it is important that it be hung to air dry."
+    },
+    {
+      "id": "q_143",
+      "question_number": "143",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Questions 143-146** refer to the following e-mail.\n> To: Shu Jiang <sjiang@rowanatech.ca>\n> From: Maxwell Baschet <mbaschet@mapleroadstorage.ca>\n> Date: 4 April\n> Subject: Your contract\n> Attachment: Jiang contract\n>\n> Dear Ms. Jiang,\n>\n> We are pleased you 143. ______ Maple Road Storage for your storage needs. I have attached a copy of your signed contract. 144. ______.\n>\n> Do you know about our referral program? You will receive one free month of storage if someone you recommend signs a contract with us. The new tenant will receive a free month 145. ______. You can find more information about this program and all our special 146. ______ on our Web site at www.mapleroadstorage.ca.\n>\n> Sincerely,\n>\n> Maxwell Baschet, Site Manager"
+    },
+    {
+      "id": "q_144",
+      "question_number": "144",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Questions 143-146** refer to the following e-mail.\n> To: Shu Jiang <sjiang@rowanatech.ca>\n> From: Maxwell Baschet <mbaschet@mapleroadstorage.ca>\n> Date: 4 April\n> Subject: Your contract\n> Attachment: Jiang contract\n>\n> Dear Ms. Jiang,\n>\n> We are pleased you 143. ______ Maple Road Storage for your storage needs. I have attached a copy of your signed contract. 144. ______.\n>\n> Do you know about our referral program? You will receive one free month of storage if someone you recommend signs a contract with us. The new tenant will receive a free month 145. ______. You can find more information about this program and all our special 146. ______ on our Web site at www.mapleroadstorage.ca.\n>\n> Sincerely,\n>\n> Maxwell Baschet, Site Manager"
+    },
+    {
+      "id": "q_145",
+      "question_number": "145",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Questions 143-146** refer to the following e-mail.\n> To: Shu Jiang <sjiang@rowanatech.ca>\n> From: Maxwell Baschet <mbaschet@mapleroadstorage.ca>\n> Date: 4 April\n> Subject: Your contract\n> Attachment: Jiang contract\n>\n> Dear Ms. Jiang,\n>\n> We are pleased you 143. ______ Maple Road Storage for your storage needs. I have attached a copy of your signed contract. 144. ______.\n>\n> Do you know about our referral program? You will receive one free month of storage if someone you recommend signs a contract with us. The new tenant will receive a free month 145. ______. You can find more information about this program and all our special 146. ______ on our Web site at www.mapleroadstorage.ca.\n>\n> Sincerely,\n>\n> Maxwell Baschet, Site Manager"
+    },
+    {
+      "id": "q_146",
+      "question_number": "146",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Questions 143-146** refer to the following e-mail.\n> To: Shu Jiang <sjiang@rowanatech.ca>\n> From: Maxwell Baschet <mbaschet@mapleroadstorage.ca>\n> Date: 4 April\n> Subject: Your contract\n> Attachment: Jiang contract\n>\n> Dear Ms. Jiang,\n>\n> We are pleased you 143. ______ Maple Road Storage for your storage needs. I have attached a copy of your signed contract. 144. ______.\n>\n> Do you know about our referral program? You will receive one free month of storage if someone you recommend signs a contract with us. The new tenant will receive a free month 145. ______. You can find more information about this program and all our special 146. ______ on our Web site at www.mapleroadstorage.ca.\n>\n> Sincerely,\n>\n> Maxwell Baschet, Site Manager"
+    },
+    {
+      "id": "q_147",
+      "question_number": "147",
+      "stem": "What is a purpose of the notice?",
+      "options": [],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**Questions 147-148** refer to the following notice.\n> **Cardinal Street Project—Update**\n>\n> Because of unusually wet and cold weather conditions, the road closure on Cardinal Street between Lee Drive and Petunia Lane will be extended until late spring. Construction will continue; however, final paving on Cardinal Street cannot occur until the weather conditions improve. Workers will begin the pavement work once construction of the bridge on Cardinal Street has been completed. If you have questions or comments, please contact Vy Nguyen in the city planning office at 615-555-0184."
+    },
+    {
+      "id": "q_148",
+      "question_number": "148",
+      "stem": "What is indicated about the Cardinal Street project?",
+      "options": [],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**Questions 147-148** refer to the following notice.\n> **Cardinal Street Project—Update**\n>\n> Because of unusually wet and cold weather conditions, the road closure on Cardinal Street between Lee Drive and Petunia Lane will be extended until late spring. Construction will continue; however, final paving on Cardinal Street cannot occur until the weather conditions improve. Workers will begin the pavement work once construction of the bridge on Cardinal Street has been completed. If you have questions or comments, please contact Vy Nguyen in the city planning office at 615-555-0184."
+    },
+    {
+      "id": "q_149",
+      "question_number": "149",
+      "stem": "What does George's Orchard Farm offer visitors?",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "**Questions 149-150** refer to the following sign.\n> **George's Orchard Farm**\n> **2232 Alpine Lane**\n>\n> Pick your own! Select from five varieties of juicy peaches in our orchard! Buckets provided at no cost.\n>\n> Stop by our market to purchase jams, pies, and sauces made from farm-fresh fruit.\n> We sell lunches to enjoy in our picnic area.\n>\n> Follow the signs ahead for designated parking areas.\n>\n> Wednesday to Friday, 12 noon to 5:00 P.M.\n> Saturday and Sunday, 10:00 A.M. to 6:00 P.M."
+    },
+    {
+      "id": "q_150",
+      "question_number": "150",
+      "stem": "What is indicated about the market?",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "**Questions 149-150** refer to the following sign.\n> **George's Orchard Farm**\n> **2232 Alpine Lane**\n>\n> Pick your own! Select from five varieties of juicy peaches in our orchard! Buckets provided at no cost.\n>\n> Stop by our market to purchase jams, pies, and sauces made from farm-fresh fruit.\n> We sell lunches to enjoy in our picnic area.\n>\n> Follow the signs ahead for designated parking areas.\n>\n> Wednesday to Friday, 12 noon to 5:00 P.M.\n> Saturday and Sunday, 10:00 A.M. to 6:00 P.M."
+    },
+    {
+      "id": "q_151",
+      "question_number": "151",
+      "stem": "Why did Mr. McCraine write the e-mail?",
+      "options": [],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Questions 151-152** refer to the following e-mail.\n| Field | Value |\n|---|---|\n| To: | Thandiwe Ngxongo <tngxongo@fancyandformal.co.uk> |\n| From: | Customer Service <service@homethings.co.uk> |\n| Date: | 26October |\n| Subject: | Performa lint roller (Model PL293) |\nDear Ms. Ngxongo,\nI am sorry to inform you that the Performa lint roller you selected is on back order because of a shortage of its ultra-strong adhesive. We expect a new shipment within three to four weeks. However, if you prefer not to wait, Home Things will be glad to ship the Extreme2 lint roller to you at no extra charge. The Extreme2 model includes a perforated sticky tape for ease of use and comes with two refills. Like the Performa model, it has a strong adhesive that effectively removes hair, fuzz, lint, and dust from most fabrics.\nYou can request this similar product to be shipped to you in place of the one you ordered, as long as you make the change to your order before the original item ships. Thank you for your understanding.\nSincerely,\nGlen McCraine\nCustomer Service Specialist\nHome Things"
+    },
+    {
+      "id": "q_152",
+      "question_number": "152",
+      "stem": "What is indicated about the Extreme2 lint roller?",
+      "options": [],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Questions 151-152** refer to the following e-mail.\n| Field | Value |\n|---|---|\n| To: | Thandiwe Ngxongo <tngxongo@fancyandformal.co.uk> |\n| From: | Customer Service <service@homethings.co.uk> |\n| Date: | 26October |\n| Subject: | Performa lint roller (Model PL293) |\nDear Ms. Ngxongo,\nI am sorry to inform you that the Performa lint roller you selected is on back order because of a shortage of its ultra-strong adhesive. We expect a new shipment within three to four weeks. However, if you prefer not to wait, Home Things will be glad to ship the Extreme2 lint roller to you at no extra charge. The Extreme2 model includes a perforated sticky tape for ease of use and comes with two refills. Like the Performa model, it has a strong adhesive that effectively removes hair, fuzz, lint, and dust from most fabrics.\nYou can request this similar product to be shipped to you in place of the one you ordered, as long as you make the change to your order before the original item ships. Thank you for your understanding.\nSincerely,\nGlen McCraine\nCustomer Service Specialist\nHome Things"
+    },
+    {
+      "id": "q_153",
+      "question_number": "153",
+      "stem": "What is suggested about Mr. Geraci?",
+      "options": [],
+      "stimulus_id": "stim_8",
+      "stimulus_text": "**Questions 153-154** refer to the following text-message chain.\n> **Sen Chai (6:51 P.M.):**\n> We're on a dinner break from the negotiation meeting. Mr. Geraci did not accept our offer.\n>\n> **Mateo Michelacci (6:52 P.M.):**\n> That's frustrating. Do you think if we offered another €10,000 he would sell? You and I have agreed that this is the right facility: it's in a convenient location for customers, the access from the highway is perfect for incoming and outgoing deliveries, and potential tenants have already expressed interest.\n>\n> **Sen Chai (6:53 P.M.):**\n> I can't see that happening. But I'll try again. How high can I go?\n>\n> **Mateo Michelacci (6:54 P.M.):**\n> The bank approved us for another €20,000. Offer Mr. Geraci €10,000 more, plus we will fix any building code violations at our expense. Go up to the full €20,000 only if necessary.\n>\n> **Sen Chai (6:55 P.M.):**\n> I'll do my best."
+    },
+    {
+      "id": "q_154",
+      "question_number": "154",
+      "stem": "At 6:53 P.M., what does Ms. Chai most likely mean when she writes, \"I can't see that happening\"?",
+      "options": [],
+      "stimulus_id": "stim_8",
+      "stimulus_text": "**Questions 153-154** refer to the following text-message chain.\n> **Sen Chai (6:51 P.M.):**\n> We're on a dinner break from the negotiation meeting. Mr. Geraci did not accept our offer.\n>\n> **Mateo Michelacci (6:52 P.M.):**\n> That's frustrating. Do you think if we offered another €10,000 he would sell? You and I have agreed that this is the right facility: it's in a convenient location for customers, the access from the highway is perfect for incoming and outgoing deliveries, and potential tenants have already expressed interest.\n>\n> **Sen Chai (6:53 P.M.):**\n> I can't see that happening. But I'll try again. How high can I go?\n>\n> **Mateo Michelacci (6:54 P.M.):**\n> The bank approved us for another €20,000. Offer Mr. Geraci €10,000 more, plus we will fix any building code violations at our expense. Go up to the full €20,000 only if necessary.\n>\n> **Sen Chai (6:55 P.M.):**\n> I'll do my best."
+    },
+    {
+      "id": "q_155",
+      "question_number": "155",
+      "stem": "The word \"backing\" in paragraph 2, line 3, is closest in meaning to",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "**Questions 155-157** refer to the following advertisement.\n> **Blossom Sales Systems**\n>\n> Blossom Sales Systems (BSS) makes running your business a breeze with its sleek, intuitive point-of-sale devices. As a small business owner, you have many responsibilities and a reputation to build. BSS has all the tools needed to make transactions safe, seamless, and hassle-free.\n>\n> Enjoy the convenience of a system that has you covered wherever you conduct your business. Whether you sell in a store, over the phone, or online, BSS simplifies the transaction process while backing you with 24-7 technical expertise. Our innovative devices enable you to accept a variety of payment types—from magnetic-stripe and chip readers for credit cards to digital scanners for checks to popular mobile app payment services—ensuring that no potential sales are missed.\n>\n> Sign up for BSS today and enjoy a free ten-day trial. Registration takes just fifteen minutes to complete. Once approved, save $50 on the purchase of any BSS device that connects to your phone or tablet. Call 931-555-0148 to schedule a demonstration and see how BSS can make your sales bloom!"
+    },
+    {
+      "id": "q_156",
+      "question_number": "156",
+      "stem": "What payment method is NOT mentioned in the advertisement?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "**Questions 155-157** refer to the following advertisement.\n> **Blossom Sales Systems**\n>\n> Blossom Sales Systems (BSS) makes running your business a breeze with its sleek, intuitive point-of-sale devices. As a small business owner, you have many responsibilities and a reputation to build. BSS has all the tools needed to make transactions safe, seamless, and hassle-free.\n>\n> Enjoy the convenience of a system that has you covered wherever you conduct your business. Whether you sell in a store, over the phone, or online, BSS simplifies the transaction process while backing you with 24-7 technical expertise. Our innovative devices enable you to accept a variety of payment types—from magnetic-stripe and chip readers for credit cards to digital scanners for checks to popular mobile app payment services—ensuring that no potential sales are missed.\n>\n> Sign up for BSS today and enjoy a free ten-day trial. Registration takes just fifteen minutes to complete. Once approved, save $50 on the purchase of any BSS device that connects to your phone or tablet. Call 931-555-0148 to schedule a demonstration and see how BSS can make your sales bloom!"
+    },
+    {
+      "id": "q_157",
+      "question_number": "157",
+      "stem": "What is BSS offering as a sales promotion?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "**Questions 155-157** refer to the following advertisement.\n> **Blossom Sales Systems**\n>\n> Blossom Sales Systems (BSS) makes running your business a breeze with its sleek, intuitive point-of-sale devices. As a small business owner, you have many responsibilities and a reputation to build. BSS has all the tools needed to make transactions safe, seamless, and hassle-free.\n>\n> Enjoy the convenience of a system that has you covered wherever you conduct your business. Whether you sell in a store, over the phone, or online, BSS simplifies the transaction process while backing you with 24-7 technical expertise. Our innovative devices enable you to accept a variety of payment types—from magnetic-stripe and chip readers for credit cards to digital scanners for checks to popular mobile app payment services—ensuring that no potential sales are missed.\n>\n> Sign up for BSS today and enjoy a free ten-day trial. Registration takes just fifteen minutes to complete. Once approved, save $50 on the purchase of any BSS device that connects to your phone or tablet. Call 931-555-0148 to schedule a demonstration and see how BSS can make your sales bloom!"
+    },
+    {
+      "id": "q_158",
+      "question_number": "158",
+      "stem": "What is one reason that Ms. Hsiao wrote the e-mail?",
+      "options": [],
+      "stimulus_id": "stim_10",
+      "stimulus_text": "**Questions 158-160** refer to the following e-mail.\n> **\\*E-mail\\***\n>\n> | | |\n> |---|---|\n> | To: | cbrandt@prebleevents.com |\n> | From: | chsiao@yanvillefestival.com |\n> | Date: | May 15 |\n> | Subject: | Festival support |\n>\n> Dear Mr. Brandt,\n>\n> Thank you for contacting us regarding the Yanville Festival. — [1] —. We have already contracted with Breemer's Staging to provide lighting equipment for our main stages.\n>\n> — [2] —. Do you provide catering services? — [3] —. We do not have anyone yet to manage the food for our actors and stage crews. Would you be interested in this work? Please let me know. — [4] —.\n>\n> Best regards,\n>\n> Cecily IIsiao\n> Vice-Chair, Yanville Festival"
+    },
+    {
+      "id": "q_159",
+      "question_number": "159",
+      "stem": "What most likely is the focus of the Yanville Festival?",
+      "options": [],
+      "stimulus_id": "stim_10",
+      "stimulus_text": "**Questions 158-160** refer to the following e-mail.\n> **\\*E-mail\\***\n>\n> | | |\n> |---|---|\n> | To: | cbrandt@prebleevents.com |\n> | From: | chsiao@yanvillefestival.com |\n> | Date: | May 15 |\n> | Subject: | Festival support |\n>\n> Dear Mr. Brandt,\n>\n> Thank you for contacting us regarding the Yanville Festival. — [1] —. We have already contracted with Breemer's Staging to provide lighting equipment for our main stages.\n>\n> — [2] —. Do you provide catering services? — [3] —. We do not have anyone yet to manage the food for our actors and stage crews. Would you be interested in this work? Please let me know. — [4] —.\n>\n> Best regards,\n>\n> Cecily IIsiao\n> Vice-Chair, Yanville Festival"
+    },
+    {
+      "id": "q_160",
+      "question_number": "160",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_10",
+      "stimulus_text": "**Questions 158-160** refer to the following e-mail.\n> **\\*E-mail\\***\n>\n> | | |\n> |---|---|\n> | To: | cbrandt@prebleevents.com |\n> | From: | chsiao@yanvillefestival.com |\n> | Date: | May 15 |\n> | Subject: | Festival support |\n>\n> Dear Mr. Brandt,\n>\n> Thank you for contacting us regarding the Yanville Festival. — [1] —. We have already contracted with Breemer's Staging to provide lighting equipment for our main stages.\n>\n> — [2] —. Do you provide catering services? — [3] —. We do not have anyone yet to manage the food for our actors and stage crews. Would you be interested in this work? Please let me know. — [4] —.\n>\n> Best regards,\n>\n> Cecily IIsiao\n> Vice-Chair, Yanville Festival"
+    },
+    {
+      "id": "q_161",
+      "question_number": "161",
+      "stem": "What most likely can be purchased at Kramer's Emporium?",
+      "options": [],
+      "stimulus_id": "stim_11",
+      "stimulus_text": "**Questions 161-163** refer to the following advertisement.\n> **Kramer's Emporium**\n> 2323 Raleigh Street • Houston, TX 77021\n>\n> After 25 years in business, our store is closing. Everything must go!\n>\n> From refrigerators to washing machines, we have hundreds of brand-new appliances for your home or office. Most items have been marked down by 30 percent. Delivery is available within 60 miles of our store for a flat fee of $50.00. We are open daily from 9:00 A.M. to 7:00 P.M.\n>\n> Don't wait! Merchandise is selling fast!"
+    },
+    {
+      "id": "q_162",
+      "question_number": "162",
+      "stem": "Why is Kramer's Emporium selling merchandise at a discount?",
+      "options": [],
+      "stimulus_id": "stim_11",
+      "stimulus_text": "**Questions 161-163** refer to the following advertisement.\n> **Kramer's Emporium**\n> 2323 Raleigh Street • Houston, TX 77021\n>\n> After 25 years in business, our store is closing. Everything must go!\n>\n> From refrigerators to washing machines, we have hundreds of brand-new appliances for your home or office. Most items have been marked down by 30 percent. Delivery is available within 60 miles of our store for a flat fee of $50.00. We are open daily from 9:00 A.M. to 7:00 P.M.\n>\n> Don't wait! Merchandise is selling fast!"
+    },
+    {
+      "id": "q_163",
+      "question_number": "163",
+      "stem": "What is mentioned about delivery?",
+      "options": [],
+      "stimulus_id": "stim_11",
+      "stimulus_text": "**Questions 161-163** refer to the following advertisement.\n> **Kramer's Emporium**\n> 2323 Raleigh Street • Houston, TX 77021\n>\n> After 25 years in business, our store is closing. Everything must go!\n>\n> From refrigerators to washing machines, we have hundreds of brand-new appliances for your home or office. Most items have been marked down by 30 percent. Delivery is available within 60 miles of our store for a flat fee of $50.00. We are open daily from 9:00 A.M. to 7:00 P.M.\n>\n> Don't wait! Merchandise is selling fast!"
+    },
+    {
+      "id": "q_164",
+      "question_number": "164",
+      "stem": "What is a purpose of the e-mail?",
+      "options": [],
+      "stimulus_id": "stim_12",
+      "stimulus_text": "**Questions 164-167** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Bruce Holt |\n> | From: | Shamonica Walker |\n> | Date: | April 9 |\n> | Subject: | Immediate and confidential |\n>\n> Dear Bruce,\n>\n> Beginning with the new fiscal year, a change in retirement benefits will be applied for all full-time employees here in Blanen Industries. They will no longer be given their matching retirement funds in the form of cash. Instead, their retirement funds will be provided in the form of company stock to be deposited in their retirement portfolios.\n>\n> Our current retirement management firm, Proxave Futures, has been informed of this change in retirement benefits. The firm will manage the transition and will continue to provide customer support to Blanen Industries employees. Questions should be directed to Pierre Dehaene at Proxave Futures rather than our human resources department.\n>\n> Please work with Yua Suzuki, head of human resources, to provide her with the information she should include in her all-staff communication about this important change in employee benefits. Our president notified me that he would like to receive all reports related to this transition. Also, please continue to send me daily financial reports.\n>\n> Best,\n>\n> Shamonica Walker, CFO\n> Blanen Industries"
+    },
+    {
+      "id": "q_165",
+      "question_number": "165",
+      "stem": "The word \"applied\" in paragraph 1, line 1, is closest in meaning to",
+      "options": [],
+      "stimulus_id": "stim_12",
+      "stimulus_text": "**Questions 164-167** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Bruce Holt |\n> | From: | Shamonica Walker |\n> | Date: | April 9 |\n> | Subject: | Immediate and confidential |\n>\n> Dear Bruce,\n>\n> Beginning with the new fiscal year, a change in retirement benefits will be applied for all full-time employees here in Blanen Industries. They will no longer be given their matching retirement funds in the form of cash. Instead, their retirement funds will be provided in the form of company stock to be deposited in their retirement portfolios.\n>\n> Our current retirement management firm, Proxave Futures, has been informed of this change in retirement benefits. The firm will manage the transition and will continue to provide customer support to Blanen Industries employees. Questions should be directed to Pierre Dehaene at Proxave Futures rather than our human resources department.\n>\n> Please work with Yua Suzuki, head of human resources, to provide her with the information she should include in her all-staff communication about this important change in employee benefits. Our president notified me that he would like to receive all reports related to this transition. Also, please continue to send me daily financial reports.\n>\n> Best,\n>\n> Shamonica Walker, CFO\n> Blanen Industries"
+    },
+    {
+      "id": "q_166",
+      "question_number": "166",
+      "stem": "What is suggested about Proxave Futures?",
+      "options": [],
+      "stimulus_id": "stim_12",
+      "stimulus_text": "**Questions 164-167** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Bruce Holt |\n> | From: | Shamonica Walker |\n> | Date: | April 9 |\n> | Subject: | Immediate and confidential |\n>\n> Dear Bruce,\n>\n> Beginning with the new fiscal year, a change in retirement benefits will be applied for all full-time employees here in Blanen Industries. They will no longer be given their matching retirement funds in the form of cash. Instead, their retirement funds will be provided in the form of company stock to be deposited in their retirement portfolios.\n>\n> Our current retirement management firm, Proxave Futures, has been informed of this change in retirement benefits. The firm will manage the transition and will continue to provide customer support to Blanen Industries employees. Questions should be directed to Pierre Dehaene at Proxave Futures rather than our human resources department.\n>\n> Please work with Yua Suzuki, head of human resources, to provide her with the information she should include in her all-staff communication about this important change in employee benefits. Our president notified me that he would like to receive all reports related to this transition. Also, please continue to send me daily financial reports.\n>\n> Best,\n>\n> Shamonica Walker, CFO\n> Blanen Industries"
+    },
+    {
+      "id": "q_167",
+      "question_number": "167",
+      "stem": "Who is responsible for notifying all employees about the policy change?",
+      "options": [],
+      "stimulus_id": "stim_12",
+      "stimulus_text": "**Questions 164-167** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Bruce Holt |\n> | From: | Shamonica Walker |\n> | Date: | April 9 |\n> | Subject: | Immediate and confidential |\n>\n> Dear Bruce,\n>\n> Beginning with the new fiscal year, a change in retirement benefits will be applied for all full-time employees here in Blanen Industries. They will no longer be given their matching retirement funds in the form of cash. Instead, their retirement funds will be provided in the form of company stock to be deposited in their retirement portfolios.\n>\n> Our current retirement management firm, Proxave Futures, has been informed of this change in retirement benefits. The firm will manage the transition and will continue to provide customer support to Blanen Industries employees. Questions should be directed to Pierre Dehaene at Proxave Futures rather than our human resources department.\n>\n> Please work with Yua Suzuki, head of human resources, to provide her with the information she should include in her all-staff communication about this important change in employee benefits. Our president notified me that he would like to receive all reports related to this transition. Also, please continue to send me daily financial reports.\n>\n> Best,\n>\n> Shamonica Walker, CFO\n> Blanen Industries"
+    },
+    {
+      "id": "q_168",
+      "question_number": "168",
+      "stem": "Why is Ms. Jones going to be out of the office today?",
+      "options": [],
+      "stimulus_id": "stim_13",
+      "stimulus_text": "**Questions 168-171** refer to the following online chat discussion.\n> **Monica Zia (8:27 A.M.)** Hi, Yuji and Sung-ho. I wonder if one of you could help me later today. Dejani Jones was going to help, but she's going to be out of the office today.\n>\n> **Yuji Saito (8:28 A.M.)** That's too bad. Did she say why?\n>\n> **Monica Zia (8:28 A.M.)** She said she had a slight cold but that she should be able to work from home on the data analyses for her clients.\n>\n> **Sung-ho Suh (8:29 A.M.)** So, she won't be coming in at all today?\n>\n> **Monica Zia (8:31 A.M.)** No. And Dejani and I were going to go to Willi's Market to buy food and beverages for tomorrow's office picnic. You remember, right? Saturday at noon at City Park. Anyhow, Dejani has a car and was going to drive us to the store and use her credit card to purchase the supplies. I know that both of you drive to work, so I thought one of you could help.\n>\n> **Sung-ho Suh (8:32 A.M.)** When were you thinking of going?\n>\n> **Yuji Saito (8:32 A.M.)** Sure. I can help, and we can use my credit card.\n>\n> **Monica Zia (8:33 A.M.)** Around two.\n>\n> **Yuji Saito (8:34 A.M.)** No problem. Just stop by my cubicle, and we can take my car to go to the store.\n>\n> **Sung-ho Suh (8:35 A.M.)** That's great, Yuji. I have several meetings this afternoon, so I wouldn't be able to get away.\n>\n> **Monica Zia (8:35 A.M.)** Thanks, Yuji. I'll see you this afternoon."
+    },
+    {
+      "id": "q_169",
+      "question_number": "169",
+      "stem": "What had Ms. Jones previously agreed to do?",
+      "options": [],
+      "stimulus_id": "stim_13",
+      "stimulus_text": "**Questions 168-171** refer to the following online chat discussion.\n> **Monica Zia (8:27 A.M.)** Hi, Yuji and Sung-ho. I wonder if one of you could help me later today. Dejani Jones was going to help, but she's going to be out of the office today.\n>\n> **Yuji Saito (8:28 A.M.)** That's too bad. Did she say why?\n>\n> **Monica Zia (8:28 A.M.)** She said she had a slight cold but that she should be able to work from home on the data analyses for her clients.\n>\n> **Sung-ho Suh (8:29 A.M.)** So, she won't be coming in at all today?\n>\n> **Monica Zia (8:31 A.M.)** No. And Dejani and I were going to go to Willi's Market to buy food and beverages for tomorrow's office picnic. You remember, right? Saturday at noon at City Park. Anyhow, Dejani has a car and was going to drive us to the store and use her credit card to purchase the supplies. I know that both of you drive to work, so I thought one of you could help.\n>\n> **Sung-ho Suh (8:32 A.M.)** When were you thinking of going?\n>\n> **Yuji Saito (8:32 A.M.)** Sure. I can help, and we can use my credit card.\n>\n> **Monica Zia (8:33 A.M.)** Around two.\n>\n> **Yuji Saito (8:34 A.M.)** No problem. Just stop by my cubicle, and we can take my car to go to the store.\n>\n> **Sung-ho Suh (8:35 A.M.)** That's great, Yuji. I have several meetings this afternoon, so I wouldn't be able to get away.\n>\n> **Monica Zia (8:35 A.M.)** Thanks, Yuji. I'll see you this afternoon."
+    },
+    {
+      "id": "q_170",
+      "question_number": "170",
+      "stem": "Who most likely will purchase food and beverages for the picnic?",
+      "options": [],
+      "stimulus_id": "stim_13",
+      "stimulus_text": "**Questions 168-171** refer to the following online chat discussion.\n> **Monica Zia (8:27 A.M.)** Hi, Yuji and Sung-ho. I wonder if one of you could help me later today. Dejani Jones was going to help, but she's going to be out of the office today.\n>\n> **Yuji Saito (8:28 A.M.)** That's too bad. Did she say why?\n>\n> **Monica Zia (8:28 A.M.)** She said she had a slight cold but that she should be able to work from home on the data analyses for her clients.\n>\n> **Sung-ho Suh (8:29 A.M.)** So, she won't be coming in at all today?\n>\n> **Monica Zia (8:31 A.M.)** No. And Dejani and I were going to go to Willi's Market to buy food and beverages for tomorrow's office picnic. You remember, right? Saturday at noon at City Park. Anyhow, Dejani has a car and was going to drive us to the store and use her credit card to purchase the supplies. I know that both of you drive to work, so I thought one of you could help.\n>\n> **Sung-ho Suh (8:32 A.M.)** When were you thinking of going?\n>\n> **Yuji Saito (8:32 A.M.)** Sure. I can help, and we can use my credit card.\n>\n> **Monica Zia (8:33 A.M.)** Around two.\n>\n> **Yuji Saito (8:34 A.M.)** No problem. Just stop by my cubicle, and we can take my car to go to the store.\n>\n> **Sung-ho Suh (8:35 A.M.)** That's great, Yuji. I have several meetings this afternoon, so I wouldn't be able to get away.\n>\n> **Monica Zia (8:35 A.M.)** Thanks, Yuji. I'll see you this afternoon."
+    },
+    {
+      "id": "q_171",
+      "question_number": "171",
+      "stem": "At 8:33 A.M., what does Ms. Zia mean when she writes, \"Around two\"?",
+      "options": [],
+      "stimulus_id": "stim_13",
+      "stimulus_text": "**Questions 168-171** refer to the following online chat discussion.\n> **Monica Zia (8:27 A.M.)** Hi, Yuji and Sung-ho. I wonder if one of you could help me later today. Dejani Jones was going to help, but she's going to be out of the office today.\n>\n> **Yuji Saito (8:28 A.M.)** That's too bad. Did she say why?\n>\n> **Monica Zia (8:28 A.M.)** She said she had a slight cold but that she should be able to work from home on the data analyses for her clients.\n>\n> **Sung-ho Suh (8:29 A.M.)** So, she won't be coming in at all today?\n>\n> **Monica Zia (8:31 A.M.)** No. And Dejani and I were going to go to Willi's Market to buy food and beverages for tomorrow's office picnic. You remember, right? Saturday at noon at City Park. Anyhow, Dejani has a car and was going to drive us to the store and use her credit card to purchase the supplies. I know that both of you drive to work, so I thought one of you could help.\n>\n> **Sung-ho Suh (8:32 A.M.)** When were you thinking of going?\n>\n> **Yuji Saito (8:32 A.M.)** Sure. I can help, and we can use my credit card.\n>\n> **Monica Zia (8:33 A.M.)** Around two.\n>\n> **Yuji Saito (8:34 A.M.)** No problem. Just stop by my cubicle, and we can take my car to go to the store.\n>\n> **Sung-ho Suh (8:35 A.M.)** That's great, Yuji. I have several meetings this afternoon, so I wouldn't be able to get away.\n>\n> **Monica Zia (8:35 A.M.)** Thanks, Yuji. I'll see you this afternoon."
+    },
+    {
+      "id": "q_172",
+      "question_number": "172",
+      "stem": "What is the main purpose of the e-mail?",
+      "options": [],
+      "stimulus_id": "stim_14",
+      "stimulus_text": "**Questions 172-175** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Dorota Kucharski <dkucharski@internationaltechnologicalsociety.org> |\n> | From: | Luciano Moretti <lmoretti@internationaltechnologicalsociety.org> |\n> | Date: | 8 August |\n> | Subject: | Research results |\n>\n> Ms. Kucharski,\n>\n> The following is a summary of what I have learned in my research about where to hold our next annual technology conference in June of next year.\n>\n> In Rome, the best option I have found is Hotel al Ponte. The total cost for conference events there would be €31,500. — [1] —. Individual hotel rooms would cost €80 per night for participants. In the event that attendance is high, we could also house participants in the nearby Hotel Milvio at €120 per night. — [2] —.\n>\n> I also looked into hotels in Genoa and Florence, but I could not find any that would be much cheaper in overall conference costs. — [3] —. More importantly, I am concerned that the greater cost of flights to those smaller cities could discourage some attendees. Rome, on the other hand, has affordable direct flights from most European cities. — [4] —. It will also be more affordable for our colleagues coming from Buenos Aires.\n>\n> If you would like to pursue the Hotel al Ponte option, I will provide a detailed write-up of the anticipated costs and of the amenities offered by the hotel.\n>\n> Best,\n>\n> Luciano Moretti\n> Secretary, International Technological Society"
+    },
+    {
+      "id": "q_173",
+      "question_number": "173",
+      "stem": "What is indicated about the conference?",
+      "options": [],
+      "stimulus_id": "stim_14",
+      "stimulus_text": "**Questions 172-175** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Dorota Kucharski <dkucharski@internationaltechnologicalsociety.org> |\n> | From: | Luciano Moretti <lmoretti@internationaltechnologicalsociety.org> |\n> | Date: | 8 August |\n> | Subject: | Research results |\n>\n> Ms. Kucharski,\n>\n> The following is a summary of what I have learned in my research about where to hold our next annual technology conference in June of next year.\n>\n> In Rome, the best option I have found is Hotel al Ponte. The total cost for conference events there would be €31,500. — [1] —. Individual hotel rooms would cost €80 per night for participants. In the event that attendance is high, we could also house participants in the nearby Hotel Milvio at €120 per night. — [2] —.\n>\n> I also looked into hotels in Genoa and Florence, but I could not find any that would be much cheaper in overall conference costs. — [3] —. More importantly, I am concerned that the greater cost of flights to those smaller cities could discourage some attendees. Rome, on the other hand, has affordable direct flights from most European cities. — [4] —. It will also be more affordable for our colleagues coming from Buenos Aires.\n>\n> If you would like to pursue the Hotel al Ponte option, I will provide a detailed write-up of the anticipated costs and of the amenities offered by the hotel.\n>\n> Best,\n>\n> Luciano Moretti\n> Secretary, International Technological Society"
+    },
+    {
+      "id": "q_174",
+      "question_number": "174",
+      "stem": "What is true about Hotel Milvio?",
+      "options": [],
+      "stimulus_id": "stim_14",
+      "stimulus_text": "**Questions 172-175** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Dorota Kucharski <dkucharski@internationaltechnologicalsociety.org> |\n> | From: | Luciano Moretti <lmoretti@internationaltechnologicalsociety.org> |\n> | Date: | 8 August |\n> | Subject: | Research results |\n>\n> Ms. Kucharski,\n>\n> The following is a summary of what I have learned in my research about where to hold our next annual technology conference in June of next year.\n>\n> In Rome, the best option I have found is Hotel al Ponte. The total cost for conference events there would be €31,500. — [1] —. Individual hotel rooms would cost €80 per night for participants. In the event that attendance is high, we could also house participants in the nearby Hotel Milvio at €120 per night. — [2] —.\n>\n> I also looked into hotels in Genoa and Florence, but I could not find any that would be much cheaper in overall conference costs. — [3] —. More importantly, I am concerned that the greater cost of flights to those smaller cities could discourage some attendees. Rome, on the other hand, has affordable direct flights from most European cities. — [4] —. It will also be more affordable for our colleagues coming from Buenos Aires.\n>\n> If you would like to pursue the Hotel al Ponte option, I will provide a detailed write-up of the anticipated costs and of the amenities offered by the hotel.\n>\n> Best,\n>\n> Luciano Moretti\n> Secretary, International Technological Society"
+    },
+    {
+      "id": "q_175",
+      "question_number": "175",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_14",
+      "stimulus_text": "**Questions 172-175** refer to the following e-mail.\n> | | |\n> |---|---|\n> | To: | Dorota Kucharski <dkucharski@internationaltechnologicalsociety.org> |\n> | From: | Luciano Moretti <lmoretti@internationaltechnologicalsociety.org> |\n> | Date: | 8 August |\n> | Subject: | Research results |\n>\n> Ms. Kucharski,\n>\n> The following is a summary of what I have learned in my research about where to hold our next annual technology conference in June of next year.\n>\n> In Rome, the best option I have found is Hotel al Ponte. The total cost for conference events there would be €31,500. — [1] —. Individual hotel rooms would cost €80 per night for participants. In the event that attendance is high, we could also house participants in the nearby Hotel Milvio at €120 per night. — [2] —.\n>\n> I also looked into hotels in Genoa and Florence, but I could not find any that would be much cheaper in overall conference costs. — [3] —. More importantly, I am concerned that the greater cost of flights to those smaller cities could discourage some attendees. Rome, on the other hand, has affordable direct flights from most European cities. — [4] —. It will also be more affordable for our colleagues coming from Buenos Aires.\n>\n> If you would like to pursue the Hotel al Ponte option, I will provide a detailed write-up of the anticipated costs and of the amenities offered by the hotel.\n>\n> Best,\n>\n> Luciano Moretti\n> Secretary, International Technological Society"
+    },
+    {
+      "id": "q_176",
+      "question_number": "176",
+      "stem": "What is the purpose of the Web page?",
+      "options": [],
+      "stimulus_id": "stim_15",
+      "stimulus_text": "**Questions 176-180** refer to the following Web page and online review.\n> https://www.centraluniversity.edu/nutrition/newsletter\n>\n> | Home | Customer Service | Subscribe | Account | Log In |\n>\n> **Central University Health Newsletter—Your Guide to Nutrition and Well-Being**\n>\n> Tips on healthful eating are available almost everywhere—from TV shows to online cooking forums. It's often difficult to know whether the advice you encounter is based on scientific evidence. That's why the *Central University Health Newsletter* is indispensable. Each month, it delivers informative, easy-to-understand articles that summarize findings by researchers at the Central University School of Nutrition. For example, last April's issue evaluated nutritional supplements that are sold in supermarkets. The back page features our Ask an Expert column, in which the director of the School of Nutrition answers readers' questions.\n>\n> A one-year subscription is $20 and includes online access to all previous issues. We also offer a 10 percent discount on your first subscription renewal. What's more, subscribers receive our free weekly \"Healthy Living\" e-mail update, which includes special reports plus links to videos and podcasts.\n>\n> To get started, simply go to our Subscribe page and follow the instructions.\n> https://www.centraluniversity.edu/nutrition/newsletter/reviews\n>\n> **Publication:** *Central University Health Newsletter*\n> ★★★★★\n> **Reviewed by:** Ari Kipp\n> **Date posted:** August 4\n>\n> This is my second year subscribing to the *Central University Health Newsletter*, which I read cover to cover. I'm particularly impressed with the Ask an Expert column, and I always learn something new. This month, for instance, Dr. Stella Booth gives a surprising answer to the question of which pasta is most nutritious. I didn't know that bean-based pasta even existed, much less how much fiber it contains. I tried it and will never go back to regular pasta. My sole complaint is that the newsletter is only twelve pages long!\n310"
+    },
+    {
+      "id": "q_177",
+      "question_number": "177",
+      "stem": "In the Web page, the word \"delivers\" in paragraph 1, line 4, is closest in meaning to",
+      "options": [],
+      "stimulus_id": "stim_15",
+      "stimulus_text": "**Questions 176-180** refer to the following Web page and online review.\n> https://www.centraluniversity.edu/nutrition/newsletter\n>\n> | Home | Customer Service | Subscribe | Account | Log In |\n>\n> **Central University Health Newsletter—Your Guide to Nutrition and Well-Being**\n>\n> Tips on healthful eating are available almost everywhere—from TV shows to online cooking forums. It's often difficult to know whether the advice you encounter is based on scientific evidence. That's why the *Central University Health Newsletter* is indispensable. Each month, it delivers informative, easy-to-understand articles that summarize findings by researchers at the Central University School of Nutrition. For example, last April's issue evaluated nutritional supplements that are sold in supermarkets. The back page features our Ask an Expert column, in which the director of the School of Nutrition answers readers' questions.\n>\n> A one-year subscription is $20 and includes online access to all previous issues. We also offer a 10 percent discount on your first subscription renewal. What's more, subscribers receive our free weekly \"Healthy Living\" e-mail update, which includes special reports plus links to videos and podcasts.\n>\n> To get started, simply go to our Subscribe page and follow the instructions.\n> https://www.centraluniversity.edu/nutrition/newsletter/reviews\n>\n> **Publication:** *Central University Health Newsletter*\n> ★★★★★\n> **Reviewed by:** Ari Kipp\n> **Date posted:** August 4\n>\n> This is my second year subscribing to the *Central University Health Newsletter*, which I read cover to cover. I'm particularly impressed with the Ask an Expert column, and I always learn something new. This month, for instance, Dr. Stella Booth gives a surprising answer to the question of which pasta is most nutritious. I didn't know that bean-based pasta even existed, much less how much fiber it contains. I tried it and will never go back to regular pasta. My sole complaint is that the newsletter is only twelve pages long!\n310"
+    },
+    {
+      "id": "q_178",
+      "question_number": "178",
+      "stem": "What is true about Mr. Kipp?",
+      "options": [],
+      "stimulus_id": "stim_15",
+      "stimulus_text": "**Questions 176-180** refer to the following Web page and online review.\n> https://www.centraluniversity.edu/nutrition/newsletter\n>\n> | Home | Customer Service | Subscribe | Account | Log In |\n>\n> **Central University Health Newsletter—Your Guide to Nutrition and Well-Being**\n>\n> Tips on healthful eating are available almost everywhere—from TV shows to online cooking forums. It's often difficult to know whether the advice you encounter is based on scientific evidence. That's why the *Central University Health Newsletter* is indispensable. Each month, it delivers informative, easy-to-understand articles that summarize findings by researchers at the Central University School of Nutrition. For example, last April's issue evaluated nutritional supplements that are sold in supermarkets. The back page features our Ask an Expert column, in which the director of the School of Nutrition answers readers' questions.\n>\n> A one-year subscription is $20 and includes online access to all previous issues. We also offer a 10 percent discount on your first subscription renewal. What's more, subscribers receive our free weekly \"Healthy Living\" e-mail update, which includes special reports plus links to videos and podcasts.\n>\n> To get started, simply go to our Subscribe page and follow the instructions.\n> https://www.centraluniversity.edu/nutrition/newsletter/reviews\n>\n> **Publication:** *Central University Health Newsletter*\n> ★★★★★\n> **Reviewed by:** Ari Kipp\n> **Date posted:** August 4\n>\n> This is my second year subscribing to the *Central University Health Newsletter*, which I read cover to cover. I'm particularly impressed with the Ask an Expert column, and I always learn something new. This month, for instance, Dr. Stella Booth gives a surprising answer to the question of which pasta is most nutritious. I didn't know that bean-based pasta even existed, much less how much fiber it contains. I tried it and will never go back to regular pasta. My sole complaint is that the newsletter is only twelve pages long!\n310"
+    },
+    {
+      "id": "q_179",
+      "question_number": "179",
+      "stem": "What is indicated about the Central University School of Nutrition?",
+      "options": [],
+      "stimulus_id": "stim_15",
+      "stimulus_text": "**Questions 176-180** refer to the following Web page and online review.\n> https://www.centraluniversity.edu/nutrition/newsletter\n>\n> | Home | Customer Service | Subscribe | Account | Log In |\n>\n> **Central University Health Newsletter—Your Guide to Nutrition and Well-Being**\n>\n> Tips on healthful eating are available almost everywhere—from TV shows to online cooking forums. It's often difficult to know whether the advice you encounter is based on scientific evidence. That's why the *Central University Health Newsletter* is indispensable. Each month, it delivers informative, easy-to-understand articles that summarize findings by researchers at the Central University School of Nutrition. For example, last April's issue evaluated nutritional supplements that are sold in supermarkets. The back page features our Ask an Expert column, in which the director of the School of Nutrition answers readers' questions.\n>\n> A one-year subscription is $20 and includes online access to all previous issues. We also offer a 10 percent discount on your first subscription renewal. What's more, subscribers receive our free weekly \"Healthy Living\" e-mail update, which includes special reports plus links to videos and podcasts.\n>\n> To get started, simply go to our Subscribe page and follow the instructions.\n> https://www.centraluniversity.edu/nutrition/newsletter/reviews\n>\n> **Publication:** *Central University Health Newsletter*\n> ★★★★★\n> **Reviewed by:** Ari Kipp\n> **Date posted:** August 4\n>\n> This is my second year subscribing to the *Central University Health Newsletter*, which I read cover to cover. I'm particularly impressed with the Ask an Expert column, and I always learn something new. This month, for instance, Dr. Stella Booth gives a surprising answer to the question of which pasta is most nutritious. I didn't know that bean-based pasta even existed, much less how much fiber it contains. I tried it and will never go back to regular pasta. My sole complaint is that the newsletter is only twelve pages long!\n310"
+    },
+    {
+      "id": "q_180",
+      "question_number": "180",
+      "stem": "According to the online review, what is a weakness of the newsletter?",
+      "options": [],
+      "stimulus_id": "stim_15",
+      "stimulus_text": "**Questions 176-180** refer to the following Web page and online review.\n> https://www.centraluniversity.edu/nutrition/newsletter\n>\n> | Home | Customer Service | Subscribe | Account | Log In |\n>\n> **Central University Health Newsletter—Your Guide to Nutrition and Well-Being**\n>\n> Tips on healthful eating are available almost everywhere—from TV shows to online cooking forums. It's often difficult to know whether the advice you encounter is based on scientific evidence. That's why the *Central University Health Newsletter* is indispensable. Each month, it delivers informative, easy-to-understand articles that summarize findings by researchers at the Central University School of Nutrition. For example, last April's issue evaluated nutritional supplements that are sold in supermarkets. The back page features our Ask an Expert column, in which the director of the School of Nutrition answers readers' questions.\n>\n> A one-year subscription is $20 and includes online access to all previous issues. We also offer a 10 percent discount on your first subscription renewal. What's more, subscribers receive our free weekly \"Healthy Living\" e-mail update, which includes special reports plus links to videos and podcasts.\n>\n> To get started, simply go to our Subscribe page and follow the instructions.\n> https://www.centraluniversity.edu/nutrition/newsletter/reviews\n>\n> **Publication:** *Central University Health Newsletter*\n> ★★★★★\n> **Reviewed by:** Ari Kipp\n> **Date posted:** August 4\n>\n> This is my second year subscribing to the *Central University Health Newsletter*, which I read cover to cover. I'm particularly impressed with the Ask an Expert column, and I always learn something new. This month, for instance, Dr. Stella Booth gives a surprising answer to the question of which pasta is most nutritious. I didn't know that bean-based pasta even existed, much less how much fiber it contains. I tried it and will never go back to regular pasta. My sole complaint is that the newsletter is only twelve pages long!\n310"
+    },
+    {
+      "id": "q_181",
+      "question_number": "181",
+      "stem": "What client of BRV's is most likely seeking new employment?",
+      "options": [],
+      "stimulus_id": "stim_16",
+      "stimulus_text": "**Questions 181-185** refer to the following invoice and e-mail.\n> **Brit-Revision Editing Services Invoice**\n>\n> **Freelance Editor:** Lisa Yamashita\n> **Invoice Date:** 30 September\n> **Address:** 178 Upsala Road\n> LONDON\n> E16 1DJ\n> **Contact:** (020) 7946 0612\n> lisa.yamashita@bluesun.co.uk\n> Stashcash ID: Lisa.Yamashita8\n>\n> | Client Name | Project Description | Date Completed | Time |\n> |---|---|---|---|\n> | Eddie Kent | University thesis editing | 5 September | 2 hours |\n> | Ben Gallagher | Grant proposal editing | 9 September | 10 hours |\n> | Lydia Quinn of Hyden Interiors | Marketing copy editing | 17 September | 8.5 hours |\n> | Winona Rogers | Journal article editing | 22 September | 2 hours |\n> | Tony Withers | CV and cover letter editing | 28 September | 2.5 hours |\n> | | |\n> |---|---|\n> | **To:** | Lisa Yamashita <lisa.yamashita@bluesun.co.uk> |\n> | **From:** | Claudio Aguilar <caguilar@britrevision.co.uk> |\n> | **Date:** | 1 October |\n> | **Subject:** | Your recent invoice |\n>\n> Dear Lisa,\n>\n> Thank you for sending your invoice for services rendered in the month of September. I want to commend you on your superb start as one of our independent freelance editors. Our clients have nothing but positive things to say about your work. As you know, we do not dictate how you structure your workday; instead, Brit-Revision (BRV) guidelines require simply that deadlines be met and that work quality be maintained. You have done both admirably.\n>\n> Also, we will pay you for an additional 30 minutes of work that you did for Mr. Kent. He reported that you did consulting work for him over the phone on a short oral presentation that he created. As for the work that you did for our long-standing corporate client Lydia Quinn, you will see on your receipt that we have paid you at a higher hourly rate.\n>\n> I have initiated the transfer of £750 into your Stashcash account. The funds should appear in your account by tomorrow morning.\n>\n> Sincerely,\n>\n> Claudio Aguilar\n> Accounts Payable, Brit-Revision Editing Services\n312"
+    },
+    {
+      "id": "q_182",
+      "question_number": "182",
+      "stem": "What does the e-mail indicate about Ms. Yamashita?",
+      "options": [],
+      "stimulus_id": "stim_16",
+      "stimulus_text": "**Questions 181-185** refer to the following invoice and e-mail.\n> **Brit-Revision Editing Services Invoice**\n>\n> **Freelance Editor:** Lisa Yamashita\n> **Invoice Date:** 30 September\n> **Address:** 178 Upsala Road\n> LONDON\n> E16 1DJ\n> **Contact:** (020) 7946 0612\n> lisa.yamashita@bluesun.co.uk\n> Stashcash ID: Lisa.Yamashita8\n>\n> | Client Name | Project Description | Date Completed | Time |\n> |---|---|---|---|\n> | Eddie Kent | University thesis editing | 5 September | 2 hours |\n> | Ben Gallagher | Grant proposal editing | 9 September | 10 hours |\n> | Lydia Quinn of Hyden Interiors | Marketing copy editing | 17 September | 8.5 hours |\n> | Winona Rogers | Journal article editing | 22 September | 2 hours |\n> | Tony Withers | CV and cover letter editing | 28 September | 2.5 hours |\n> | | |\n> |---|---|\n> | **To:** | Lisa Yamashita <lisa.yamashita@bluesun.co.uk> |\n> | **From:** | Claudio Aguilar <caguilar@britrevision.co.uk> |\n> | **Date:** | 1 October |\n> | **Subject:** | Your recent invoice |\n>\n> Dear Lisa,\n>\n> Thank you for sending your invoice for services rendered in the month of September. I want to commend you on your superb start as one of our independent freelance editors. Our clients have nothing but positive things to say about your work. As you know, we do not dictate how you structure your workday; instead, Brit-Revision (BRV) guidelines require simply that deadlines be met and that work quality be maintained. You have done both admirably.\n>\n> Also, we will pay you for an additional 30 minutes of work that you did for Mr. Kent. He reported that you did consulting work for him over the phone on a short oral presentation that he created. As for the work that you did for our long-standing corporate client Lydia Quinn, you will see on your receipt that we have paid you at a higher hourly rate.\n>\n> I have initiated the transfer of £750 into your Stashcash account. The funds should appear in your account by tomorrow morning.\n>\n> Sincerely,\n>\n> Claudio Aguilar\n> Accounts Payable, Brit-Revision Editing Services\n312"
+    },
+    {
+      "id": "q_183",
+      "question_number": "183",
+      "stem": "According to the e-mail, what did Ms. Yamashita NOT include on the invoice?",
+      "options": [],
+      "stimulus_id": "stim_16",
+      "stimulus_text": "**Questions 181-185** refer to the following invoice and e-mail.\n> **Brit-Revision Editing Services Invoice**\n>\n> **Freelance Editor:** Lisa Yamashita\n> **Invoice Date:** 30 September\n> **Address:** 178 Upsala Road\n> LONDON\n> E16 1DJ\n> **Contact:** (020) 7946 0612\n> lisa.yamashita@bluesun.co.uk\n> Stashcash ID: Lisa.Yamashita8\n>\n> | Client Name | Project Description | Date Completed | Time |\n> |---|---|---|---|\n> | Eddie Kent | University thesis editing | 5 September | 2 hours |\n> | Ben Gallagher | Grant proposal editing | 9 September | 10 hours |\n> | Lydia Quinn of Hyden Interiors | Marketing copy editing | 17 September | 8.5 hours |\n> | Winona Rogers | Journal article editing | 22 September | 2 hours |\n> | Tony Withers | CV and cover letter editing | 28 September | 2.5 hours |\n> | | |\n> |---|---|\n> | **To:** | Lisa Yamashita <lisa.yamashita@bluesun.co.uk> |\n> | **From:** | Claudio Aguilar <caguilar@britrevision.co.uk> |\n> | **Date:** | 1 October |\n> | **Subject:** | Your recent invoice |\n>\n> Dear Lisa,\n>\n> Thank you for sending your invoice for services rendered in the month of September. I want to commend you on your superb start as one of our independent freelance editors. Our clients have nothing but positive things to say about your work. As you know, we do not dictate how you structure your workday; instead, Brit-Revision (BRV) guidelines require simply that deadlines be met and that work quality be maintained. You have done both admirably.\n>\n> Also, we will pay you for an additional 30 minutes of work that you did for Mr. Kent. He reported that you did consulting work for him over the phone on a short oral presentation that he created. As for the work that you did for our long-standing corporate client Lydia Quinn, you will see on your receipt that we have paid you at a higher hourly rate.\n>\n> I have initiated the transfer of £750 into your Stashcash account. The funds should appear in your account by tomorrow morning.\n>\n> Sincerely,\n>\n> Claudio Aguilar\n> Accounts Payable, Brit-Revision Editing Services\n312"
+    },
+    {
+      "id": "q_184",
+      "question_number": "184",
+      "stem": "For what project will Ms. Yamashita earn the most per hour?",
+      "options": [],
+      "stimulus_id": "stim_16",
+      "stimulus_text": "**Questions 181-185** refer to the following invoice and e-mail.\n> **Brit-Revision Editing Services Invoice**\n>\n> **Freelance Editor:** Lisa Yamashita\n> **Invoice Date:** 30 September\n> **Address:** 178 Upsala Road\n> LONDON\n> E16 1DJ\n> **Contact:** (020) 7946 0612\n> lisa.yamashita@bluesun.co.uk\n> Stashcash ID: Lisa.Yamashita8\n>\n> | Client Name | Project Description | Date Completed | Time |\n> |---|---|---|---|\n> | Eddie Kent | University thesis editing | 5 September | 2 hours |\n> | Ben Gallagher | Grant proposal editing | 9 September | 10 hours |\n> | Lydia Quinn of Hyden Interiors | Marketing copy editing | 17 September | 8.5 hours |\n> | Winona Rogers | Journal article editing | 22 September | 2 hours |\n> | Tony Withers | CV and cover letter editing | 28 September | 2.5 hours |\n> | | |\n> |---|---|\n> | **To:** | Lisa Yamashita <lisa.yamashita@bluesun.co.uk> |\n> | **From:** | Claudio Aguilar <caguilar@britrevision.co.uk> |\n> | **Date:** | 1 October |\n> | **Subject:** | Your recent invoice |\n>\n> Dear Lisa,\n>\n> Thank you for sending your invoice for services rendered in the month of September. I want to commend you on your superb start as one of our independent freelance editors. Our clients have nothing but positive things to say about your work. As you know, we do not dictate how you structure your workday; instead, Brit-Revision (BRV) guidelines require simply that deadlines be met and that work quality be maintained. You have done both admirably.\n>\n> Also, we will pay you for an additional 30 minutes of work that you did for Mr. Kent. He reported that you did consulting work for him over the phone on a short oral presentation that he created. As for the work that you did for our long-standing corporate client Lydia Quinn, you will see on your receipt that we have paid you at a higher hourly rate.\n>\n> I have initiated the transfer of £750 into your Stashcash account. The funds should appear in your account by tomorrow morning.\n>\n> Sincerely,\n>\n> Claudio Aguilar\n> Accounts Payable, Brit-Revision Editing Services\n312"
+    },
+    {
+      "id": "q_185",
+      "question_number": "185",
+      "stem": "When can Ms. Yamashita expect a payment to arrive?",
+      "options": [],
+      "stimulus_id": "stim_16",
+      "stimulus_text": "**Questions 181-185** refer to the following invoice and e-mail.\n> **Brit-Revision Editing Services Invoice**\n>\n> **Freelance Editor:** Lisa Yamashita\n> **Invoice Date:** 30 September\n> **Address:** 178 Upsala Road\n> LONDON\n> E16 1DJ\n> **Contact:** (020) 7946 0612\n> lisa.yamashita@bluesun.co.uk\n> Stashcash ID: Lisa.Yamashita8\n>\n> | Client Name | Project Description | Date Completed | Time |\n> |---|---|---|---|\n> | Eddie Kent | University thesis editing | 5 September | 2 hours |\n> | Ben Gallagher | Grant proposal editing | 9 September | 10 hours |\n> | Lydia Quinn of Hyden Interiors | Marketing copy editing | 17 September | 8.5 hours |\n> | Winona Rogers | Journal article editing | 22 September | 2 hours |\n> | Tony Withers | CV and cover letter editing | 28 September | 2.5 hours |\n> | | |\n> |---|---|\n> | **To:** | Lisa Yamashita <lisa.yamashita@bluesun.co.uk> |\n> | **From:** | Claudio Aguilar <caguilar@britrevision.co.uk> |\n> | **Date:** | 1 October |\n> | **Subject:** | Your recent invoice |\n>\n> Dear Lisa,\n>\n> Thank you for sending your invoice for services rendered in the month of September. I want to commend you on your superb start as one of our independent freelance editors. Our clients have nothing but positive things to say about your work. As you know, we do not dictate how you structure your workday; instead, Brit-Revision (BRV) guidelines require simply that deadlines be met and that work quality be maintained. You have done both admirably.\n>\n> Also, we will pay you for an additional 30 minutes of work that you did for Mr. Kent. He reported that you did consulting work for him over the phone on a short oral presentation that he created. As for the work that you did for our long-standing corporate client Lydia Quinn, you will see on your receipt that we have paid you at a higher hourly rate.\n>\n> I have initiated the transfer of £750 into your Stashcash account. The funds should appear in your account by tomorrow morning.\n>\n> Sincerely,\n>\n> Claudio Aguilar\n> Accounts Payable, Brit-Revision Editing Services\n312"
+    },
+    {
+      "id": "q_186",
+      "question_number": "186",
+      "stem": "According to the first e-mail, what was previously sent to new employees?",
+      "options": [],
+      "stimulus_id": "stim_17",
+      "stimulus_text": "**Questions 186-190** refer to the following e-mails and instructions.\n> | | |\n> |---|---|\n> | **To:** | New Employees |\n> | **From:** | Hemi Amos <hamos@motmanmotors.com> |\n> | **Date:** | June 8 |\n> | **Subject:** | Welcome to Motman Motors |\n> | **Attachment:** | 📎 Information |\n>\n> Dear New Employees,\n>\n> Welcome! We are thrilled that all of you are joining Motman Motors.\n>\n> New-employee orientation for all is on June 10 from 9:00 A.M. to 12:00 noon. Please report to the proper room in the Pimzler Building on our campus as indicated below. I will come around to each room to meet the new employees briefly.\n>\n> - Marketing and Customer Service: both groups report to room 320.\n> - Engineering: report to room 215.\n> - Technology Services: report to room 158.\n>\n> I can confirm that the employee paperwork has been finalized for most of you, so at this point we just need to ensure that the Motman Motors portal account is set up using the employee identification number recently sent to you and that your bank account information is entered there. Please follow the attached instructions to complete this final step. It should not take any more than fifteen minutes, and I ask that you do this by June 17. Don't hesitate to reach out if you have any questions.\n>\n> Welcome aboard!\n>\n> Hemi Amos\n> Human Resources, Motman Motors\n> Please follow these steps to create and activate your new Motman Motors portal account. Go to https://motmanmotors.com/portal/activation to begin.\n>\n> 1. Go to the \"New User Registration\" page and enter your employee ID number.\n> 2. Your name and address will appear. Confirm that this information is correct.\n> 3. A new screen titled \"Bank Account\" will appear. Fill in your bank account information.\n> 4. Finally, you will be asked to select two security questions and provide the answers.\n>\n> Once you have created your account, your account will become active, the payroll department will be alerted, and your payment schedule will be set. Please e-mail Mr. Hemi Amos at hamos@motmanmotors.com if you have any difficulties or questions.\n314\n| | |\n|---|---|\n| **To:** | Hemi Amos <hamos@motmanmotors.com> |\n| **From:** | Karuna Dimaano <kdimaano@motmanmotors.com> |\n| **Date:** | June 9 |\n| **Subject:** | Trouble with Motman Motors portal |\nDear Mr. Amos,\nThank you for the kind welcome e-mail yesterday.\nI am trying to set up my Motman Motors portal account, but I seem to be having trouble with my employee ID number. Each time I put the information into the system, I get an error message. I might not have the right number. Can you please advise me on how to address this?\nI also have another question. Will the orientation include any information for newcomers to San Antonio? I am excited to start exploring everything here that this great city offers.\nI look forward to meeting you tomorrow in room 215 in the Pimzler Building.\nThank you,\nKaruna Dimaano"
+    },
+    {
+      "id": "q_187",
+      "question_number": "187",
+      "stem": "According to the first e-mail, what is the deadline to complete an online task?",
+      "options": [],
+      "stimulus_id": "stim_17",
+      "stimulus_text": "**Questions 186-190** refer to the following e-mails and instructions.\n> | | |\n> |---|---|\n> | **To:** | New Employees |\n> | **From:** | Hemi Amos <hamos@motmanmotors.com> |\n> | **Date:** | June 8 |\n> | **Subject:** | Welcome to Motman Motors |\n> | **Attachment:** | 📎 Information |\n>\n> Dear New Employees,\n>\n> Welcome! We are thrilled that all of you are joining Motman Motors.\n>\n> New-employee orientation for all is on June 10 from 9:00 A.M. to 12:00 noon. Please report to the proper room in the Pimzler Building on our campus as indicated below. I will come around to each room to meet the new employees briefly.\n>\n> - Marketing and Customer Service: both groups report to room 320.\n> - Engineering: report to room 215.\n> - Technology Services: report to room 158.\n>\n> I can confirm that the employee paperwork has been finalized for most of you, so at this point we just need to ensure that the Motman Motors portal account is set up using the employee identification number recently sent to you and that your bank account information is entered there. Please follow the attached instructions to complete this final step. It should not take any more than fifteen minutes, and I ask that you do this by June 17. Don't hesitate to reach out if you have any questions.\n>\n> Welcome aboard!\n>\n> Hemi Amos\n> Human Resources, Motman Motors\n> Please follow these steps to create and activate your new Motman Motors portal account. Go to https://motmanmotors.com/portal/activation to begin.\n>\n> 1. Go to the \"New User Registration\" page and enter your employee ID number.\n> 2. Your name and address will appear. Confirm that this information is correct.\n> 3. A new screen titled \"Bank Account\" will appear. Fill in your bank account information.\n> 4. Finally, you will be asked to select two security questions and provide the answers.\n>\n> Once you have created your account, your account will become active, the payroll department will be alerted, and your payment schedule will be set. Please e-mail Mr. Hemi Amos at hamos@motmanmotors.com if you have any difficulties or questions.\n314\n| | |\n|---|---|\n| **To:** | Hemi Amos <hamos@motmanmotors.com> |\n| **From:** | Karuna Dimaano <kdimaano@motmanmotors.com> |\n| **Date:** | June 9 |\n| **Subject:** | Trouble with Motman Motors portal |\nDear Mr. Amos,\nThank you for the kind welcome e-mail yesterday.\nI am trying to set up my Motman Motors portal account, but I seem to be having trouble with my employee ID number. Each time I put the information into the system, I get an error message. I might not have the right number. Can you please advise me on how to address this?\nI also have another question. Will the orientation include any information for newcomers to San Antonio? I am excited to start exploring everything here that this great city offers.\nI look forward to meeting you tomorrow in room 215 in the Pimzler Building.\nThank you,\nKaruna Dimaano"
+    },
+    {
+      "id": "q_188",
+      "question_number": "188",
+      "stem": "What step is Ms. Dimaano having trouble with?",
+      "options": [],
+      "stimulus_id": "stim_17",
+      "stimulus_text": "**Questions 186-190** refer to the following e-mails and instructions.\n> | | |\n> |---|---|\n> | **To:** | New Employees |\n> | **From:** | Hemi Amos <hamos@motmanmotors.com> |\n> | **Date:** | June 8 |\n> | **Subject:** | Welcome to Motman Motors |\n> | **Attachment:** | 📎 Information |\n>\n> Dear New Employees,\n>\n> Welcome! We are thrilled that all of you are joining Motman Motors.\n>\n> New-employee orientation for all is on June 10 from 9:00 A.M. to 12:00 noon. Please report to the proper room in the Pimzler Building on our campus as indicated below. I will come around to each room to meet the new employees briefly.\n>\n> - Marketing and Customer Service: both groups report to room 320.\n> - Engineering: report to room 215.\n> - Technology Services: report to room 158.\n>\n> I can confirm that the employee paperwork has been finalized for most of you, so at this point we just need to ensure that the Motman Motors portal account is set up using the employee identification number recently sent to you and that your bank account information is entered there. Please follow the attached instructions to complete this final step. It should not take any more than fifteen minutes, and I ask that you do this by June 17. Don't hesitate to reach out if you have any questions.\n>\n> Welcome aboard!\n>\n> Hemi Amos\n> Human Resources, Motman Motors\n> Please follow these steps to create and activate your new Motman Motors portal account. Go to https://motmanmotors.com/portal/activation to begin.\n>\n> 1. Go to the \"New User Registration\" page and enter your employee ID number.\n> 2. Your name and address will appear. Confirm that this information is correct.\n> 3. A new screen titled \"Bank Account\" will appear. Fill in your bank account information.\n> 4. Finally, you will be asked to select two security questions and provide the answers.\n>\n> Once you have created your account, your account will become active, the payroll department will be alerted, and your payment schedule will be set. Please e-mail Mr. Hemi Amos at hamos@motmanmotors.com if you have any difficulties or questions.\n314\n| | |\n|---|---|\n| **To:** | Hemi Amos <hamos@motmanmotors.com> |\n| **From:** | Karuna Dimaano <kdimaano@motmanmotors.com> |\n| **Date:** | June 9 |\n| **Subject:** | Trouble with Motman Motors portal |\nDear Mr. Amos,\nThank you for the kind welcome e-mail yesterday.\nI am trying to set up my Motman Motors portal account, but I seem to be having trouble with my employee ID number. Each time I put the information into the system, I get an error message. I might not have the right number. Can you please advise me on how to address this?\nI also have another question. Will the orientation include any information for newcomers to San Antonio? I am excited to start exploring everything here that this great city offers.\nI look forward to meeting you tomorrow in room 215 in the Pimzler Building.\nThank you,\nKaruna Dimaano"
+    },
+    {
+      "id": "q_189",
+      "question_number": "189",
+      "stem": "What department will Ms. Dimaano join?",
+      "options": [],
+      "stimulus_id": "stim_17",
+      "stimulus_text": "**Questions 186-190** refer to the following e-mails and instructions.\n> | | |\n> |---|---|\n> | **To:** | New Employees |\n> | **From:** | Hemi Amos <hamos@motmanmotors.com> |\n> | **Date:** | June 8 |\n> | **Subject:** | Welcome to Motman Motors |\n> | **Attachment:** | 📎 Information |\n>\n> Dear New Employees,\n>\n> Welcome! We are thrilled that all of you are joining Motman Motors.\n>\n> New-employee orientation for all is on June 10 from 9:00 A.M. to 12:00 noon. Please report to the proper room in the Pimzler Building on our campus as indicated below. I will come around to each room to meet the new employees briefly.\n>\n> - Marketing and Customer Service: both groups report to room 320.\n> - Engineering: report to room 215.\n> - Technology Services: report to room 158.\n>\n> I can confirm that the employee paperwork has been finalized for most of you, so at this point we just need to ensure that the Motman Motors portal account is set up using the employee identification number recently sent to you and that your bank account information is entered there. Please follow the attached instructions to complete this final step. It should not take any more than fifteen minutes, and I ask that you do this by June 17. Don't hesitate to reach out if you have any questions.\n>\n> Welcome aboard!\n>\n> Hemi Amos\n> Human Resources, Motman Motors\n> Please follow these steps to create and activate your new Motman Motors portal account. Go to https://motmanmotors.com/portal/activation to begin.\n>\n> 1. Go to the \"New User Registration\" page and enter your employee ID number.\n> 2. Your name and address will appear. Confirm that this information is correct.\n> 3. A new screen titled \"Bank Account\" will appear. Fill in your bank account information.\n> 4. Finally, you will be asked to select two security questions and provide the answers.\n>\n> Once you have created your account, your account will become active, the payroll department will be alerted, and your payment schedule will be set. Please e-mail Mr. Hemi Amos at hamos@motmanmotors.com if you have any difficulties or questions.\n314\n| | |\n|---|---|\n| **To:** | Hemi Amos <hamos@motmanmotors.com> |\n| **From:** | Karuna Dimaano <kdimaano@motmanmotors.com> |\n| **Date:** | June 9 |\n| **Subject:** | Trouble with Motman Motors portal |\nDear Mr. Amos,\nThank you for the kind welcome e-mail yesterday.\nI am trying to set up my Motman Motors portal account, but I seem to be having trouble with my employee ID number. Each time I put the information into the system, I get an error message. I might not have the right number. Can you please advise me on how to address this?\nI also have another question. Will the orientation include any information for newcomers to San Antonio? I am excited to start exploring everything here that this great city offers.\nI look forward to meeting you tomorrow in room 215 in the Pimzler Building.\nThank you,\nKaruna Dimaano"
+    },
+    {
+      "id": "q_190",
+      "question_number": "190",
+      "stem": "In the second e-mail, what is suggested about Ms. Dimaano?",
+      "options": [],
+      "stimulus_id": "stim_17",
+      "stimulus_text": "**Questions 186-190** refer to the following e-mails and instructions.\n> | | |\n> |---|---|\n> | **To:** | New Employees |\n> | **From:** | Hemi Amos <hamos@motmanmotors.com> |\n> | **Date:** | June 8 |\n> | **Subject:** | Welcome to Motman Motors |\n> | **Attachment:** | 📎 Information |\n>\n> Dear New Employees,\n>\n> Welcome! We are thrilled that all of you are joining Motman Motors.\n>\n> New-employee orientation for all is on June 10 from 9:00 A.M. to 12:00 noon. Please report to the proper room in the Pimzler Building on our campus as indicated below. I will come around to each room to meet the new employees briefly.\n>\n> - Marketing and Customer Service: both groups report to room 320.\n> - Engineering: report to room 215.\n> - Technology Services: report to room 158.\n>\n> I can confirm that the employee paperwork has been finalized for most of you, so at this point we just need to ensure that the Motman Motors portal account is set up using the employee identification number recently sent to you and that your bank account information is entered there. Please follow the attached instructions to complete this final step. It should not take any more than fifteen minutes, and I ask that you do this by June 17. Don't hesitate to reach out if you have any questions.\n>\n> Welcome aboard!\n>\n> Hemi Amos\n> Human Resources, Motman Motors\n> Please follow these steps to create and activate your new Motman Motors portal account. Go to https://motmanmotors.com/portal/activation to begin.\n>\n> 1. Go to the \"New User Registration\" page and enter your employee ID number.\n> 2. Your name and address will appear. Confirm that this information is correct.\n> 3. A new screen titled \"Bank Account\" will appear. Fill in your bank account information.\n> 4. Finally, you will be asked to select two security questions and provide the answers.\n>\n> Once you have created your account, your account will become active, the payroll department will be alerted, and your payment schedule will be set. Please e-mail Mr. Hemi Amos at hamos@motmanmotors.com if you have any difficulties or questions.\n314\n| | |\n|---|---|\n| **To:** | Hemi Amos <hamos@motmanmotors.com> |\n| **From:** | Karuna Dimaano <kdimaano@motmanmotors.com> |\n| **Date:** | June 9 |\n| **Subject:** | Trouble with Motman Motors portal |\nDear Mr. Amos,\nThank you for the kind welcome e-mail yesterday.\nI am trying to set up my Motman Motors portal account, but I seem to be having trouble with my employee ID number. Each time I put the information into the system, I get an error message. I might not have the right number. Can you please advise me on how to address this?\nI also have another question. Will the orientation include any information for newcomers to San Antonio? I am excited to start exploring everything here that this great city offers.\nI look forward to meeting you tomorrow in room 215 in the Pimzler Building.\nThank you,\nKaruna Dimaano"
+    },
+    {
+      "id": "q_191",
+      "question_number": "191",
+      "stem": "What is attached to the e-mail?",
+      "options": [],
+      "stimulus_id": "stim_18",
+      "stimulus_text": "**Questions 191-195** refer to the following e-mail, invoice, and memo.\n| | |\n|---|---|\n| **To:** | Felix Herman <felixh@videogenieproductions.com> |\n| **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> |\n| **Date:** | September 17 |\n| **Subject:** | Notes on rough cut of video |\n| **Attachment:** | Information |\nDear Mr. Herman,\nThank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version.\n- At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail.\n- At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot?\n- At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down?\nI look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work.\nSincerely,\nMs. Sapna Mathai, Project Manager\nThe Hospital Equipment Company\n### The Hospital Equipment Company\nInvoice 9984\n**Billing date:** October 25\n**Installation date:** October 26\nBill to:\nAll-City Hospital\n3 Shoreline Road\nClear Lake, Minnesota 55319\n| Quantity | Item Number | Description | Unit Price | Total |\n|----------|-------------|-------------|------------|-------|\n| 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 |\n| | | **Delivery and Installation** | | $2,350 |\n| | | **Total** | | **$486,950** |\n316\n## MEMO\n**To:** All The Hospital Equipment Company Employees\n**From:** Marcia Oliver, Vice President of Sales\n**Date:** October 27\n**Re:** Good work!\nCongratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered.\nI would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution."
+    },
+    {
+      "id": "q_192",
+      "question_number": "192",
+      "stem": "Why does Ms. Mathai want to replace the scene at 1 minute?",
+      "options": [],
+      "stimulus_id": "stim_18",
+      "stimulus_text": "**Questions 191-195** refer to the following e-mail, invoice, and memo.\n| | |\n|---|---|\n| **To:** | Felix Herman <felixh@videogenieproductions.com> |\n| **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> |\n| **Date:** | September 17 |\n| **Subject:** | Notes on rough cut of video |\n| **Attachment:** | Information |\nDear Mr. Herman,\nThank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version.\n- At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail.\n- At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot?\n- At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down?\nI look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work.\nSincerely,\nMs. Sapna Mathai, Project Manager\nThe Hospital Equipment Company\n### The Hospital Equipment Company\nInvoice 9984\n**Billing date:** October 25\n**Installation date:** October 26\nBill to:\nAll-City Hospital\n3 Shoreline Road\nClear Lake, Minnesota 55319\n| Quantity | Item Number | Description | Unit Price | Total |\n|----------|-------------|-------------|------------|-------|\n| 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 |\n| | | **Delivery and Installation** | | $2,350 |\n| | | **Total** | | **$486,950** |\n316\n## MEMO\n**To:** All The Hospital Equipment Company Employees\n**From:** Marcia Oliver, Vice President of Sales\n**Date:** October 27\n**Re:** Good work!\nCongratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered.\nI would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution."
+    },
+    {
+      "id": "q_193",
+      "question_number": "193",
+      "stem": "What does the invoice indicate about the Fluorolook Imagers?",
+      "options": [],
+      "stimulus_id": "stim_18",
+      "stimulus_text": "**Questions 191-195** refer to the following e-mail, invoice, and memo.\n| | |\n|---|---|\n| **To:** | Felix Herman <felixh@videogenieproductions.com> |\n| **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> |\n| **Date:** | September 17 |\n| **Subject:** | Notes on rough cut of video |\n| **Attachment:** | Information |\nDear Mr. Herman,\nThank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version.\n- At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail.\n- At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot?\n- At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down?\nI look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work.\nSincerely,\nMs. Sapna Mathai, Project Manager\nThe Hospital Equipment Company\n### The Hospital Equipment Company\nInvoice 9984\n**Billing date:** October 25\n**Installation date:** October 26\nBill to:\nAll-City Hospital\n3 Shoreline Road\nClear Lake, Minnesota 55319\n| Quantity | Item Number | Description | Unit Price | Total |\n|----------|-------------|-------------|------------|-------|\n| 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 |\n| | | **Delivery and Installation** | | $2,350 |\n| | | **Total** | | **$486,950** |\n316\n## MEMO\n**To:** All The Hospital Equipment Company Employees\n**From:** Marcia Oliver, Vice President of Sales\n**Date:** October 27\n**Re:** Good work!\nCongratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered.\nI would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution."
+    },
+    {
+      "id": "q_194",
+      "question_number": "194",
+      "stem": "Whom does Ms. Oliver specifically praise?",
+      "options": [],
+      "stimulus_id": "stim_18",
+      "stimulus_text": "**Questions 191-195** refer to the following e-mail, invoice, and memo.\n| | |\n|---|---|\n| **To:** | Felix Herman <felixh@videogenieproductions.com> |\n| **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> |\n| **Date:** | September 17 |\n| **Subject:** | Notes on rough cut of video |\n| **Attachment:** | Information |\nDear Mr. Herman,\nThank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version.\n- At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail.\n- At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot?\n- At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down?\nI look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work.\nSincerely,\nMs. Sapna Mathai, Project Manager\nThe Hospital Equipment Company\n### The Hospital Equipment Company\nInvoice 9984\n**Billing date:** October 25\n**Installation date:** October 26\nBill to:\nAll-City Hospital\n3 Shoreline Road\nClear Lake, Minnesota 55319\n| Quantity | Item Number | Description | Unit Price | Total |\n|----------|-------------|-------------|------------|-------|\n| 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 |\n| | | **Delivery and Installation** | | $2,350 |\n| | | **Total** | | **$486,950** |\n316\n## MEMO\n**To:** All The Hospital Equipment Company Employees\n**From:** Marcia Oliver, Vice President of Sales\n**Date:** October 27\n**Re:** Good work!\nCongratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered.\nI would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution."
+    },
+    {
+      "id": "q_195",
+      "question_number": "195",
+      "stem": "Where does Mr. Lamontagne most likely work?",
+      "options": [],
+      "stimulus_id": "stim_18",
+      "stimulus_text": "**Questions 191-195** refer to the following e-mail, invoice, and memo.\n| | |\n|---|---|\n| **To:** | Felix Herman <felixh@videogenieproductions.com> |\n| **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> |\n| **Date:** | September 17 |\n| **Subject:** | Notes on rough cut of video |\n| **Attachment:** | Information |\nDear Mr. Herman,\nThank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version.\n- At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail.\n- At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot?\n- At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down?\nI look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work.\nSincerely,\nMs. Sapna Mathai, Project Manager\nThe Hospital Equipment Company\n### The Hospital Equipment Company\nInvoice 9984\n**Billing date:** October 25\n**Installation date:** October 26\nBill to:\nAll-City Hospital\n3 Shoreline Road\nClear Lake, Minnesota 55319\n| Quantity | Item Number | Description | Unit Price | Total |\n|----------|-------------|-------------|------------|-------|\n| 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 |\n| | | **Delivery and Installation** | | $2,350 |\n| | | **Total** | | **$486,950** |\n316\n## MEMO\n**To:** All The Hospital Equipment Company Employees\n**From:** Marcia Oliver, Vice President of Sales\n**Date:** October 27\n**Re:** Good work!\nCongratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered.\nI would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution."
+    },
+    {
+      "id": "q_196",
+      "question_number": "196",
+      "stem": "What is the purpose of the first e-mail?",
+      "options": [],
+      "stimulus_id": "stim_19",
+      "stimulus_text": "**Questions 196-200** refer to the following packing slip and e-mails.\n### Packing Slip\n| | |\n|---|---|\n| **From:** Reina Olive Oil Company | **To:** Best Products Supermarket |\n| Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu |\n| 18002 Granada, Spain | Incheon 22382, Republic of Korea |\n**Order Date:** 28 November\n**Order Number:** SK6224\n| Item Number | Description | Quantity |\n|-------------|-------------|----------|\n| EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases |\n| EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases |\n| EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases |\n| EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases |\n| EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases |\nCelebrate the season with us! Place your next order by 31 January to receive 10 percent off.\n### *E-mail*\n| | |\n|---|---|\n| **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **Date:** | 12 December |\n| **Subject:** | Order number SK6224 |\nDear Mr. Nadal:\nWe appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error.\nWe would like to arrange to send these products back. Please inform us how to proceed.\nThank you,\nMin Hae Seong\nReceiving and Distribution, Best Products Supermarket\n318\n| | |\n|---|---|\n| **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **Date:** | 14 December |\n| **Subject:** | RE: Order number SK6224 |\nDear Ms. Seong,\nI apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake.\nWe are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments.\nWe hope to continue providing Best Products Supermarket with the finest olive oils.\nSincerely yours,\nPablo Nadal\nExport Division Manager, Reina Olive Oil Company"
+    },
+    {
+      "id": "q_197",
+      "question_number": "197",
+      "stem": "What item number does Ms. Seong refer to?",
+      "options": [],
+      "stimulus_id": "stim_19",
+      "stimulus_text": "**Questions 196-200** refer to the following packing slip and e-mails.\n### Packing Slip\n| | |\n|---|---|\n| **From:** Reina Olive Oil Company | **To:** Best Products Supermarket |\n| Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu |\n| 18002 Granada, Spain | Incheon 22382, Republic of Korea |\n**Order Date:** 28 November\n**Order Number:** SK6224\n| Item Number | Description | Quantity |\n|-------------|-------------|----------|\n| EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases |\n| EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases |\n| EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases |\n| EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases |\n| EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases |\nCelebrate the season with us! Place your next order by 31 January to receive 10 percent off.\n### *E-mail*\n| | |\n|---|---|\n| **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **Date:** | 12 December |\n| **Subject:** | Order number SK6224 |\nDear Mr. Nadal:\nWe appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error.\nWe would like to arrange to send these products back. Please inform us how to proceed.\nThank you,\nMin Hae Seong\nReceiving and Distribution, Best Products Supermarket\n318\n| | |\n|---|---|\n| **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **Date:** | 14 December |\n| **Subject:** | RE: Order number SK6224 |\nDear Ms. Seong,\nI apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake.\nWe are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments.\nWe hope to continue providing Best Products Supermarket with the finest olive oils.\nSincerely yours,\nPablo Nadal\nExport Division Manager, Reina Olive Oil Company"
+    },
+    {
+      "id": "q_198",
+      "question_number": "198",
+      "stem": "What does the second e-mail suggest about Reina Olive Oil Company?",
+      "options": [],
+      "stimulus_id": "stim_19",
+      "stimulus_text": "**Questions 196-200** refer to the following packing slip and e-mails.\n### Packing Slip\n| | |\n|---|---|\n| **From:** Reina Olive Oil Company | **To:** Best Products Supermarket |\n| Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu |\n| 18002 Granada, Spain | Incheon 22382, Republic of Korea |\n**Order Date:** 28 November\n**Order Number:** SK6224\n| Item Number | Description | Quantity |\n|-------------|-------------|----------|\n| EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases |\n| EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases |\n| EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases |\n| EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases |\n| EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases |\nCelebrate the season with us! Place your next order by 31 January to receive 10 percent off.\n### *E-mail*\n| | |\n|---|---|\n| **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **Date:** | 12 December |\n| **Subject:** | Order number SK6224 |\nDear Mr. Nadal:\nWe appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error.\nWe would like to arrange to send these products back. Please inform us how to proceed.\nThank you,\nMin Hae Seong\nReceiving and Distribution, Best Products Supermarket\n318\n| | |\n|---|---|\n| **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **Date:** | 14 December |\n| **Subject:** | RE: Order number SK6224 |\nDear Ms. Seong,\nI apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake.\nWe are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments.\nWe hope to continue providing Best Products Supermarket with the finest olive oils.\nSincerely yours,\nPablo Nadal\nExport Division Manager, Reina Olive Oil Company"
+    },
+    {
+      "id": "q_199",
+      "question_number": "199",
+      "stem": "What does Mr. Nadal mention he will do for Ms. Seong?",
+      "options": [],
+      "stimulus_id": "stim_19",
+      "stimulus_text": "**Questions 196-200** refer to the following packing slip and e-mails.\n### Packing Slip\n| | |\n|---|---|\n| **From:** Reina Olive Oil Company | **To:** Best Products Supermarket |\n| Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu |\n| 18002 Granada, Spain | Incheon 22382, Republic of Korea |\n**Order Date:** 28 November\n**Order Number:** SK6224\n| Item Number | Description | Quantity |\n|-------------|-------------|----------|\n| EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases |\n| EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases |\n| EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases |\n| EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases |\n| EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases |\nCelebrate the season with us! Place your next order by 31 January to receive 10 percent off.\n### *E-mail*\n| | |\n|---|---|\n| **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **Date:** | 12 December |\n| **Subject:** | Order number SK6224 |\nDear Mr. Nadal:\nWe appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error.\nWe would like to arrange to send these products back. Please inform us how to proceed.\nThank you,\nMin Hae Seong\nReceiving and Distribution, Best Products Supermarket\n318\n| | |\n|---|---|\n| **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **Date:** | 14 December |\n| **Subject:** | RE: Order number SK6224 |\nDear Ms. Seong,\nI apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake.\nWe are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments.\nWe hope to continue providing Best Products Supermarket with the finest olive oils.\nSincerely yours,\nPablo Nadal\nExport Division Manager, Reina Olive Oil Company"
+    },
+    {
+      "id": "q_200",
+      "question_number": "200",
+      "stem": "Why was item number EVO001 included in the shipment?",
+      "options": [],
+      "stimulus_id": "stim_19",
+      "stimulus_text": "**Questions 196-200** refer to the following packing slip and e-mails.\n### Packing Slip\n| | |\n|---|---|\n| **From:** Reina Olive Oil Company | **To:** Best Products Supermarket |\n| Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu |\n| 18002 Granada, Spain | Incheon 22382, Republic of Korea |\n**Order Date:** 28 November\n**Order Number:** SK6224\n| Item Number | Description | Quantity |\n|-------------|-------------|----------|\n| EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases |\n| EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases |\n| EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases |\n| EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases |\n| EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases |\nCelebrate the season with us! Place your next order by 31 January to receive 10 percent off.\n### *E-mail*\n| | |\n|---|---|\n| **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **Date:** | 12 December |\n| **Subject:** | Order number SK6224 |\nDear Mr. Nadal:\nWe appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error.\nWe would like to arrange to send these products back. Please inform us how to proceed.\nThank you,\nMin Hae Seong\nReceiving and Distribution, Best Products Supermarket\n318\n| | |\n|---|---|\n| **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **Date:** | 14 December |\n| **Subject:** | RE: Order number SK6224 |\nDear Ms. Seong,\nI apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake.\nWe are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments.\nWe hope to continue providing Best Products Supermarket with the finest olive oils.\nSincerely yours,\nPablo Nadal\nExport Division Manager, Reina Olive Oil Company"
+    }
+  ]
+}

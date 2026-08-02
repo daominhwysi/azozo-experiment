@@ -46,7 +46,7 @@ export function StagedProgressLoader({
   return (
     <div
       className={cn(
-        "space-y-4 rounded-xl border border-border bg-card/95 p-5 shadow-sm backdrop-blur transition-all",
+        "space-y-4 rounded-lg border border-border bg-card p-4 transition-all",
         className
       )}
     >
@@ -59,7 +59,7 @@ export function StagedProgressLoader({
             ) : progress < 100 ? (
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
             ) : (
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <CheckCircle2 className="h-4 w-4 text-success" />
             )}
             {title}
           </h3>
@@ -81,7 +81,7 @@ export function StagedProgressLoader({
               error
                 ? "border border-destructive/20 bg-destructive/10 text-destructive"
                 : progress === 100
-                  ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                  ? "border border-success/20 bg-success/10 text-success"
                   : "border border-primary/20 bg-primary/10 text-primary"
             )}
           >
@@ -99,16 +99,11 @@ export function StagedProgressLoader({
               error
                 ? "bg-destructive"
                 : progress === 100
-                  ? "bg-emerald-500"
-                  : "bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600"
+                  ? "bg-success"
+                  : "bg-primary"
             )}
             style={{ width: `${clampedProgress}%` }}
-          >
-            {/* Shimmer overlay particle */}
-            {progress > 0 && progress < 100 && !error && (
-              <div className="absolute inset-0 animate-[shimmer_1.5s_infinite] bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.4)_50%,transparent_100%)]" />
-            )}
-          </div>
+          />
         </div>
 
         {/* Current status detail text */}
@@ -136,15 +131,15 @@ export function StagedProgressLoader({
               className={cn(
                 "flex items-start gap-2.5 rounded-lg border p-2 text-xs transition-all",
                 isDone
-                  ? "border-emerald-500/20 bg-emerald-500/5 text-foreground"
+                  ? "border-success/20 bg-success/5 text-foreground"
                   : isCurrent
-                    ? "border-primary/30 bg-primary/5 text-foreground shadow-xs"
+                    ? "border-primary/30 bg-primary/5 text-foreground"
                     : "border-transparent bg-muted/30 text-muted-foreground/60"
               )}
             >
               <div className="mt-0.5 shrink-0">
                 {isDone ? (
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-success" />
                 ) : isCurrent ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
                 ) : (

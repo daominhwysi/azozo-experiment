@@ -1,0 +1,13 @@
+{
+  "timestamp": "20260724_152559",
+  "filename": "de-va-dap-an-chinh-thuc-ky-thi-tot-nghiep-thpt-nam-2025-mon-tieng-anh.pdf",
+  "total_pages": 8,
+  "model": "xiaomi/mimo-v2.5",
+  "provider": "commandcode",
+  "batch_size": 6,
+  "concurrency": 1,
+  "total_duration_seconds": 86.19,
+  "seconds_per_page": 10.77,
+  "pages_per_minute": 5.57,
+  "character_count": 43259
+}

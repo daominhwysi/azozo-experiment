@@ -7,6 +7,7 @@ and runs ParserAgentWorker to extract and visualize structured questions & stimu
 
 import os
 import sys
+import json
 import re
 import json
 from typing import List, Dict, Any
@@ -14,12 +15,17 @@ from typing import List, Dict, Any
 # Ensure project root is in python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from backend.app.services.long_parser.sequence_reconciler import (
+from backend.app.domains.ocr.parser.long_parser.sequence_reconciler import (
     DocumentStateStack,
     extract_metadata_headers_from_markdown,
 )
-from backend.app.services.long_parser.greedy_chunker import greedy_oversize_chunker
-from backend.app.services.long_parser.parser_agent_worker import ParserAgentWorker
+from backend.app.domains.ocr.parser.long_parser.greedy_chunker import (
+    PAGE_SEPARATOR,
+    build_chunk_plan,
+    greedy_oversize_chunker,
+)
+from backend.app.domains.ocr.parser.long_parser.parser_agent_worker import ParserAgentWorker
+from backend.app.domains.ocr.parser.long_parser.det_anchor_worker import DetAnchorParserWorker
 
 
 def parse_ocr_markdown(file_path: str) -> List[Dict[str, Any]]:
@@ -155,7 +161,7 @@ def generate_parser_summary_report(
     md.append(f"**Source OCR File:** `{ocr_file_path}`  ")
     md.append(f"**Execution Mode:** `Compact Target (4,192 Tokens)`  ")
     md.append(f"**Generated On:** `2026-07-22`  ")
-    md.append(f"**Engine Worker:** `backend.app.services.long_parser.parser_agent_worker.ParserAgentWorker`  ")
+    md.append(f"**Engine Worker:** `backend.app.domains.ocr.parser.long_parser.parser_agent_worker.ParserAgentWorker`  ")
     md.append("")
     md.append("---")
     md.append("")
@@ -205,12 +211,12 @@ def main():
     out_dir = os.path.join(base_code_dir, "results", input_stem)
     os.makedirs(out_dir, exist_ok=True)
 
-    # Clean up old .md chunk files if present
+    # Clean up old chunk files if present
     for fname in os.listdir(out_dir):
-        if fname.startswith("chunk_") and fname.endswith("_parsed.md"):
-            old_md_path = os.path.join(out_dir, fname)
-            os.remove(old_md_path)
-            print(f"Removed old md chunk file: {old_md_path}")
+        if fname.startswith("chunk_") and (fname.endswith("_parsed.md") or fname.endswith("_parsed.xml")):
+            old_chunk_path = os.path.join(out_dir, fname)
+            os.remove(old_chunk_path)
+            print(f"Removed old chunk file: {old_chunk_path}")
 
     print(f"Parsing OCR markdown: {ocr_file}")
     pages_data, full_text = parse_ocr_markdown(ocr_file)
@@ -218,34 +224,67 @@ def main():
     # 1. Run Chunker in Compact mode (target=4192, max=6500)
     print("Running greedy_oversize_chunker in Compact mode (target=4192, max=6500)...")
     pages_copy = [dict(p) for p in pages_data]
-    chunks = greedy_oversize_chunker(pages_copy, target_tokens=4192, max_tokens=6500)
+    global_offset = 0
+    for page_index, page in enumerate(pages_copy):
+        if page_index:
+            global_offset += len(PAGE_SEPARATOR)
+        page["global_start"] = global_offset
+        global_offset += len(page["text"])
+        page["global_end"] = global_offset
+    chunks = greedy_oversize_chunker(
+        pages_copy,
+        target_tokens=4192,
+        max_tokens=6500,
+        overlap_pages=1,
+    )
     print(f"Generated {len(chunks)} chunks.")
 
-    # 2. Run ParserAgentWorker on each chunk
-    worker = ParserAgentWorker()
+    # 2. Run DetAnchorParserWorker (or ParserAgentWorker) on each chunk
+    use_det_anchor = "--llm" not in sys.argv
+    if use_det_anchor:
+        print("Using DET + Anchor Parser Worker (DetAnchorParserWorker)...")
+        worker = DetAnchorParserWorker()
+    else:
+        print("Using pure LLM Parser Worker (ParserAgentWorker)...")
+        worker = ParserAgentWorker()
     parsed_results = []
     chunk_filenames = []
+    manifest_chunks = []
 
     for c_idx, chunk_pages in enumerate(chunks):
         start_p = chunk_pages[0]["p"]
         end_p = chunk_pages[-1]["p"]
         chunk_tokens = sum(p["estimated_tokens"] for p in chunk_pages)
-        raw_chunk_text = "\n\n".join(p["text"] for p in chunk_pages)
+        plan = build_chunk_plan(chunk_pages, c_idx)
+        raw_chunk_text = plan["raw_chunk_text"]
 
         print(f"Processing Chunk {c_idx+1}/{len(chunks)} (p{start_p}-p{end_p}, {chunk_tokens} tokens)...")
-        res = worker.process_chunk(raw_chunk_text, chunk_index=c_idx)
+        res = worker.process_chunk(
+            raw_chunk_text,
+            chunk_index=c_idx,
+            page_ids=plan["page_ids"],
+            overlap_page_ids=plan["overlap_page_ids"],
+            page_offset_ranges=plan["page_offset_ranges"],
+        )
         parsed_results.append(res)
 
         # Write per-chunk raw XML file
         fn = f"chunk_{c_idx+1}_p{start_p}_p{end_p}_parsed.xml"
         chunk_filenames.append(fn)
-        raw_xml_content = (
-            f"<!-- Chunk {c_idx + 1}: Pages p{start_p}-p{end_p} | Tokens: {chunk_tokens:,} | Method: {res.get('method')} -->\n\n"
-            + res.get("raw_xml", "")
-        )
+        raw_xml_content = res.get("raw_xml", "")
         chunk_file_path = os.path.join(out_dir, fn)
         with open(chunk_file_path, "w", encoding="utf-8") as f:
             f.write(raw_xml_content)
+        source_filename = f"chunk_{c_idx+1}_p{start_p}_p{end_p}_source.txt"
+        with open(os.path.join(out_dir, source_filename), "w", encoding="utf-8") as f:
+            f.write(raw_chunk_text)
+        manifest_chunks.append({
+            **plan,
+            "raw_chunk_text_file": source_filename,
+            "parsed_xml_file": fn,
+            "parse_status": res.get("parse_status"),
+            "parse_diagnostics": res.get("parse_diagnostics", {}),
+        })
         print(f"  -> Generated raw XML chunk file: {chunk_file_path}")
 
     # 3. Generate Main Summary Report
@@ -253,6 +292,18 @@ def main():
     summary_path = os.path.join(out_dir, "parser_visualization.md")
     with open(summary_path, "w", encoding="utf-8") as f:
         f.write(summary_md)
+    manifest = {
+        "source_ocr_file": ocr_file,
+        "chunking": {
+            "target_tokens": 4192,
+            "max_tokens": 6500,
+            "overlap_pages": 1,
+            "page_separator": PAGE_SEPARATOR,
+        },
+        "chunks": manifest_chunks,
+    }
+    with open(os.path.join(out_dir, "parser_chunks_manifest.json"), "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
     print(f"\nSuccessfully generated main parser visualization report at: {summary_path}")
 
 

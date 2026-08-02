@@ -75,18 +75,11 @@ export function TopLoader() {
       className="pointer-events-none fixed top-0 right-0 left-0 z-[9999]"
     >
       <div
-        className="h-1 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 shadow-[0_0_12px_rgba(79,70,229,0.8)] transition-all duration-300 ease-out"
+        className="h-0.5 bg-primary transition-all duration-300 ease-out"
         style={{
           width: `${progress}%`,
           opacity: progress === 100 ? 0 : 1,
           transitionProperty: "width, opacity",
-        }}
-      />
-      <div
-        className="absolute top-0 right-0 h-1 w-28 translate-x-full transform bg-gradient-to-r from-transparent to-white blur-[1px] transition-all duration-300 ease-out"
-        style={{
-          left: `${progress}%`,
-          display: progress > 0 && progress < 100 ? "block" : "none",
         }}
       />
     </div>

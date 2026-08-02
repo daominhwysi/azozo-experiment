@@ -19,11 +19,11 @@ providers:
 
 models:
   ocr:
-    model_name: "phatchau036/minimax-m3"
-    provider: "xah"
+    model_name: "xiaomi/mimo-v2.5"
+    provider: "commandcode"
     batch_size: 6
     thinking: disabled
-    concurrency: 5
+    concurrency: 1
     description: "Vision LLM model for converting PDF pages to markdown text"
 
   parser:

@@ -1,7 +1,18 @@
-<section>ĐỀ THI TỔNG HỢP KHỐI A - MÔN LỊCH SỬ</section>
+<input>
+**3.**
+Chiến dịch Điện Biên Phủ diễn ra trong bao nhiêu ngày đêm?
+**4.**
+Đại hội đại biểu toàn quốc lần thứ I của Đảng Cộng sản Việt Nam họp ở đâu?
+**5.**
+Tổ chức nào là tiền thân của Đảng Cộng sản Việt Nam?
+</input>
+<parsed>
 <question_label>**3.**</question_label>
-<question>Chiến dịch Điện Biên Phủ diễn ra trong năm nào?</question>
+<stem>Chiến dịch Điện Biên Phủ diễn ra trong bao nhiêu ngày đêm?</stem>
 <question_label>**4.**</question_label>
-<question>Phong trào nào đánh dấu bước chuyển trong đổi mới tư duy của Đảng?</question>
+<stem>Đại hội đại biểu toàn quốc lần thứ I của Đảng Cộng sản Việt Nam họp ở đâu?</stem>
 <question_label>**5.**</question_label>
-<question>Điểm nào là điểm đích của hành trình tiếp quản toàn quốc?</question>
+<stem>Tổ chức nào là tiền thân của Đảng Cộng sản Việt Nam?</stem>
+<question_label>**6.**</question_label>
+<stem>Câu hỏi ảo bị loại bỏ vì không có trong raw input.</stem>
+</parsed>

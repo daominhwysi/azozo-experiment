@@ -1,0 +1,906 @@
+{
+  "doc_id": "ocr_de-va-dap-an-chinh-thuc-ky-thi-tot-nghiep-thpt-nam-2025-mon-tieng-anh_20260724_152559",
+  "total_questions": 79,
+  "total_stimuli": 11,
+  "questions": [
+    {
+      "id": "q_1",
+      "question_number": "1",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1"
+    },
+    {
+      "id": "q_2",
+      "question_number": "2",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1"
+    },
+    {
+      "id": "q_3",
+      "question_number": "3",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1"
+    },
+    {
+      "id": "q_4",
+      "question_number": "4",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1"
+    },
+    {
+      "id": "q_5",
+      "question_number": "5",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_1"
+    },
+    {
+      "id": "q_6",
+      "question_number": "6",
+      "stem": "Which of the following is **NOT** mentioned in paragraph 1 as a type of collected real-time data?",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_7",
+      "question_number": "7",
+      "stem": "The word **accelerate** in paragraph 1 can be best replaced by \\_\\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_8",
+      "question_number": "8",
+      "stem": "The word **curb** in paragraph 2 is **OPPOSITE** in meaning to \\_\\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_9",
+      "question_number": "9",
+      "stem": "The word **it** in paragraph 3 refers to \\_\\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_10",
+      "question_number": "10",
+      "stem": "Which of the following best paraphrases the underlined sentence in paragraph 3?",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_11",
+      "question_number": "11",
+      "stem": "Which of the following is **TRUE** according to paragraph 4?",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_12",
+      "question_number": "12",
+      "stem": "Which paragraph mentions real-time tracking of produce?",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_13",
+      "question_number": "13",
+      "stem": "Which paragraph mentions a preventive measure against biological threats?",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_14",
+      "question_number": "14",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_15",
+      "question_number": "15",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_16",
+      "question_number": "16",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_17",
+      "question_number": "17",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_18",
+      "question_number": "18",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_2"
+    },
+    {
+      "id": "q_19",
+      "question_number": "19",
+      "stem": "According to paragraph 1, genuine decarbonisation \\_\\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_20",
+      "question_number": "20",
+      "stem": "Which of the following best summarises paragraph 1?",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_21",
+      "question_number": "21",
+      "stem": "Which of the following is **NOT** stated as an example of greenwashed products or services?",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_22",
+      "question_number": "22",
+      "stem": "The word **glossy** in paragraph 2 mostly means \\_\\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_23",
+      "question_number": "23",
+      "stem": "The word **They** in paragraph 2 refers to \\_\\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_24",
+      "question_number": "24",
+      "stem": "Which of the following best paraphrases the underlined sentence in paragraph 3?",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_25",
+      "question_number": "25",
+      "stem": "According to the passage, the adoption of \"green\" paint by fossil-fuel companies is mentioned as \\_\\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_26",
+      "question_number": "26",
+      "stem": "Which of the following can be inferred from the passage?",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_27",
+      "question_number": "27",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_28",
+      "question_number": "28",
+      "stem": "Which of the following best summarises the passage?",
+      "options": [],
+      "stimulus_id": "stim_3"
+    },
+    {
+      "id": "q_29",
+      "question_number": "29",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "who"
+        },
+        {
+          "label": "B",
+          "text": "which"
+        },
+        {
+          "label": "C",
+          "text": "whom"
+        },
+        {
+          "label": "D",
+          "text": "whose"
+        }
+      ],
+      "stimulus_id": "stim_4"
+    },
+    {
+      "id": "q_30",
+      "question_number": "30",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "heading"
+        },
+        {
+          "label": "B",
+          "text": "leading"
+        },
+        {
+          "label": "C",
+          "text": "flying"
+        },
+        {
+          "label": "D",
+          "text": "rating"
+        }
+      ],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Vietnam International Art Exhibition 2025 – A Landmark Cultural Event**\nTaking place from July 25th to 29th at the International Centre for Exhibition in Hanoi, the Vietnam International Art Exhibition 2025 will showcase over 100 famous galleries (29) \\_\\_\\_\\_\\_\\_\\_ are derived from global art capitals alongside Vietnam's (30) \\_\\_\\_\\_\\_\\_\\_ art institutions.\nVisitors will gain exposure to a wide (31) \\_\\_\\_\\_\\_\\_\\_ of oil paintings, sculptures, digital art, and mixed media, blending traditional and contemporary styles. The event will also feature live art demonstrations and insightful discussions (32) \\_\\_\\_\\_\\_\\_\\_ by famous artists and curators, offering a deeper understanding of modern artistic trends.\nThis exhibition is a unique opportunity for (33) \\_\\_\\_\\_\\_\\_\\_, investors, and art enthusiasts to discover emerging talents and (34) \\_\\_\\_\\_\\_\\_\\_ some artworks. Don't miss this incredible celebration of artistic expression!\nFor more information, visit https://vniae.com/.\n*(Adapted from https://english.vov.vn)*"
+    },
+    {
+      "id": "q_31",
+      "question_number": "31",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "range"
+        },
+        {
+          "label": "B",
+          "text": "deal"
+        },
+        {
+          "label": "C",
+          "text": "number"
+        },
+        {
+          "label": "D",
+          "text": "amount"
+        }
+      ],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Vietnam International Art Exhibition 2025 – A Landmark Cultural Event**\nTaking place from July 25th to 29th at the International Centre for Exhibition in Hanoi, the Vietnam International Art Exhibition 2025 will showcase over 100 famous galleries (29) \\_\\_\\_\\_\\_\\_\\_ are derived from global art capitals alongside Vietnam's (30) \\_\\_\\_\\_\\_\\_\\_ art institutions.\nVisitors will gain exposure to a wide (31) \\_\\_\\_\\_\\_\\_\\_ of oil paintings, sculptures, digital art, and mixed media, blending traditional and contemporary styles. The event will also feature live art demonstrations and insightful discussions (32) \\_\\_\\_\\_\\_\\_\\_ by famous artists and curators, offering a deeper understanding of modern artistic trends.\nThis exhibition is a unique opportunity for (33) \\_\\_\\_\\_\\_\\_\\_, investors, and art enthusiasts to discover emerging talents and (34) \\_\\_\\_\\_\\_\\_\\_ some artworks. Don't miss this incredible celebration of artistic expression!\nFor more information, visit https://vniae.com/.\n*(Adapted from https://english.vov.vn)*"
+    },
+    {
+      "id": "q_32",
+      "question_number": "32",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "have held"
+        },
+        {
+          "label": "B",
+          "text": "be holding"
+        },
+        {
+          "label": "C",
+          "text": "holding"
+        },
+        {
+          "label": "D",
+          "text": "held"
+        }
+      ],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Vietnam International Art Exhibition 2025 – A Landmark Cultural Event**\nTaking place from July 25th to 29th at the International Centre for Exhibition in Hanoi, the Vietnam International Art Exhibition 2025 will showcase over 100 famous galleries (29) \\_\\_\\_\\_\\_\\_\\_ are derived from global art capitals alongside Vietnam's (30) \\_\\_\\_\\_\\_\\_\\_ art institutions.\nVisitors will gain exposure to a wide (31) \\_\\_\\_\\_\\_\\_\\_ of oil paintings, sculptures, digital art, and mixed media, blending traditional and contemporary styles. The event will also feature live art demonstrations and insightful discussions (32) \\_\\_\\_\\_\\_\\_\\_ by famous artists and curators, offering a deeper understanding of modern artistic trends.\nThis exhibition is a unique opportunity for (33) \\_\\_\\_\\_\\_\\_\\_, investors, and art enthusiasts to discover emerging talents and (34) \\_\\_\\_\\_\\_\\_\\_ some artworks. Don't miss this incredible celebration of artistic expression!\nFor more information, visit https://vniae.com/.\n*(Adapted from https://english.vov.vn)*"
+    },
+    {
+      "id": "q_33",
+      "question_number": "33",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "collectively"
+        },
+        {
+          "label": "B",
+          "text": "collect"
+        },
+        {
+          "label": "C",
+          "text": "collectors"
+        },
+        {
+          "label": "D",
+          "text": "collective"
+        }
+      ],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Vietnam International Art Exhibition 2025 – A Landmark Cultural Event**\nTaking place from July 25th to 29th at the International Centre for Exhibition in Hanoi, the Vietnam International Art Exhibition 2025 will showcase over 100 famous galleries (29) \\_\\_\\_\\_\\_\\_\\_ are derived from global art capitals alongside Vietnam's (30) \\_\\_\\_\\_\\_\\_\\_ art institutions.\nVisitors will gain exposure to a wide (31) \\_\\_\\_\\_\\_\\_\\_ of oil paintings, sculptures, digital art, and mixed media, blending traditional and contemporary styles. The event will also feature live art demonstrations and insightful discussions (32) \\_\\_\\_\\_\\_\\_\\_ by famous artists and curators, offering a deeper understanding of modern artistic trends.\nThis exhibition is a unique opportunity for (33) \\_\\_\\_\\_\\_\\_\\_, investors, and art enthusiasts to discover emerging talents and (34) \\_\\_\\_\\_\\_\\_\\_ some artworks. Don't miss this incredible celebration of artistic expression!\nFor more information, visit https://vniae.com/.\n*(Adapted from https://english.vov.vn)*"
+    },
+    {
+      "id": "q_34",
+      "question_number": "34",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "fill up"
+        },
+        {
+          "label": "B",
+          "text": "come up"
+        },
+        {
+          "label": "C",
+          "text": "pick up"
+        },
+        {
+          "label": "D",
+          "text": "get up"
+        }
+      ],
+      "stimulus_id": "stim_4",
+      "stimulus_text": "**Vietnam International Art Exhibition 2025 – A Landmark Cultural Event**\nTaking place from July 25th to 29th at the International Centre for Exhibition in Hanoi, the Vietnam International Art Exhibition 2025 will showcase over 100 famous galleries (29) \\_\\_\\_\\_\\_\\_\\_ are derived from global art capitals alongside Vietnam's (30) \\_\\_\\_\\_\\_\\_\\_ art institutions.\nVisitors will gain exposure to a wide (31) \\_\\_\\_\\_\\_\\_\\_ of oil paintings, sculptures, digital art, and mixed media, blending traditional and contemporary styles. The event will also feature live art demonstrations and insightful discussions (32) \\_\\_\\_\\_\\_\\_\\_ by famous artists and curators, offering a deeper understanding of modern artistic trends.\nThis exhibition is a unique opportunity for (33) \\_\\_\\_\\_\\_\\_\\_, investors, and art enthusiasts to discover emerging talents and (34) \\_\\_\\_\\_\\_\\_\\_ some artworks. Don't miss this incredible celebration of artistic expression!\nFor more information, visit https://vniae.com/.\n*(Adapted from https://english.vov.vn)*"
+    },
+    {
+      "id": "q_35",
+      "question_number": "35",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "at"
+        },
+        {
+          "label": "B",
+          "text": "to"
+        },
+        {
+          "label": "C",
+          "text": "of"
+        },
+        {
+          "label": "D",
+          "text": "in"
+        }
+      ],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**How to Live Your Life Actively?**\nIf you are not naturally sporty, and finding ways to fit more activity into your daily life, here are several tips to help you make a routine (35) \\_\\_\\_\\_\\_\\_\\_ being active:\n- Select a realistic exercise plan.\n- Track your progress using a health app (36) \\_\\_\\_\\_\\_\\_\\_ a paper checklist.\n- Take every opportunity to do such strength-building activities as carrying (37) \\_\\_\\_\\_\\_\\_\\_ and climbing the stairs.\n- Invite friends and (38) \\_\\_\\_\\_\\_\\_\\_ family members to join in, and try (39) \\_\\_\\_\\_\\_\\_\\_ everyone's competitive side with challenges like seeing who can do the most steps or cover the most distance in a day.\n- Reward yourself with a treat like a favourite TV show if your plan works (40) \\_\\_\\_\\_\\_\\_\\_ to maintain your motivation.\n*(Adapted from https://www.nhs.uk)*"
+    },
+    {
+      "id": "q_36",
+      "question_number": "36",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "nor"
+        },
+        {
+          "label": "B",
+          "text": "but"
+        },
+        {
+          "label": "C",
+          "text": "so"
+        },
+        {
+          "label": "D",
+          "text": "or"
+        }
+      ],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**How to Live Your Life Actively?**\nIf you are not naturally sporty, and finding ways to fit more activity into your daily life, here are several tips to help you make a routine (35) \\_\\_\\_\\_\\_\\_\\_ being active:\n- Select a realistic exercise plan.\n- Track your progress using a health app (36) \\_\\_\\_\\_\\_\\_\\_ a paper checklist.\n- Take every opportunity to do such strength-building activities as carrying (37) \\_\\_\\_\\_\\_\\_\\_ and climbing the stairs.\n- Invite friends and (38) \\_\\_\\_\\_\\_\\_\\_ family members to join in, and try (39) \\_\\_\\_\\_\\_\\_\\_ everyone's competitive side with challenges like seeing who can do the most steps or cover the most distance in a day.\n- Reward yourself with a treat like a favourite TV show if your plan works (40) \\_\\_\\_\\_\\_\\_\\_ to maintain your motivation.\n*(Adapted from https://www.nhs.uk)*"
+    },
+    {
+      "id": "q_37",
+      "question_number": "37",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "heavy bags grocery"
+        },
+        {
+          "label": "B",
+          "text": "bags grocery heavy"
+        },
+        {
+          "label": "C",
+          "text": "bags heavy grocery"
+        },
+        {
+          "label": "D",
+          "text": "heavy grocery bags"
+        }
+      ],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**How to Live Your Life Actively?**\nIf you are not naturally sporty, and finding ways to fit more activity into your daily life, here are several tips to help you make a routine (35) \\_\\_\\_\\_\\_\\_\\_ being active:\n- Select a realistic exercise plan.\n- Track your progress using a health app (36) \\_\\_\\_\\_\\_\\_\\_ a paper checklist.\n- Take every opportunity to do such strength-building activities as carrying (37) \\_\\_\\_\\_\\_\\_\\_ and climbing the stairs.\n- Invite friends and (38) \\_\\_\\_\\_\\_\\_\\_ family members to join in, and try (39) \\_\\_\\_\\_\\_\\_\\_ everyone's competitive side with challenges like seeing who can do the most steps or cover the most distance in a day.\n- Reward yourself with a treat like a favourite TV show if your plan works (40) \\_\\_\\_\\_\\_\\_\\_ to maintain your motivation.\n*(Adapted from https://www.nhs.uk)*"
+    },
+    {
+      "id": "q_38",
+      "question_number": "38",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "another"
+        },
+        {
+          "label": "B",
+          "text": "others"
+        },
+        {
+          "label": "C",
+          "text": "the others"
+        },
+        {
+          "label": "D",
+          "text": "other"
+        }
+      ],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**How to Live Your Life Actively?**\nIf you are not naturally sporty, and finding ways to fit more activity into your daily life, here are several tips to help you make a routine (35) \\_\\_\\_\\_\\_\\_\\_ being active:\n- Select a realistic exercise plan.\n- Track your progress using a health app (36) \\_\\_\\_\\_\\_\\_\\_ a paper checklist.\n- Take every opportunity to do such strength-building activities as carrying (37) \\_\\_\\_\\_\\_\\_\\_ and climbing the stairs.\n- Invite friends and (38) \\_\\_\\_\\_\\_\\_\\_ family members to join in, and try (39) \\_\\_\\_\\_\\_\\_\\_ everyone's competitive side with challenges like seeing who can do the most steps or cover the most distance in a day.\n- Reward yourself with a treat like a favourite TV show if your plan works (40) \\_\\_\\_\\_\\_\\_\\_ to maintain your motivation.\n*(Adapted from https://www.nhs.uk)*"
+    },
+    {
+      "id": "q_39",
+      "question_number": "39",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "replacing"
+        },
+        {
+          "label": "B",
+          "text": "contrasting"
+        },
+        {
+          "label": "C",
+          "text": "engaging"
+        },
+        {
+          "label": "D",
+          "text": "comparing"
+        }
+      ],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**How to Live Your Life Actively?**\nIf you are not naturally sporty, and finding ways to fit more activity into your daily life, here are several tips to help you make a routine (35) \\_\\_\\_\\_\\_\\_\\_ being active:\n- Select a realistic exercise plan.\n- Track your progress using a health app (36) \\_\\_\\_\\_\\_\\_\\_ a paper checklist.\n- Take every opportunity to do such strength-building activities as carrying (37) \\_\\_\\_\\_\\_\\_\\_ and climbing the stairs.\n- Invite friends and (38) \\_\\_\\_\\_\\_\\_\\_ family members to join in, and try (39) \\_\\_\\_\\_\\_\\_\\_ everyone's competitive side with challenges like seeing who can do the most steps or cover the most distance in a day.\n- Reward yourself with a treat like a favourite TV show if your plan works (40) \\_\\_\\_\\_\\_\\_\\_ to maintain your motivation.\n*(Adapted from https://www.nhs.uk)*"
+    },
+    {
+      "id": "q_40",
+      "question_number": "40",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "values"
+        },
+        {
+          "label": "B",
+          "text": "legends"
+        },
+        {
+          "label": "C",
+          "text": "marvels"
+        },
+        {
+          "label": "D",
+          "text": "wonders"
+        }
+      ],
+      "stimulus_id": "stim_5",
+      "stimulus_text": "**How to Live Your Life Actively?**\nIf you are not naturally sporty, and finding ways to fit more activity into your daily life, here are several tips to help you make a routine (35) \\_\\_\\_\\_\\_\\_\\_ being active:\n- Select a realistic exercise plan.\n- Track your progress using a health app (36) \\_\\_\\_\\_\\_\\_\\_ a paper checklist.\n- Take every opportunity to do such strength-building activities as carrying (37) \\_\\_\\_\\_\\_\\_\\_ and climbing the stairs.\n- Invite friends and (38) \\_\\_\\_\\_\\_\\_\\_ family members to join in, and try (39) \\_\\_\\_\\_\\_\\_\\_ everyone's competitive side with challenges like seeing who can do the most steps or cover the most distance in a day.\n- Reward yourself with a treat like a favourite TV show if your plan works (40) \\_\\_\\_\\_\\_\\_\\_ to maintain your motivation.\n*(Adapted from https://www.nhs.uk)*"
+    },
+    {
+      "id": "q_1",
+      "question_number": "1",
+      "stem": "The word **settle** in paragraph 1 mostly means \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_2",
+      "question_number": "2",
+      "stem": "Which of the following is **NOT** mentioned in paragraph 1 as information displayed on a live, shared picture?",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_3",
+      "question_number": "3",
+      "stem": "The word **their** in paragraph 2 refers to \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_4",
+      "question_number": "4",
+      "stem": "Which of the following best paraphrases the underlined sentence in paragraph 2?",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_5",
+      "question_number": "5",
+      "stem": "The word **slashing** in paragraph 3 is **OPPOSITE** in meaning to \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_6",
+      "question_number": "6",
+      "stem": "Which of the following is **TRUE** according to paragraph 4?",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_7",
+      "question_number": "7",
+      "stem": "Which paragraph mentions approaches to different weather patterns?",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_8",
+      "question_number": "8",
+      "stem": "Which paragraph mentions real-time tracking of produce?",
+      "options": [],
+      "stimulus_id": "stim_6",
+      "stimulus_text": "When several farmers merge plots into a single \"project farm\", they use digital tools to make that teamwork far more effective. GPS mapping, drones, and in-field sensors build a live, shared picture of soil types, weather shifts, and plant growth. Because everyone works on the same data, the team can **settle** seeding dates, determine when to spray, and track machinery in real time. What once depended on guesswork is now driven by verifiable information.\nWith GPS technology, farmers can accurately map out their fields and create customised planting plans. Seeding machines change **their** rate on the fly, drones spray pests on targeted zones, and smart spreaders apply fertiliser only where data shows a need. **Because inputs go exactly where they help, fields yield more while chemical runoff falls.** Trials report considerable savings on seed, fuel, and sprays – benefits the partners split at the season's end.\nWater management is just as precise. Specialised equipment tracks moisture every hour, and forecast apps predict rain, wind, or heatwaves. Automated pumps deliver measured water amounts to thirsty zones and stop when a storm is coming, **slashing** waste and energy bills. The result is steadier yields in dry years, fewer nutrients washed away, and a smaller water footprint for the whole partnership. Smart irrigation also helps limit weed growth, reducing herbicide use.\nThe journey from field to market is equally digital. Cloud platforms record harvest weights, storage temperatures, and shipment times the moment they change, while blockchain records freeze each entry so customers can rely on it. Analytic tools browse the records to indicate weak points in the procedure, forecast prices, and suggest better planting plans for the next season to project partners. This makes project farming both profitable and sustainable.\n*(Adapted from https://www.consumersearch.com)*"
+    },
+    {
+      "id": "q_9",
+      "question_number": "9",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "volume"
+        },
+        {
+          "label": "B",
+          "text": "amount"
+        },
+        {
+          "label": "C",
+          "text": "number"
+        },
+        {
+          "label": "D",
+          "text": "level"
+        }
+      ],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_10",
+      "question_number": "10",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "competition"
+        },
+        {
+          "label": "B",
+          "text": "competitive"
+        },
+        {
+          "label": "C",
+          "text": "compete"
+        },
+        {
+          "label": "D",
+          "text": "competitively"
+        }
+      ],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_11",
+      "question_number": "11",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "managed"
+        },
+        {
+          "label": "B",
+          "text": "managing"
+        },
+        {
+          "label": "C",
+          "text": "has managed"
+        },
+        {
+          "label": "D",
+          "text": "is managing"
+        }
+      ],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_12",
+      "question_number": "12",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "top"
+        },
+        {
+          "label": "B",
+          "text": "quick"
+        },
+        {
+          "label": "C",
+          "text": "high"
+        },
+        {
+          "label": "D",
+          "text": "smart"
+        }
+      ],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_13",
+      "question_number": "13",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "who"
+        },
+        {
+          "label": "B",
+          "text": "which"
+        },
+        {
+          "label": "C",
+          "text": "when"
+        },
+        {
+          "label": "D",
+          "text": "why"
+        }
+      ],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_14",
+      "question_number": "14",
+      "stem": "",
+      "options": [
+        {
+          "label": "A",
+          "text": "build up"
+        },
+        {
+          "label": "B",
+          "text": "go up"
+        },
+        {
+          "label": "C",
+          "text": "come up"
+        },
+        {
+          "label": "D",
+          "text": "look up"
+        }
+      ],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_15",
+      "question_number": "15",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_16",
+      "question_number": "16",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_17",
+      "question_number": "17",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_18",
+      "question_number": "18",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_19",
+      "question_number": "19",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_7",
+      "stimulus_text": "**Da Nang International Fireworks Festival (DIFF) 2025**\nWith ten teams worldwide, DIFF 2025 features the largest **(9)** \\_\\_\\_\\_\\_\\_ of participating teams in its history, and is predicted to be the most thrilling **(10)** \\_\\_\\_\\_\\_\\_ so far.\nZ121 Vina Pyrotech, a company **(11)** \\_\\_\\_\\_\\_\\_ by Vietnam Ministry of National Defence, is a newcomer this year. With thirty years of experience in fireworks, Z121 Vina Pyrotech is expected to deliver a breathtaking performance. It is among the **(12)** \\_\\_\\_\\_\\_\\_ candidates to win the championship.\nFrom May 31<sup>st</sup> to July 12<sup>th</sup>, DIFF 2025 promises a series of spectacular fireworks displays, **(13)** \\_\\_\\_\\_\\_\\_ is hoped to bring spectators a world-class entertainment experience.\nOver the past twelve years, the Da Nang International Fireworks Festival has helped the city **(14)** \\_\\_\\_\\_\\_\\_ the reputation as \"The City of Fireworks\" and become an attractive tourist destination.\n*(Adapted from https://www.vietnamnews.vn)*"
+    },
+    {
+      "id": "q_20",
+      "question_number": "20",
+      "stem": "According to paragraph 1, having products claimed as eco-friendly rather than conducting meaningful decarbonisation will \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_21",
+      "question_number": "21",
+      "stem": "The word **manipulated** in paragraph 2 mostly means \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_22",
+      "question_number": "22",
+      "stem": "Which of the following best summarises paragraph 2?",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_23",
+      "question_number": "23",
+      "stem": "What causes corporate boards to adopt greenwashing?",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_24",
+      "question_number": "24",
+      "stem": "What challenge do regulators face in monitoring greenwashing claims?",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_25",
+      "question_number": "25",
+      "stem": "The phrase **the practice** in paragraph 3 refers to \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_26",
+      "question_number": "26",
+      "stem": "Which of the following best paraphrases the underlined sentence in paragraph 4?",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_27",
+      "question_number": "27",
+      "stem": "Which of the following can be inferred from the passage?",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_28",
+      "question_number": "28",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_29",
+      "question_number": "29",
+      "stem": "Which of the following best summarises the passage?",
+      "options": [],
+      "stimulus_id": "stim_8"
+    },
+    {
+      "id": "q_20",
+      "question_number": "20",
+      "stem": "According to paragraph 1, having products claimed as eco-friendly rather than conducting meaningful decarbonisation will \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_21",
+      "question_number": "21",
+      "stem": "The word **manipulated** in paragraph 2 mostly means \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_22",
+      "question_number": "22",
+      "stem": "Which of the following best summarises paragraph 2?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_23",
+      "question_number": "23",
+      "stem": "What causes corporate boards to adopt greenwashing?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_24",
+      "question_number": "24",
+      "stem": "What challenge do regulators face in monitoring greenwashing claims?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_25",
+      "question_number": "25",
+      "stem": "The phrase **the practice** in paragraph 3 refers to \\_\\_\\_\\_\\_\\_.",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_26",
+      "question_number": "26",
+      "stem": "Which of the following best paraphrases the underlined sentence in paragraph 4?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_27",
+      "question_number": "27",
+      "stem": "Which of the following can be inferred from the passage?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_28",
+      "question_number": "28",
+      "stem": "",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    },
+    {
+      "id": "q_29",
+      "question_number": "29",
+      "stem": "Which of the following best summarises the passage?",
+      "options": [],
+      "stimulus_id": "stim_9",
+      "stimulus_text": "Why does this matter? Greenwashing and climate denial share a core objective: to postpone the deep emission cuts claimed by scientists as urgent this decade. [IV] Whereas denial disputes the crisis, greenwashing misleads the public into believing problems are solved, thereby eroding consumer advocacy of genuine environmental actions and stalling regulatory reforms. In effect, it acts as a soothing lullaby, guiding society ever closer to ecological breakdown while fostering a false sense of progress. **Exposing the facade – and insisting on verifiable, measurable carbon reductions – is essential if rhetoric is to give way to real action.**\n*(Adapted from https://www.greenpeace.org.uk)*"
+    }
+  ]
+}

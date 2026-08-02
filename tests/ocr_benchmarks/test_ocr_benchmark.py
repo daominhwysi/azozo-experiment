@@ -2,6 +2,7 @@ import sys
 import time
 import json
 from datetime import datetime
+from typing import Optional
 from pathlib import Path
 
 # Add project root to sys.path
@@ -9,8 +10,8 @@ workspace_dir = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(workspace_dir))
 
 import fitz
-from backend.real_data_annotator.pdf_converter import PDFOCRConverter
-from backend.app.config import OCR_MODEL, OCR_PROVIDER, OCR_BATCH_SIZE, OCR_CONCURRENCY, LOGS_DIR
+from backend.app.domains.ocr.annotator.pdf_converter import PDFOCRConverter
+from backend.app.core.config import OCR_MODEL, OCR_PROVIDER, OCR_BATCH_SIZE, OCR_CONCURRENCY, LOGS_DIR
 
 def benchmark_pdf_ocr(pdf_path_str: str, results_dir: Optional[Path] = None):
     pdf_path = Path(pdf_path_str)
@@ -90,6 +91,5 @@ def benchmark_pdf_ocr(pdf_path_str: str, results_dir: Optional[Path] = None):
     print("===================================")
 
 if __name__ == "__main__":
-    from typing import Optional
     pdf_target = "/home/daominhwysi/project/azozo-experiment/ocr_logs/req_20260718_153303_f053ab47/input.pdf"
     benchmark_pdf_ocr(pdf_target)

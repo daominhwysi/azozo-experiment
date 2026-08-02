@@ -1,47 +1,50 @@
 import { useState, useEffect, lazy, Suspense } from "react"
 import type { Exam, TestResult } from "@/types/exam"
 import { fetchExams, deleteExam, createExam, updateExam } from "@/services/api"
-import { Header } from "@/components/layout/Header"
-import { Sidebar } from "@/components/layout/Sidebar"
+import { Header } from "@/layouts/Header"
+import { Sidebar } from "@/layouts/Sidebar"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { TopLoader } from "@/components/ui/top-loader"
 import { Loader2 } from "lucide-react"
 import { Toaster } from "@/components/ui/sonner"
 
 // Lazy-loaded workspace components for optimized bundle size & faster initial load
 const ExamBank = lazy(() =>
-  import("@/components/exam/ExamBank").then((m) => ({ default: m.ExamBank }))
+  import("@/features/exam/ExamBank").then((m) => ({ default: m.ExamBank }))
 )
 const ExamStudentRoom = lazy(() =>
-  import("@/components/exam/ExamStudentRoom").then((m) => ({
+  import("@/features/exam/ExamStudentRoom").then((m) => ({
     default: m.ExamStudentRoom,
   }))
 )
 const PdfAnnotator = lazy(() =>
-  import("@/components/ocr/PdfAnnotator").then((m) => ({
+  import("@/features/ocr/PdfAnnotator").then((m) => ({
     default: m.PdfAnnotator,
   }))
 )
 const Gradebook = lazy(() =>
-  import("@/components/exam/Gradebook").then((m) => ({ default: m.Gradebook }))
+  import("@/features/exam/Gradebook").then((m) => ({ default: m.Gradebook }))
 )
 const StudentSubmissions = lazy(() =>
-  import("@/components/exam/StudentSubmissions").then((m) => ({
+  import("@/features/exam/StudentSubmissions").then((m) => ({
     default: m.StudentSubmissions,
   }))
 )
 const ExamEditor = lazy(() =>
-  import("@/components/exam/ExamEditor").then((m) => ({
+  import("@/features/exam/ExamEditor").then((m) => ({
     default: m.ExamEditor,
   }))
 )
 const AssessmentReview = lazy(() =>
-  import("@/components/exam/AssessmentReview").then((m) => ({
+  import("@/features/exam/AssessmentReview").then((m) => ({
     default: m.AssessmentReview,
   }))
 )
 
 export function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const isMobile = useIsMobile()
+  // Open by default on desktop, closed on phones where it would eat the viewport.
+  const [sidebarOpen, setSidebarOpen] = useState(() => !isMobile)
   const [activeTab, setActiveTab] = useState<
     "bank" | "ocr" | "student" | "gradebook" | "submissions" | "review"
   >("bank")
@@ -50,11 +53,18 @@ export function App() {
     "bank" | "ocr" | "student" | "gradebook" | "submissions"
   >("gradebook")
 
+  // Follow the breakpoint when it changes, so a resize never strands the drawer open.
+  useEffect(() => {
+    setSidebarOpen(!isMobile)
+  }, [isMobile])
+
   const handleTabChange = (
     tab: "bank" | "ocr" | "student" | "gradebook" | "submissions"
   ) => {
     setActiveTab(tab)
     setReviewSubmission(null)
+    // A drawer must get out of the way once it has been used.
+    if (isMobile) setSidebarOpen(false)
   }
   const [role, setRole] = useState<"teacher" | "student">("teacher")
   const [isTestRunning, setIsTestRunning] = useState(false)
@@ -70,6 +80,9 @@ export function App() {
   const [exams, setExams] = useState<Exam[]>([])
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null)
   const [isLoadingExams, setIsLoadingExams] = useState(false)
+  const [serverStatus, setServerStatus] = useState<
+    "connecting" | "online" | "offline"
+  >("connecting")
 
   // Editor State
   const [isEditing, setIsEditing] = useState(false)
@@ -80,10 +93,12 @@ export function App() {
     try {
       const data = await fetchExams()
       setExams(data)
+      setServerStatus("online")
       if (data.length > 0 && !selectedExam) {
         setSelectedExam(data[0])
       }
     } catch (e) {
+      setServerStatus("offline")
       console.warn("Backend API offline or unreachable", e)
     } finally {
       setIsLoadingExams(false)
@@ -153,8 +168,15 @@ export function App() {
         <main className="flex h-full flex-1 flex-col overflow-hidden bg-background">
           <Suspense
             fallback={
-              <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-2">
-                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground opacity-75" />
+              <div
+                role="status"
+                aria-live="polite"
+                className="flex h-full min-h-[300px] flex-col items-center justify-center gap-2"
+              >
+                <Loader2
+                  aria-hidden="true"
+                  className="h-5 w-5 animate-spin text-muted-foreground opacity-75"
+                />
                 <p className="text-[10px] font-medium tracking-wide text-muted-foreground">
                   Loading workspace...
                 </p>
@@ -181,6 +203,13 @@ export function App() {
       <TopLoader />
       <Toaster />
 
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:rounded-md focus:border focus:border-border focus:bg-background focus:px-3 focus:py-1.5 focus:text-xs focus:font-medium focus:text-foreground"
+      >
+        Skip to content
+      </a>
+
       {/* Collapsible Left Sidebar */}
       {sidebarOpen && !isTestRunning && (
         <Sidebar
@@ -190,6 +219,9 @@ export function App() {
           role={role}
           choiceStyle={choiceStyle}
           setChoiceStyle={handleSetChoiceStyle}
+          serverStatus={serverStatus}
+          isMobile={isMobile}
+          onClose={() => setSidebarOpen(false)}
         />
       )}
 
@@ -211,12 +243,21 @@ export function App() {
 
         {/* Central Workspace Canvas */}
         <main
-          className={`flex-1 overflow-y-auto bg-background ${isTestRunning && activeTab === "student" ? "p-0" : "p-6"}`}
+          id="main-content"
+          aria-label="Workspace content"
+          className={`flex-1 overflow-y-auto bg-background ${isTestRunning && activeTab === "student" ? "p-0" : "p-4 md:p-6"}`}
         >
           <Suspense
             fallback={
-              <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-2">
-                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground opacity-75" />
+              <div
+                role="status"
+                aria-live="polite"
+                className="flex h-full min-h-[300px] flex-col items-center justify-center gap-2"
+              >
+                <Loader2
+                  aria-hidden="true"
+                  className="h-5 w-5 animate-spin text-muted-foreground opacity-75"
+                />
                 <p className="text-[10px] font-medium tracking-wide text-muted-foreground">
                   Loading workspace...
                 </p>
