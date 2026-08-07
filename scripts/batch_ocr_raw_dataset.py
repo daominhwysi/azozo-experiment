@@ -63,16 +63,29 @@ def run_batch_ocr(
     success_count = 0
     failed_count = 0
 
-    pbar = tqdm(files_to_process, desc="Batch OCR Progress", unit="file")
-    for pdf_path in pbar:
+    total_to_process = len(files_to_process)
+    pbar = tqdm(enumerate(files_to_process, 1), total=total_to_process, desc="Batch OCR Progress", unit="file")
+    for file_idx, pdf_path in pbar:
         rel_path = pdf_path.relative_to(raw_dir)
         target_md = out_dir / rel_path.with_suffix(".md")
 
         target_md.parent.mkdir(parents=True, exist_ok=True)
-        pbar.set_postfix({"current": pdf_path.stem, "success": success_count, "failed": failed_count})
+
+        def make_callback(f_idx, f_total, f_name):
+            def callback(stage: str, current: int, total: int, msg: str):
+                pbar.set_postfix({
+                    "file": f"{f_idx}/{f_total}",
+                    "current": f_name[:20],
+                    "stage": f"[{stage} {current}/{total}]",
+                    "ok": success_count,
+                    "err": failed_count,
+                })
+            return callback
+
+        cb = make_callback(file_idx, total_to_process, pdf_path.stem)
 
         try:
-            ocr_text = converter.convert_pdf(pdf_path)
+            ocr_text = converter.convert_pdf(pdf_path, progress_callback=cb)
             target_md.write_text(ocr_text, encoding="utf-8")
             success_count += 1
         except Exception as e:
