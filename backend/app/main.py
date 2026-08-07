@@ -8,7 +8,8 @@ workspace_dir = Path(__file__).resolve().parent.parent.parent
 if str(workspace_dir) not in sys.path:
     sys.path.append(str(workspace_dir))
 
-from backend.app.routers import exams, ocr
+from backend.app.domains.exams import router as exams_router
+from backend.app.domains.ocr import router as ocr_router
 
 app = FastAPI(
     title="Azozo Exam Platform API",
@@ -26,8 +27,8 @@ app.add_middleware(
 )
 
 # Include Routers
-app.include_router(exams.router)
-app.include_router(ocr.router)
+app.include_router(exams_router.router)
+app.include_router(ocr_router.router)
 
 @app.get("/api/health", tags=["health"])
 def health():

@@ -1,0 +1,13 @@
+{
+  "timestamp": "20260722_195412",
+  "filename": "input.pdf",
+  "total_pages": 29,
+  "model": "phatchau036/minimax-m3",
+  "provider": "xah",
+  "batch_size": 6,
+  "concurrency": 5,
+  "total_duration_seconds": 99.91,
+  "seconds_per_page": 3.45,
+  "pages_per_minute": 17.42,
+  "character_count": 34938
+}

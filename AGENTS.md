@@ -4,22 +4,28 @@
 
 **Azozo** (Azozo Exam Platform) is an Azota-grade PDF OCR, Sequence Labeling, and Online Examination System featuring a Notion-inspired UI design system.
 
-- **Backend**: FastAPI app (`backend/app/main.py`) providing REST APIs for exam management, PDF parsing, OCR annotation, and LLM sequence labeling.
-- **Frontend**: React 19 + TypeScript + Vite web app (`vite-app/`) utilizing Tailwind CSS v4, Lucide icons, and Notion UI aesthetics (`@fontsource-variable/inter`).
-- **OCR Engine**: PyMuPDF (`fitz`) based PDF text & image converter, token alignment, and XML annotation parser in `backend/real_data_annotator/`.
-- **LLM Engine**: Multi-provider client (`backend/app/services/deepseek_client.py`) supporting DeepSeek, NVIDIA NIM, and Vilao.ai for question extraction and OCR cleanup.
+- **Backend**: FastAPI app (`backend/app/main.py`) organized into domain modules (`core`, `domains/exams`, `domains/ocr`, `domains/llm`).
+- **Frontend**: React 19 + TypeScript + Vite web app (`vite-app/`) with feature-based architecture (`features/exam`, `features/ocr`, `layouts`, `components/ui`).
+- **OCR Engine**: PyMuPDF (`fitz`) based PDF text & image converter, token alignment, and XML annotation parser in `backend/app/domains/ocr/annotator/`.
+- **LLM Engine**: Multi-provider client (`backend/app/domains/llm/deepseek_client.py`) supporting DeepSeek, NVIDIA NIM, and Vilao.ai.
 
 ---
 
 ## Environment Setup
 
-The repository uses [Pixi](https://pixi.sh) for environment & dependency management (Conda + PyPI), as well as standard `npm` for the React frontend.
+The repository uses [uv](https://docs.astral.sh/uv/) for Python environment & dependency management, and standard `npm` for the React frontend.
+
+### Default Runtime Convention
+
+- Use `bash` as the default shell for local command execution.
+- Use `uv` for Python command execution and virtualenv workflows.
+- Default to `uv` runtime for backend-related commands.
 
 ### Prerequisites
 
 - Python >= 3.10
 - Node.js >= 18 and `npm`
-- Pixi (optional but recommended)
+- uv (for backend environment and dependency management)
 
 ### Environment File (`.env`)
 
@@ -44,11 +50,13 @@ NVIDIA_API_KEY=<nvidia_api_key>
 - **Backend FastAPI Server**:
 
   ```bash
-  # Using Python
-  python backend/app.py
+  # Setup (first time)
+  uv venv .venv
+  source .venv/bin/activate
+  uv pip install -r requirements.txt
 
-  # Or using Pixi
-  pixi run backend
+  # Run server
+  uv run python backend/app.py
   ```
 
   - API Base URL: `http://localhost:8000`
@@ -83,26 +91,25 @@ All frontend commands should be executed inside the `vite-app/` directory:
 ```
 azozo/
 ├── .env                  # API keys and environment configuration
-├── pixi.toml             # Environment definition and task automation
+├── requirements.txt       # Python dependency list for uv workflows
 ├── backend/              # FastAPI Application & Data Layer
 │   ├── app/              # Core application package
-│   │   ├── config.py     # Workspace paths & configuration
-│   │   ├── database.py   # DB handlers for db.json
-│   │   ├── models.py     # Pydantic request & response models
-│   │   ├── main.py       # FastAPI application initialization & routers
-│   │   ├── routers/      # API endpoints (exams.py, ocr.py)
-│   │   └── services/     # OCR parser & LLM integration client
-│   │       ├── parser.py
-│   │       └── deepseek_client.py
-│   ├── real_data_annotator/ # PDF OCR & Token Alignment Module
-│   │   ├── pdf_converter.py # PyMuPDF text & page renderer
-│   │   ├── annotate_ocr.py  # Tokenization and BIO tag alignment
-│   │   └── pipeline.py      # Full OCR processing pipeline
-│   ├── app.py            # FastAPI entry point launcher
-│   └── db.json           # File-based JSON database store
+│   │   ├── core/         # Config & DB persistence (config.py, database.py)
+│   │   ├── domains/      # Domain modules
+│   │   │   ├── exams/    # Exam models & endpoints (models.py, router.py)
+│   │   │   ├── ocr/      # OCR annotator, parser engine & endpoints
+│   │   │   │   ├── annotator/ # PyMuPDF converter & token alignment
+│   │   │   │   ├── parser/    # Question extraction & deterministic parsers
+│   │   │   │   └── router.py  # OCR API endpoints
+│   │   │   └── llm/      # DeepSeek / NIM / Vilao integration & logger
+│   │   └── main.py       # FastAPI application entrypoint & router aggregation
+│   ├── app.py            # Uvicorn launcher
+│   └── azozo.db          # SQLite database store
 └── vite-app/             # React 19 + TypeScript + Vite Frontend
     ├── src/
-    │   ├── components/   # Modular React components (layout, exam, ocr)
+    │   ├── components/   # Shared primitive components (ui/)
+    │   ├── features/     # Domain feature components (exam/, ocr/)
+    │   ├── layouts/      # App layout components (Header.tsx, Sidebar.tsx)
     │   ├── services/     # API fetch functions (api.ts)
     │   ├── types/        # TypeScript interfaces (exam.ts)
     │   ├── App.tsx       # Main Application Shell
@@ -151,3 +158,13 @@ When working on the frontend interface, refer to these primary documents:
 - **Grid Rhythm**: Keep layouts aligned to a strict 4px vertical rhythm.
 - **Banned Patterns**: Do not use side-stripe borders (e.g. `border-l-3` or `border-l-2` colored accents on one side of a card), nested cards, gradient text, or glassmorphism.
 
+---
+
+## Agent Persona & Technical Objectivity Guidelines
+
+To ensure rigorous, unbiased, and state-of-the-art engineering pair programming, the AI agent must strictly adhere to the following behavioral standards:
+
+- **Zero Sycophancy & Flattery**: Do not compliment user prompts, praise user ideas (e.g., avoid "Brilliant idea!", "Spot-on!"), or use performative agreement. Maintain a neutral, matter-of-fact tone.
+- **Unbiased Technical Rigor**: Evaluate code and architecture objectively based strictly on engineering trade-offs (correctness, edge cases, complexity, latency, and memory footprint).
+- **Direct Pushback & Trade-off Analysis**: If a user-suggested approach has drawbacks, edge cases, or potential over-engineering, state the trade-offs plainly and present comparative evidence before adopting any change.
+- **No Wavering or Flip-Flapping**: Stand by sound technical recommendations unless empirical log evidence or concrete edge cases demonstrate otherwise. When revising a plan, focus strictly on technical delta and factual justification.
