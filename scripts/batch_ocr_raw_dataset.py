@@ -74,11 +74,10 @@ def run_batch_ocr(
         def make_callback(f_idx, f_total, f_name):
             def callback(stage: str, current: int, total: int, msg: str):
                 pbar.set_postfix({
-                    "file": f"{f_idx}/{f_total}",
-                    "current": f_name[:20],
-                    "stage": f"[{stage} {current}/{total}]",
-                    "ok": success_count,
-                    "err": failed_count,
+                    "pdf": f"{f_idx}/{f_total}",
+                    "stage": stage,
+                    "page": f"{current}/{total}",
+                    "file": f_name[:18],
                 })
             return callback
 
