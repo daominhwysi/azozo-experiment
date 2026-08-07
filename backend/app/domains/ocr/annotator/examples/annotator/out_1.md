@@ -57,4 +57,4 @@ _(Hình vẽ: Hình chóp S.ABC với S ở trên, tam giác đáy ABC có góc 
 - <option_label>**a)**</option_label> <option_text>Tìm tập xác định của hàm số $y = f(x)$.</option_text>
 - <option_label>**b)**</option_label> <option_text>Tính đạo hàm của hàm số tại $x = 1$.</option_text>
 
----------- **HẾT** ----------
+---------- **HẾT** ----------<|END|>

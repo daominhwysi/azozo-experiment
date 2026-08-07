@@ -54,14 +54,9 @@ You must mark your answers on the separate answer sheet. Do not write your answe
 
 **Directions:** Read the texts that follow. A word, phrase, or sentence is missing in parts of each text. Four answer choices for each question are given below the text. Select the best answer to complete the text.
 
-<stimulus>**Questions 131-134** refer to the following advertisement.
-
-Apex Fitness Center
-456 Oak Avenue
-
-Are you ready to transform your routine? Apex Fitness Center features top-grade machinery and expert coaches to assist you in meeting your personal targets.</stimulus>
+<stimulus id="stim_1" start_anchor="**Questions 131-134** refer" end_anchor="your personal targets." />
 
 <question_label>**131.**</question_label> <stem>Horizon Finance offers a wide range of consultancy options ------ the requirements of its clients.</stem>
 <option_label>(A)</option_label> <option_text>meet</option_text>
 <option_label>(B)</option_label> <option_text>to meet</option_text>
-<option_label>(D)</option_label> <option_text>meetings</option_text>
+<option_label>(D)</option_label> <option_text>meetings</option_text><|END|>

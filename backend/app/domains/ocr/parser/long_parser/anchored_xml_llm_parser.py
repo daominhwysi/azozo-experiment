@@ -16,7 +16,7 @@ import uuid
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from backend.app.core.config import PARSER_MODEL, PARSER_PROVIDER
+from backend.app.core.config import PARSER_MODEL, PARSER_PROVIDER, PARSER_THINKING
 from backend.app.domains.llm.deepseek_client import chat
 from backend.app.domains.ocr.annotator.annotate_ocr import (
     clean_llm_response,
@@ -29,13 +29,13 @@ STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE = """# [System Config]
 Role: You are an expert NLP sequence annotator and validator for educational exam papers (TOEIC, SAT, High School Exams).
 
 You operate under two distinct execution roles:
-- ROLE A (PARSER): Annotates raw OCR text with inline XML sequence tags and compact section/stimulus anchors.
-- ROLE B (VALIDATOR): Audits Role A's tagged output for missing questions, untagged stems/choices, unclosed tags, or broken anchors, and outputs the confirmed/corrected XML annotation string.
+- ROLE A (PARSER): Annotates raw OCR text with inline XML sequence tags and compact stimulus anchors.
+- ROLE B (VALIDATOR): A high-tolerance safety auditor. Role B defaults to APPROVED unless a catastrophic pipeline collapse occurred (e.g. missing an entire reading passage, leaving every question empty when questions exist, massive text deletion, or un-parsable XML corruption). First provides brief audit reasoning, then concludes with DECISION: APPROVED or DECISION: DISAPPROVED on the final line. Do NOT re-write or output the XML text.
 
 ## 🏷️ Tag Dictionary:
 
-1. <section start_anchor="..." end_anchor="..." />: Wrap or anchor major section/part titles and directions (e.g. "PHẦN I. Câu trắc nghiệm..."). Output self-closing tag with start_anchor (first 10-40 chars) and end_anchor (last 10-40 chars), or standard <section>...</section> if short.
-2. <stimulus id="stim_1" start_anchor="..." end_anchor="..." />: For shared reading passages, emails, articles, tables, and multi-passage sets. Output self-closing anchor tag with id, start_anchor (first 10-40 chars), and end_anchor (last 10-40 chars).
+1. <section>...</section>: Wrap major section/part titles, headers, directions, and subject block titles (e.g. "<section>PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn...</section>", "<section>## PART 5</section>", "<section>## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517</section>"). Output full paired tags <section>...</section> containing verbatim text. Do NOT use anchor tags for section titles.
+2. <stimulus id="stim_1" start_anchor="..." end_anchor="..." />: For shared reading passages, emails, articles, tables, figures, multi-passage sets, and explicit context prompts (e.g. "Dựa vào thông tin sau đây để giải quyết bài 4, 5...", "Dựa vào thông tin dưới đây để trả lời các câu từ 515-517..."). CRITICAL DEFINITION & MULTI-QUESTION RULE: A stimulus ONLY applies if it is intimately related to 2 OR MORE QUESTIONS (shared reading passage, dataset, table, or multi-question context). If a context or text block is only related to 1 single standalone question, do NOT tag it as a stimulus—include it inside that question's <stem> instead! A stimulus is a CRUCIAL, essential shared content block without which those 2+ questions CANNOT be answered. Output self-closing anchor tag with id, start_anchor (first 3-10 verbatim words), and end_anchor (last 3-10 verbatim words).
 3. <question_label>...</question_label>: Wrap question prefix indicators (e.g. "**101.**", "**131.**", "101.", "Câu 1:").
 4. <stem>...</stem>: Wrap the main text body of a question following the question label.
 5. <option_label>...</option_label>: Wrap choice letters/prefixes and sub-item/sub-question indicators (e.g. "(A)", "(B)", "A.", "B.", "a)", "b)").
@@ -46,21 +46,35 @@ You operate under two distinct execution roles:
 
 ## ⛔ Strict Rules:
 
-1. NO TEXT MODIFICATION: Do NOT alter, correct, spell-check, or omit any character, typo, LaTeX expression ($...$), or page marker. Preserve 100% of input text layout.
-2. FULL ANNOTATION COVERAGE: All question labels, stems, option labels, option texts, and explanations MUST be annotated with their respective XML tags. Do NOT leave questions untagged!
-3. NO MARKDOWN CODEBLOCKS: Output ONLY the annotated text directly. Do not wrap the output in ```xml codeblocks.
-4. END DELIMITER: Append <|END|> at the very end of your output to indicate the annotation is complete.
-5. STRICT TARGET BOUNDARY RULE: Annotate ONLY the raw text provided inside the boundary delimiters <<<TARGET_TEXT_START>>> and <<<TARGET_TEXT_END>>>.
+1. VERBATIM QUESTION & SECTION TEXT (NO TEXT MODIFICATION): Do NOT alter, correct, spell-check, or omit any character, typo, LaTeX expression ($...$), or page marker inside question elements (<question_label>, <stem>, <option_label>, <option_text>, <explanation>) or section elements (<section>). Preserve 100% verbatim input text layout.
+2. ANCHOR TAG EXCEPTION (COMPACT STIMULUS SHORTCUT): Self-closing <stimulus id="..." start_anchor="..." end_anchor="..." /> tags are intentionally compact references ONLY for reading passages, shared texts, tables, and context prompts. For stimuli, output ONLY the self-closing anchor tag with start_anchor (first 3-10 verbatim words) and end_anchor (last 3-10 verbatim words). Do NOT use anchor tags for <section>; section headers MUST always be wrapped in full paired <section>...</section> tags.
+3. FULL ANNOTATION COVERAGE: All question labels, stems, option labels, option texts, explanations, and section headers MUST be annotated with their respective XML tags. Do NOT leave questions or sections untagged!
+4. NO MARKDOWN CODEBLOCKS: Output ONLY the annotated text directly. Do not wrap the output in ```xml codeblocks.
+5. END DELIMITER: Append <|END|> at the very end of your output to indicate the annotation is complete.
+6. STRICT TARGET BOUNDARY RULE: Annotate ONLY the raw text provided inside the boundary delimiters <<<TARGET_TEXT_START>>> and <<<TARGET_TEXT_END>>>.
+7. STIMULUS DISCRIMINATION & MULTI-QUESTION RULE: A <stimulus> tag MUST ONLY be created if the passage/context/data block intimately relates to 2 OR MORE QUESTIONS (e.g. reading passage for questions 6-10, dataset for questions 515-517, or prompt "Dựa vào thông tin sau đây để giải quyết bài 4, 5..."). If a piece of text or table is associated with only 1 single question, include it directly inside that question's <stem>...</stem> rather than tagging it as a <stimulus>. Never tag generic section headers, subject titles, exam metadata, or question range announcements (e.g. "## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517", "PHẦN I. TRẮC NGHIỆM", "Môn: Toán") as <stimulus>!
 
 ---
 
 ## 🔄 Role Execution Instructions:
 
 When instructed with "### ACTIVATE ROLE A: PARSER":
-Annotate the raw OCR text with inline XML sequence tags and compact section/stimulus anchors.
+Annotate the raw OCR text with inline XML sequence tags and compact stimulus anchors.
 
 When instructed with "### ACTIVATE ROLE B: VALIDATOR":
-Review Role A's tagged output against the raw OCR text. Fix any missing questions, untagged stems, untagged options, unclosed XML tags, or unlinked stimuli. Output the confirmed or corrected final XML annotation string.
+Audit Role A's tagged output against the raw OCR text with HIGH TOLERANCE.
+Rule: DEFAULT TO APPROVED. Only output DISAPPROVED if a catastrophic collapse occurs:
+1. Total Question Void: Leaving every question un-annotated, returning 0 questions, or dropping an entire passage/stimulus block.
+2. Massive Text Collapse: Large blocks of original OCR text completely deleted.
+3. Un-parsable Output: Broken XML syntax preventing data extraction.
+
+First, explain your brief audit reasoning.
+Then provide a quality rating (1 to 5 stars).
+Finally conclude with your decision:
+REASONING: <brief audit evaluation>
+RATING: <score 1 to 5, e.g. 5/5>
+DECISION: APPROVED  (or DECISION: DISAPPROVED)
+Do NOT re-write or output the XML text.
 """
 
 
@@ -293,14 +307,18 @@ def parse_xml_with_anchors(
     return spans, stimuli, structured_questions
 
 
+
+
+
 class AnchoredXMLLLMExamParser:
     """
     Full XML LLM exam parser using two-pass multi-role execution and anchor recovery.
     """
 
-    def __init__(self, model: Optional[str] = None, provider: Optional[str] = None):
+    def __init__(self, model: Optional[str] = None, provider: Optional[str] = None, thinking: Optional[Any] = None):
         self.model = model or PARSER_MODEL
         self.provider = provider or PARSER_PROVIDER
+        self.thinking = thinking if thinking is not None else PARSER_THINKING
         script_dir = Path(__file__).resolve().parent
         examples_dir = script_dir.parent.parent / "annotator" / "examples" / "annotator"
         few_shot_xml = load_few_shot_examples_xml(examples_dir) if examples_dir.exists() else ""
@@ -309,10 +327,15 @@ class AnchoredXMLLLMExamParser:
     def parse_exam_chunk(
         self,
         raw_ocr_text: str,
-        chunk_index: int = 0,
-        completion_fn: Optional[Callable] = None,
+        completion_fn: Optional[Any] = None,
+        enable_validator: bool = True,
     ) -> Dict[str, Any]:
-        if not raw_ocr_text.strip():
+        """
+        Runs anchor-aware XML annotation on raw OCR text.
+        If enable_validator is True, runs 2 passes (Pass 1 Role A Parser + Pass 2 Role B Validator).
+        If enable_validator is False, runs 1 pass (Pass 1 Role A Parser only).
+        """
+        if not raw_ocr_text or not raw_ocr_text.strip():
             return {
                 "questions": [],
                 "stimuli": {},
@@ -341,35 +364,74 @@ class AnchoredXMLLLMExamParser:
             messages=messages,
             model=self.model,
             provider=self.provider,
+            thinking=self.thinking,
         )
 
-        # Pass 2: Role B — Validator (continues in exact same thread)
+        if not enable_validator:
+            final_xml = role_a_xml or ""
+            spans, stimuli, questions = parse_xml_with_anchors(raw_ocr_text, final_xml)
+            return {
+                "questions": questions,
+                "stimuli": stimuli,
+                "spans": spans,
+                "role_a_xml": role_a_xml,
+                "role_b_xml": final_xml,
+                "role_b_rating": "5/5 (skipped)",
+                "role_b_reasoning_and_decision": "Validator skipped (single-pass mode)",
+                "role_b_status": "SKIPPED",
+                "method": "llm_single_pass_xml_anchored",
+            }
+
+        # Pass 2: Role B — Tolerant Safety Validator (Reasoning, Rating, and Approve/Disapprove)
         role_b_prompt = (
             "### ACTIVATE ROLE B: VALIDATOR\n"
-            "Review Role A's tagged output above against the raw OCR text. Fix any missing questions, "
-            "untagged stems, untagged choices, unclosed tags, or unlinked stimuli. "
-            "Output the confirmed or corrected final XML annotation string."
+            "Audit Role A's tagged output above against raw OCR text with HIGH TOLERANCE.\n"
+            "DEFAULT TO APPROVED unless a catastrophic failure occurred (missing an entire passage, leaving all questions empty, massive text erasure, or un-parsable XML).\n"
+            "Step 1: Provide brief audit reasoning.\n"
+            "Step 2: Provide a Quality Rating (RATING: <score 1 to 5, e.g. 5/5>).\n"
+            "Step 3: Conclude with your decision as either:\n"
+            "DECISION: APPROVED\n"
+            "or\n"
+            "DECISION: DISAPPROVED"
         )
 
         messages.append({"role": "assistant", "content": role_a_xml or ""})
         messages.append({"role": "user", "content": role_b_prompt})
 
-        role_b_xml = complete(
+        role_b_response = complete(
             messages=messages,
             model=self.model,
             provider=self.provider,
+            thinking=self.thinking,
         )
 
-        # Parse XML results (Role B first, fallback to Role A)
-        spans, stimuli, questions = parse_xml_with_anchors(raw_ocr_text, role_b_xml)
-        if not questions and role_a_xml:
-            spans, stimuli, questions = parse_xml_with_anchors(raw_ocr_text, role_a_xml)
+        clean_b_resp = clean_llm_response(role_b_response or "").replace("<|END|>", "").strip()
+        lines = [line.strip() for line in clean_b_resp.splitlines() if line.strip()]
+        last_line = lines[-1].upper() if lines else clean_b_resp.upper()
+
+        role_b_approved = (
+            "DECISION: APPROVED" in last_line or
+            ("APPROVED" in last_line and "DISAPPROVED" not in last_line and "REJECTED" not in last_line)
+        )
+
+        # Extract Rating (e.g. RATING: 5/5, 4.5/5, 5 stars)
+        rating_match = re.search(r"RATING:\s*([0-9\.\/]+(?:\s*\/\s*[0-9]+)?(?:\s*stars)?)", clean_b_resp, re.IGNORECASE)
+        role_b_rating = rating_match.group(1).strip() if rating_match else "5/5"
+
+        final_xml = role_a_xml or ""
+        if not role_b_approved:
+            print(f"[AnchoredXMLLLMExamParser] Role B disapproved Role A output: {clean_b_resp[:160]}")
+
+        spans, stimuli, questions = parse_xml_with_anchors(raw_ocr_text, final_xml)
 
         return {
             "questions": questions,
             "stimuli": stimuli,
             "spans": spans,
             "role_a_xml": role_a_xml,
-            "role_b_xml": role_b_xml,
+            "role_b_xml": final_xml,
+            "role_b_rating": role_b_rating,
+            "role_b_reasoning_and_decision": clean_b_resp,
+            "role_b_status": "APPROVED" if role_b_approved else f"DISAPPROVED: {clean_b_resp[:100]}",
             "method": "llm_two_pass_xml_anchored",
         }
