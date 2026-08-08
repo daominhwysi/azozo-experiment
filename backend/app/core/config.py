@@ -6,9 +6,10 @@ from dotenv import load_dotenv
 
 # Paths
 APP_DIR = Path(__file__).resolve().parent
-BACKEND_DIR = APP_DIR.parent
+BACKEND_DIR = APP_DIR.parent.parent
 WORKSPACE_DIR = BACKEND_DIR.parent
 load_dotenv(WORKSPACE_DIR / ".env")
+load_dotenv(BACKEND_DIR / ".env")
 
 DB_FILE = BACKEND_DIR / "db.json"
 TMP_DIR = WORKSPACE_DIR / "tmp"
@@ -58,6 +59,17 @@ OCR_PROVIDER = ocr_cfg.get("provider")
 OCR_BATCH_SIZE = ocr_cfg.get("batch_size", 6)
 OCR_CONCURRENCY = ocr_cfg.get("concurrency", 5)
 
+figure_cfg = ocr_cfg.get("figure_detection", {})
+FIGURE_DETECTION_ENABLED = figure_cfg.get("enabled", True)
+FIGURE_MODEL_PATH = WORKSPACE_DIR / figure_cfg.get(
+    "model_path", "export_onnx/iter1-haswell-int8.onnx"
+)
+FIGURE_CONFIDENCE_THRESHOLD = float(figure_cfg.get("confidence_threshold", 0.3))
+FIGURE_CLASS_NAMES = tuple(
+    figure_cfg.get("class_names", ["bangbienthien", "class_1"])
+)
+FIGURE_INCLUDED_CLASS_IDS = tuple(figure_cfg.get("included_class_ids", [1]))
+
 parser_cfg = models_cfg.get("parser", {})
 PARSER_MODEL = parser_cfg.get("model_name")
 PARSER_PROVIDER = parser_cfg.get("provider")
@@ -67,10 +79,16 @@ PARSER_MAX_TOKENS = parser_cfg.get("max_tokens")
 linker_cfg = models_cfg.get("linker", {})
 LINKER_MODEL = linker_cfg.get("model_name")
 LINKER_PROVIDER = linker_cfg.get("provider")
+LINKER_THINKING = linker_cfg.get("thinking")
 
 mapper_cfg = models_cfg.get("answer_mapper", {})
 ANSWER_MAPPER_MODEL = mapper_cfg.get("model_name")
 ANSWER_MAPPER_PROVIDER = mapper_cfg.get("provider")
+
+chunker_cfg = models_cfg.get("chunker", {})
+CHUNKER_TARGET_TOKENS = int(chunker_cfg.get("target_tokens", 48000))
+CHUNKER_MAX_TOKENS = int(chunker_cfg.get("max_tokens", 64000))
+CHUNKER_OVERLAP_PAGES = int(chunker_cfg.get("overlap_pages", 1))
 
 # Logs Directory
 LOGS_DIR = WORKSPACE_DIR / config_data.get("logging", {}).get("dir", "logs/ocr_logs")
@@ -78,4 +96,3 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 LLM_LOGS_DIR = WORKSPACE_DIR / "logs" / "llm_logs"
 LLM_LOGS_DIR.mkdir(parents=True, exist_ok=True)
-

@@ -19,30 +19,42 @@ providers:
 
 models:
   ocr:
-    model_name: "xiaomi/mimo-v2.5"
-    provider: "commandcode"
-    batch_size: 6
-    thinking: disabled
+    model_name: "phatchau036/gpt-5.6-luna"
+    provider: "xah"
+    batch_size: 15
+    thinking: medium
     concurrency: 1
     description: "Vision LLM model for converting PDF pages to markdown text"
+    figure_detection:
+      enabled: true
+      model_path: "export_onnx/iter1-haswell-int8.onnx"
+      confidence_threshold: 0.3
+      class_names: ["bangbienthien", "class_1"]
+      included_class_ids: [1]
 
   parser:
-    model_name: "deepseek/deepseek-v4-flash"
-    provider: "commandcode"
-    thinking: disabled
-    max_tokens: 64000
+    model_name: "deepseek-v4-flash-0731"
+    provider: "xah"
+    thinking: low
+    max_tokens: 65536
     description: "Sequence labeling LLM model for question stem and option annotation"
 
   linker:
-    model_name: "deepseek/deepseek-v4-flash"
-    provider: "commandcode"
-    thinking: disabled
+    model_name: "levuphong2909/gpt-5.6-luna"
+    provider: "xah"
+    thinking: low
     description: "Graph resolver agent for entity resolution and passage linking"
 
   answer_mapper:
     model_name: "phatchau036/minimax-m3"
     provider: "xah"
     description: "LLM model for mapping unstructured answer keys to questions"
+
+  chunker:
+    target_tokens: 30000
+    max_tokens: 35000
+    overlap_pages: 1
+    description: "Passage-locked greedy chunker token budget"
 
 logging:
   dir: "logs/ocr_logs"

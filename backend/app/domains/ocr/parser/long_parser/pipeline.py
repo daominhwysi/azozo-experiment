@@ -10,6 +10,9 @@ from backend.app.core.config import (
     LINKER_MODEL,
     PARSER_PROVIDER,
     LINKER_PROVIDER,
+    CHUNKER_TARGET_TOKENS,
+    CHUNKER_MAX_TOKENS,
+    CHUNKER_OVERLAP_PAGES,
 )
 from backend.app.domains.ocr.annotator.pdf_converter import PDFOCRConverter
 from backend.app.domains.ocr.parser.long_parser.sequence_reconciler import (
@@ -39,7 +42,9 @@ class LongContextParserPipeline:
         linker_provider: Optional[str] = None,
         batch_size: int = 3,
         concurrency: int = 5,
-        overlap_pages: int = 1,
+        target_tokens: Optional[int] = None,
+        max_tokens: Optional[int] = None,
+        overlap_pages: Optional[int] = None,
         use_det_anchor: bool = False,
     ):
         self.ocr_model = ocr_model or OCR_MODEL
@@ -49,7 +54,9 @@ class LongContextParserPipeline:
         self.linker_provider = linker_provider or LINKER_PROVIDER
         self.batch_size = batch_size
         self.concurrency = concurrency
-        self.overlap_pages = max(0, overlap_pages)
+        self.target_tokens = target_tokens if target_tokens is not None else CHUNKER_TARGET_TOKENS
+        self.max_tokens = max_tokens if max_tokens is not None else CHUNKER_MAX_TOKENS
+        self.overlap_pages = max(0, overlap_pages if overlap_pages is not None else CHUNKER_OVERLAP_PAGES)
         self.use_det_anchor = use_det_anchor
 
     @staticmethod
@@ -221,7 +228,7 @@ class LongContextParserPipeline:
                 continue
             meta = metadata_headers[idx] if idx < len(metadata_headers) else {}
             text_body = re.sub(
-                r"<page_metadata>\s*\{.*?\}\s*</page_metadata>",
+                r"<page_metadata>.*?(?:</page_metadata>|(?=</page>)|$)",
                 "",
                 p_text,
                 flags=re.DOTALL | re.IGNORECASE,
@@ -246,8 +253,8 @@ class LongContextParserPipeline:
 
         chunks = greedy_oversize_chunker(
             page_list,
-            target_tokens=20000,
-            max_tokens=35000,
+            target_tokens=self.target_tokens,
+            max_tokens=self.max_tokens,
             overlap_pages=self.overlap_pages,
         )
         chunk_plans = [

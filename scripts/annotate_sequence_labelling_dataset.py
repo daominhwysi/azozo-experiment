@@ -19,6 +19,9 @@ from backend.app.core.config import (
     PARSER_MODEL,
     PARSER_PROVIDER,
     PARSER_MAX_TOKENS,
+    CHUNKER_TARGET_TOKENS,
+    CHUNKER_MAX_TOKENS,
+    CHUNKER_OVERLAP_PAGES,
 )
 from backend.app.domains.ocr.parser.long_parser.sequence_reconciler import (
     DocumentStateStack,
@@ -62,9 +65,9 @@ def process_single_document(
     out_dir: Path,
     parser_model: str,
     parser_provider: str,
-    target_tokens: int = 48000,
-    max_tokens: int = 64000,
-    overlap_pages: int = 1,
+    target_tokens: int = CHUNKER_TARGET_TOKENS,
+    max_tokens: int = CHUNKER_MAX_TOKENS,
+    overlap_pages: int = CHUNKER_OVERLAP_PAGES,
     concurrency: int = 4,
     enable_validator: bool = True,
 ) -> Dict[str, Any]:
@@ -288,8 +291,8 @@ def main():
         default=str(WORKSPACE_DIR / "data" / "sequence_labelling_annotated"),
         help="Path to save annotated JSON & XML outputs",
     )
-    parser.add_argument("--target_tokens", type=int, default=48000, help="Target chunk size in tokens")
-    parser.add_argument("--max_tokens", type=int, default=64000, help="Maximum chunk size in tokens")
+    parser.add_argument("--target_tokens", type=int, default=CHUNKER_TARGET_TOKENS, help="Target chunk size in tokens")
+    parser.add_argument("--max_tokens", type=int, default=CHUNKER_MAX_TOKENS, help="Maximum chunk size in tokens")
     parser.add_argument("--concurrency", type=int, default=4, help="Number of concurrent chunk worker threads")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of documents to process")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing output files")
