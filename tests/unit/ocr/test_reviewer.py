@@ -248,3 +248,42 @@ def test_batch_review_flow(tmp_path, valid_xml, broken_xml_unclosed):
     assert "# 📋 Annotation Quality Audit" in md_content
     assert "Passed" in md_content
     assert report_file.exists()
+
+
+def test_clean_raw_ocr_text_strips_metadata():
+    raw_with_meta = """<pages>
+<page>
+# ĐỀ THI TOÁN
+<page_metadata>
+{ "p": 1, "seq": [["Q_START", "1"]] }
+</page_metadata>
+</page>
+<page>
+Câu 1. Tính giá trị.
+<page_metadata>
+{ "p": 2 }
+</page>
+</pages>"""
+    cleaned = DeterministicAuditor.clean_raw_ocr_text(raw_with_meta)
+    assert "<page_metadata>" not in cleaned
+    assert "</page_metadata>" not in cleaned
+    assert "<pages>" not in cleaned
+    assert "<page>" not in cleaned
+    assert "# ĐỀ THI TOÁN" in cleaned
+    assert "Câu 1. Tính giá trị." in cleaned
+
+
+def test_sample_xml_safely_preserves_tag_boundaries():
+    blocks = [
+        f"<question_label>**Câu {i}.**</question_label>\n<stem>Nội dung câu hỏi số {i} với độ dài văn bản nhất định.</stem>\n<explanation>Lời giải cho câu {i}.</explanation>"
+        for i in range(1, 30)
+    ]
+    xml_doc = "\n\n".join(blocks)
+    assert len(xml_doc) > 2000
+
+    sampled = DeepSeekReviewer._sample_xml_safely(xml_doc, max_chars=1000)
+    assert "AUDITOR_SAMPLING_WINDOW" in sampled
+    assert not sampled.endswith("</")
+    assert not sampled.startswith(">")
+    assert "<question_label>**Câu 1.**</question_label>" in sampled
+

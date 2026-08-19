@@ -519,7 +519,8 @@ class DeterministicAuditor:
 
             # If raw OCR text is provided, verify anchors exist in source document
             if raw_ocr_text:
-                norm_raw = " ".join(raw_ocr_text.split())
+                clean_raw = DeterministicAuditor.clean_raw_ocr_text(raw_ocr_text)
+                norm_raw = " ".join(clean_raw.split())
                 norm_start = " ".join(start_anchor.split())
                 norm_end = " ".join(end_anchor.split())
 
@@ -547,6 +548,25 @@ class DeterministicAuditor:
         return issues, score
 
     @staticmethod
+    def clean_raw_ocr_text(raw_ocr_text: Optional[str]) -> str:
+        """
+        Strips wrapper metadata (like <page_metadata> JSON blocks, <page>, <pages>)
+        to extract pure source document text for verbatim comparison.
+        """
+        if not raw_ocr_text:
+            return ""
+        # Strip <page_metadata> blocks whether closed with </page_metadata> or terminated at </page>
+        cleaned = re.sub(
+            r"<page_metadata>.*?(?:</page_metadata>|</page>)",
+            "</page>",
+            raw_ocr_text,
+            flags=re.DOTALL,
+        )
+        # Strip <pages>, </pages>, <page>, </page>
+        cleaned = re.sub(r"</?pages?>", "", cleaned)
+        return cleaned.strip()
+
+    @staticmethod
     def check_verbatim_alignment(
         xml_content: str, raw_ocr_text: Optional[str]
     ) -> Tuple[List[AuditIssue], float, Dict[str, Any]]:
@@ -560,24 +580,23 @@ class DeterministicAuditor:
         annotated_chars = len(pure_text)
         annotated_words = len(pure_text.split())
 
+        clean_raw = DeterministicAuditor.clean_raw_ocr_text(raw_ocr_text) if raw_ocr_text else ""
+        raw_chars = len(clean_raw) if clean_raw else 0
+        raw_words = len(clean_raw.split()) if clean_raw else 0
+
         metrics: Dict[str, Any] = {
             "annotated_char_count": annotated_chars,
             "annotated_word_count": annotated_words,
-            "raw_char_count": len(raw_ocr_text) if raw_ocr_text else None,
+            "raw_char_count": raw_chars if raw_ocr_text else None,
             "retention_ratio": None,
             "similarity_ratio": None,
         }
 
-        if not raw_ocr_text:
+        if not raw_ocr_text or raw_chars == 0:
             return issues, 100.0, metrics
 
-        raw_chars = len(raw_ocr_text)
-        raw_words = len(raw_ocr_text.split())
         metrics["raw_char_count"] = raw_chars
         metrics["raw_word_count"] = raw_words
-
-        if raw_chars == 0:
-            return issues, 100.0, metrics
 
         retention_ratio = annotated_chars / raw_chars
         metrics["retention_ratio"] = round(retention_ratio, 3)
@@ -621,7 +640,7 @@ class DeterministicAuditor:
             deductions += 10.0
 
         # Sample similarity check using fast token overlap
-        sample_raw = " ".join(raw_ocr_text.split()[:200])
+        sample_raw = " ".join(clean_raw.split()[:200])
         sample_annot = " ".join(pure_text.split()[:200])
         similarity = SequenceMatcher(None, sample_raw, sample_annot).ratio()
         metrics["similarity_ratio"] = round(similarity, 3)
@@ -652,19 +671,19 @@ Your task is to critically inspect an annotated XML exam document against strict
 ## Schema & Tag Dictionary:
 1. <section>...</section>: Section headers, part titles, exam directions.
 2. <stimulus id="..." start_anchor="..." end_anchor="..." />: Shared reading passages, tables, context prompts serving 2 OR MORE QUESTIONS.
-3. <question_label>...</question_label>: Question prefixes (e.g. "**101.**", "Câu 1:").
+3. <question_label>...</question_label>: Question prefixes (e.g. "**101.**", "Câu 1:", "### Ví dụ 1").
 4. <stem>...</stem>: Question body text.
 5. <option_label>...</option_label>: Choice labels (A., B., (A)) AND sub-question labels (a), b), c)) in essay/true-false.
 6. <option_text>...</option_text>: Choice or sub-question body text.
-7. <explanation>...</explanation>: Solutions / answer keys.
+7. <explanation>...</explanation>: Solutions / answer keys / explanations.
 8. <figure id="..." description="..." bbox="..." />: Vision OCR figure placeholder.
 
 ## Strict Rules:
-- Rule 1: 100% Verbatim preservation. No text modification, no translation, LaTeX formulas intact.
+- Rule 1: 100% Verbatim preservation. No text modification, no translation, LaTeX formulas intact. Standard mathematical abbreviations (e.g. 'VT' = Vế Trái, 'VP' = Vế Phải, 'đpcm' = điều phải chứng minh) and comparison symbols (<, >) inside math text are valid.
 - Rule 2: Multi-Question Stimulus Rule. <stimulus> ONLY for shared context with 2+ questions. 1-question context stays in <stem>.
 - Rule 3: Sub-question labels (a), b)) must be wrapped in <option_label> + <option_text>, NEVER absorbed into <stem>.
 - Rule 4: Prohibited tags (<pages>, <page>, <page_metadata>, <think>) must be pruned.
-- Rule 5: Malfunctions include: truncated output, zero questions, hallucinated text, unclosed tags, corrupted math.
+- Rule 5: Malfunctions include: truncated generation mid-sentence, zero questions, hallucinated text, unclosed tags, corrupted math. Mixed sections (e.g., worked examples with <explanation> alongside practice problems with <stem> only) are valid.
 
 ## Output Format:
 Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
@@ -703,22 +722,56 @@ Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
         self.provider = provider or REVIEWER_PROVIDER or PARSER_PROVIDER
         self.thinking = thinking or REVIEWER_THINKING or "medium"
 
+    @staticmethod
+    def _sample_xml_safely(xml_content: str, max_chars: int) -> str:
+        """
+        Safely samples XML without splitting mid-tag or creating broken XML fragments.
+        """
+        if len(xml_content) <= max_chars:
+            return xml_content
+
+        target_head = int(max_chars * 0.7)
+        target_tail = int(max_chars * 0.3)
+
+        # Find clean boundary for head (e.g., </explanation>\n\n, </section>\n\n, </stem>\n\n, \n\n)
+        head_cut = target_head
+        for sep in ["</explanation>\n\n", "</section>\n\n", "</stem>\n\n", "</stimulus>\n\n", "\n\n"]:
+            idx = xml_content.rfind(sep, 0, target_head + 500)
+            if idx != -1 and idx > target_head - 2500:
+                head_cut = idx + len(sep)
+                break
+
+        # Find clean boundary for tail (e.g., \n\n<question_label>, \n\n<section>, \n\n<stimulus>, \n\n)
+        tail_start_target = len(xml_content) - target_tail
+        tail_cut = tail_start_target
+        for sep in ["\n\n<question_label>", "\n\n<section>", "\n\n<stimulus>", "\n\n"]:
+            idx = xml_content.find(sep, max(head_cut, tail_start_target - 1500), tail_start_target + 1500)
+            if idx != -1:
+                tail_cut = idx + (2 if sep.startswith("\n\n") else 0)
+                break
+
+        head = xml_content[:head_cut].rstrip()
+        tail = xml_content[tail_cut:].lstrip()
+        elided_len = max(0, tail_cut - head_cut)
+
+        return (
+            f"{head}\n\n"
+            f"<!-- ... [AUDITOR_SAMPLING_WINDOW: {elided_len} characters elided by audit tool for token budget. "
+            f"This is an auditor sampling window, NOT a document flaw] ... -->\n\n"
+            f"{tail}"
+        )
+
     def review_semantic(
         self,
         xml_content: str,
         deterministic_metrics: Dict[str, Any],
         raw_ocr_text: Optional[str] = None,
-        max_xml_chars: int = 16000,
+        max_xml_chars: int = 100000,
     ) -> Optional[Dict[str, Any]]:
         """
         Calls DeepSeek / LLM to semantically rate annotation quality and detect subtle malfunctions.
         """
-        # Truncate sample if too large for prompt context
-        xml_sample = xml_content
-        if len(xml_content) > max_xml_chars:
-            head = xml_content[: int(max_xml_chars * 0.7)]
-            tail = xml_content[-int(max_xml_chars * 0.3) :]
-            xml_sample = f"{head}\n\n<!-- ... [中間 content elided for token budget: {len(xml_content)} chars total] ... -->\n\n{tail}"
+        xml_sample = self._sample_xml_safely(xml_content, max_chars=max_xml_chars)
 
         user_prompt = (
             f"Review the following annotated XML exam document:\n\n"
@@ -730,6 +783,11 @@ Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
             f"- Retention Ratio: {deterministic_metrics.get('retention_ratio', 'N/A')}\n\n"
             f"### Target Annotated XML:\n"
             f"```xml\n{xml_sample}\n```\n\n"
+            f"### Evaluation Instructions:\n"
+            f"- Mathematical '<' or '>' comparison symbols inside math formulas/LaTeX are valid content, not broken XML tags.\n"
+            f"- Vietnamese mathematical abbreviations (e.g. 'VT' = Vế Trái, 'VP' = Vế Phải, 'đpcm' = điều phải chứng minh) are valid standard notation.\n"
+            f"- Documents may legitimately mix solved examples (<stem> + <explanation>) and unsolved exercises (<stem> only).\n"
+            f"- If an [AUDITOR_SAMPLING_WINDOW] comment is present, it was injected by the test auditor tool for large files; do not treat the sampling marker or jump across it as an omission or error.\n\n"
             f"Evaluate the quality, rate each rubric dimension, detect any hallucinations or malfunctions, and return your audit JSON."
         )
 
@@ -1172,14 +1230,20 @@ class AnnotationReviewerAgent:
             # Locate raw path
             raw_file = None
             if raw_dir:
-                rel = xml_p.relative_to(base_dir)
-                # Map exam_XXX/merged.xml -> exam_XXX.md
-                if rel.name in ["merged.xml", "merged.json"]:
-                    candidate = Path(raw_dir) / rel.parent.with_suffix(".md")
-                else:
-                    candidate = Path(raw_dir) / rel.with_suffix(".md")
-                if candidate.exists():
-                    raw_file = candidate
+                try:
+                    rel = xml_p.relative_to(base_dir)
+                    # Map exam_XXX/merged.xml -> exam_XXX.md
+                    if rel.name in ["merged.xml", "merged.json"]:
+                        if rel.parent == Path("."):
+                            candidate = Path(raw_dir) / f"{base_dir.name}.md"
+                        else:
+                            candidate = Path(raw_dir) / rel.parent.with_suffix(".md")
+                    else:
+                        candidate = Path(raw_dir) / rel.with_suffix(".md")
+                    if candidate.exists():
+                        raw_file = candidate
+                except Exception:
+                    pass
 
             report = self.review_file(
                 xml_p,
