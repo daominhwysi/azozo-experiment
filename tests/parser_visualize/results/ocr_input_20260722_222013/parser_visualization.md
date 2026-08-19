@@ -2,7 +2,7 @@
 **Source OCR File:** `/home/daominhwysi/project/azozo-experiment/tests/ocr_benchmarks/results/ocr_input_20260722_222013.md`  
 **Execution Mode:** `Compact Target (4,192 Tokens)`  
 **Generated On:** `2026-07-22`  
-**Engine Worker:** `backend.app.services.long_parser.parser_agent_worker.ParserAgentWorker`  
+**Engine Worker:** `backend.app.domains.ocr.parser.long_parser.parser_agent_worker.ParserAgentWorker`  
 
 ---
 
@@ -20,9 +20,9 @@
 
 | Chunk # | Page Range | Est. Tokens | Questions | Stimuli Count | Extraction Method | Detailed Chunk Result Link |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Chunk 1** | `p1 - p13` | `4,473` | `57` | `9` | `llm_xml` | 👉 [chunk_1_p1_p13_parsed.xml](chunk_1_p1_p13_parsed.xml) |
-| **Chunk 2** | `p13 - p23` | `4,375` | `31` | `8` | `llm_xml` | 👉 [chunk_2_p13_p23_parsed.xml](chunk_2_p13_p23_parsed.xml) |
-| **Chunk 3** | `p23 - p29` | `3,133` | `20` | `3` | `llm_xml` | 👉 [chunk_3_p23_p29_parsed.xml](chunk_3_p23_p29_parsed.xml) |
+| **Chunk 1** | `p1 - p13` | `4,473` | `57` | `9` | `llm_two_pass_anchored` | 👉 [chunk_1_p1_p13_parsed.xml](chunk_1_p1_p13_parsed.xml) |
+| **Chunk 2** | `p13 - p23` | `4,375` | `31` | `8` | `llm_two_pass_anchored` | 👉 [chunk_2_p13_p23_parsed.xml](chunk_2_p13_p23_parsed.xml) |
+| **Chunk 3** | `p23 - p29` | `3,133` | `20` | `3` | `llm_two_pass_anchored` | 👉 [chunk_3_p23_p29_parsed.xml](chunk_3_p23_p29_parsed.xml) |
 
 ---
 

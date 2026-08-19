@@ -61,7 +61,9 @@ When this skill is active, the agent **MUST** adhere to the following mandatory 
    - When sub-questions or True/False statements appear inside Markdown/HTML tables without choice letters, tag each evaluated statement cell text as `<option_text>...</option_text>` (e.g., `<td><option_text>Statement text...</option_text></td>`). Table structure tags (`<table>`, `<tr>`, `<td>`) remain un-tagged structure.
 6. **Figure Immutability**:
    - Preserve `<figure id="..." description="..." bbox="..." />` exactly as provided. It may sit inside a `<stem>`, `<option_text>`, or between items.
-7. **End Delimiter**:
+7. **Page Tags & Metadata Pruning**:
+   - Prune and omit `<pages>`, `</pages>`, `<page>`, `</page>`, and `<page_metadata>...</page_metadata>` from the XML output. Do not retain page boundary tags or metadata blocks. Maintain continuous elements (`<stem>`, `<option_text>`, `<explanation>`, `<section>`) seamlessly across page breaks without splitting them.
+8. **End Delimiter**:
    - Append `<|END|>` at the very end of the output XML document.
 
 ---

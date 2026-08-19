@@ -25,7 +25,7 @@ from backend.app.domains.ocr.parser.long_parser.greedy_chunker import (
     greedy_oversize_chunker,
 )
 from backend.app.domains.ocr.parser.long_parser.parser_agent_worker import ParserAgentWorker
-from backend.app.domains.ocr.parser.long_parser.det_anchor_worker import DetAnchorParserWorker
+from backend.app.domains.ocr.parser.long_parser.old.det_anchor_worker import DetAnchorParserWorker
 
 
 def parse_ocr_markdown(file_path: str) -> List[Dict[str, Any]]:
@@ -204,7 +204,8 @@ def generate_parser_summary_report(
 
 def main():
     default_ocr_file = "/home/daominhwysi/project/azozo-experiment/tests/ocr_benchmarks/results/ocr_input_20260722_222013.md"
-    ocr_file = sys.argv[1] if len(sys.argv) > 1 else default_ocr_file
+    args = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
+    ocr_file = args[0] if args else default_ocr_file
 
     input_stem = os.path.splitext(os.path.basename(ocr_file))[0]
     base_code_dir = os.path.dirname(os.path.abspath(__file__))
@@ -239,13 +240,13 @@ def main():
     )
     print(f"Generated {len(chunks)} chunks.")
 
-    # 2. Run DetAnchorParserWorker (or ParserAgentWorker) on each chunk
-    use_det_anchor = "--llm" not in sys.argv
-    if use_det_anchor:
+    # 2. Run ParserAgentWorker (or DetAnchorParserWorker if --det flag set)
+    use_det = "--det" in sys.argv
+    if use_det:
         print("Using DET + Anchor Parser Worker (DetAnchorParserWorker)...")
         worker = DetAnchorParserWorker()
     else:
-        print("Using pure LLM Parser Worker (ParserAgentWorker)...")
+        print("Using LLM Parser Worker with AnchoredXMLLLMExamParser (ParserAgentWorker)...")
         worker = ParserAgentWorker()
     parsed_results = []
     chunk_filenames = []

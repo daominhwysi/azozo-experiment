@@ -15,8 +15,8 @@ import uuid
 from typing import Any, Dict, List, Optional
 
 from backend.app.core.config import PARSER_MODEL, PARSER_PROVIDER
-from backend.app.domains.ocr.parser.long_parser.anchor_extractor import AnchorStructureAgent
-from backend.app.domains.ocr.parser.long_parser.deterministic_parser import (
+from backend.app.domains.ocr.parser.long_parser.old.anchor_extractor import AnchorStructureAgent
+from backend.app.domains.ocr.parser.long_parser.old.deterministic_parser import (
     CONFIDENCE_ESCALATION_THRESHOLD,
     parse_chunk_deterministic,
     spans_to_annotated_xml,

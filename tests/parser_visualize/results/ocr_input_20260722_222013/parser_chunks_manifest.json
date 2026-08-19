@@ -1,0 +1,345 @@
+{
+  "source_ocr_file": "/home/daominhwysi/project/azozo-experiment/tests/ocr_benchmarks/results/ocr_input_20260722_222013.md",
+  "chunking": {
+    "target_tokens": 4192,
+    "max_tokens": 6500,
+    "overlap_pages": 1,
+    "page_separator": "\n\n"
+  },
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "raw_chunk_text": "# 기출 TEST 10\n\n**READING TEST**\n\nIn the Reading test, you will read a variety of texts and answer several different types of reading comprehension questions. The entire Reading test will last 75 minutes. There are three parts, and directions are given for each part. You are encouraged to answer as many questions as possible within the time allowed.\n\nYou must mark your answers on the separate answer sheet. Do not write your answers in your test book.\n\n## PART 5\n\n**Directions:** A word or phrase is missing in each of the sentences below. Four answer choices are given below each sentence. Select the best answer to complete the sentence. Then mark the letter (A), (B), (C), or (D) on your answer sheet.\n\n**101.** Aberdeen Bank offers a range of financial services ------ the needs of its customers.\n(A) meet\n(B) to meet\n(C) is meeting\n(D) meetings\n\n**102.** ------ staff are asked to provide a backup cell phone number and e-mail address.\n(A) Every\n(B) All\n(C) Each\n(D) Any\n\n**103.** Today, Mr. Rahn will present ------ ideas to improve the company's accounting software.\n(A) he\n(B) him\n(C) his\n(D) himself\n\n**104.** The firm's one-hour lunch policy is ------ enforced, so do not return late.\n(A) strictly\n(B) hungrily\n(C) punctually\n(D) bravely\n\n**105.** Ms. Martinova's promotion to chief financial officer is contingent ------ approval by our board of executives.\n(A) within\n(B) on\n(C) around\n(D) beside\n\n**106.** The peninsula's southernmost portion is rarely visited because it is not ------ accessible to travelers.\n(A) easy\n(B) easily\n(C) easier\n(D) easiest\n\n**107.** The Vaknis Group ------ all clients a flat consultation fee, to be paid in advance.\n(A) informs\n(B) considers\n(C) charges\n(D) suggests\n\n**108.** On August 19, employees will not be able to access their e-mail account ------ time sheet.\n(A) like\n(B) so\n(C) or\n(D) first\n\n292\n\n**109.** Walk-in clients are ------ a reliable source of business for the Auburn Hair Salon.\n(A) typically\n(B) fairly\n(C) sharply\n(D) evenly\n\n**110.** By the end of the year, all packaging used for Schaefer's food products will be ------ recyclable.\n(A) critically\n(B) initially\n(C) freshly\n(D) fully\n\n**111.** Highbrook Hotel staff are trained to provide each guest with an exceptional ------.\n(A) experiencing\n(B) is experienced\n(C) experience\n(D) to experience\n\n**112.** In ------ for their help, volunteers at the library's book sale were given personalized tea mugs.\n(A) appreciate\n(B) appreciative\n(C) appreciation\n(D) appreciates\n\n**113.** Because employees must learn to use the new software, several training sessions will take place ------ the next two weeks.\n(A) by\n(B) over\n(C) against\n(D) at\n\n**114.** Flight attendants asked passengers to take their seats ------ upon boarding the plane.\n(A) quicken\n(B) quickened\n(C) quickly\n(D) quickest\n\n**115.** Last July, Rojas Rieper LLC ------ a grand opening celebration.\n(A) hosts\n(B) hosted\n(C) will host\n(D) is hosting\n\n**116.** Mr. Kim was one ------ three people who received the firm's Competitive Edge award.\n(A) by\n(B) of\n(C) for\n(D) to\n\n**117.** Interviews begin today for the production manager ------ at Zhu Pharmaceuticals.\n(A) participation\n(B) outline\n(C) arrangement\n(D) position\n\n**118.** Tours of the historic courthouse are offered twice a week ------ the summer.\n(A) onto\n(B) during\n(C) about\n(D) at\n\n**119.** ------ the next few months, Abundi Ltd. will open its fourth pharmaceutical laboratory in New Zealand.\n(A) Within\n(B) Soon\n(C) Even\n(D) When\n\n**120.** The ------ at Yohanan Company organizes the delivery of supplies to all conference locations.\n(A) coordinating\n(B) coordinates\n(C) coordinated\n(D) coordinator\n\n**GO ON TO THE NEXT PAGE**\n\nTEST 10 **293**\n\n**121.** The owners of Rowecroft Porcelain ------ to begin production of casual dinnerware sets next month.\n(A) intend\n(B) intending\n(C) intentional\n(D) intentionally\n\n**122.** Mykos Auto Makers agreed to grant long-term factory employees ------ vacation time.\n(A) exhausted\n(B) every\n(C) extended\n(D) any\n\n**123.** The customer ------ believed that the coat he had purchased was waterproof.\n(A) mistakenly\n(B) mistaken\n(C) mistook\n(D) mistake\n\n**124.** All cars built by Roadway Motors come ------ with an alarm reminding drivers to buckle their seat belts.\n(A) equips\n(B) equipped\n(C) equipping\n(D) equipment\n\n**125.** The components of the CT640 dishwasher are largely the same as ------ of earlier models.\n(A) they\n(B) them\n(C) those\n(D) themselves\n\n**126.** The Nakato Group has won several industry awards for its innovative marketing ------.\n(A) strategize\n(B) strategic\n(C) strategically\n(D) strategies\n\n**127.** Krit Pinthong's new mystery novel is the most widely ------ book of the year.\n(A) estimated\n(B) anticipated\n(C) assumed\n(D) predicted\n\n**128.** The leadership team was quite relieved ------ the Toyvar building project was completed under budget.\n(A) especially\n(B) following\n(C) when\n(D) than\n\n**129.** ------ two floors of offices, the building offers several retail spaces.\n(A) In addition to\n(B) Fortunately\n(C) In order that\n(D) Especially\n\n**130.** ------ regarding construction noise and traffic delays should be directed to Mr. Jasdi, the project manager.\n(A) Materials\n(B) Concerns\n(C) Expansions\n(D) Selections\n\n**294**\n\n## PART 6\n\n**Directions:** Read the texts that follow. A word, phrase, or sentence is missing in parts of each text. Four answer choices for each question are given below the text. Select the best answer to complete the text. Then mark the letter (A), (B), (C), or (D) on your answer sheet.\n\n**Questions 131-134** refer to the following advertisement.\n\n> **JOIN THE RGBS AUTOMOTIVE TEAM**\n>\n> RGBS Automotive is ------ hiring full-time and part-time workers. Apply today! ------ could become part of our manufacturing team! We make high-tech products ------ found in cars and trucks of all kinds.\n>\n> RGBS Automotive pays well, and we provide ongoing training plus opportunities for promotion.\n>\n> ------ . Go to www.rgbsautomotive.com for more details and to fill out an application.\n\n**131.**\n(A) now\n(B) likewise\n(C) there\n(D) instead\n\n**132.**\n(A) It\n(B) You\n(C) They\n(D) Everyone\n\n**133.**\n(A) can be\n(B) that are\n(C) and being\n(D) that had been\n\n**134.**\n(A) Ours is a highly competitive industry.\n(B) RGBS Automotive began doing business 45 years ago.\n(C) We also offer a generous number of vacation days.\n(D) RGBS Automotive sells a wide selection of merchandise.\n\n**GO ON TO THE NEXT PAGE**\n\nTEST 10 **295**\n\n**Questions 135-138** refer to the following memo.\n\n> **MEMO**\n>\n> To: Marketing Team\n> From: Alyssa Jacobs, Project Manager\n> Date: 27 September\n> Subject: Meeting wrap-up\n>\n> Thank you again to all of you for your fine work on the upcoming marketing campaign for the Turbo Omega 2 smartphone. As ------ during yesterday's meeting, our goal is to launch the television, radio, and social media advertisements on 1 November. The phone itself will be in stores by 1 December. ------ .\n>\n> ------ , Gary Carollo will draft the press release and post it on our shared drive, where all of you will be able to read it. Please e-mail any ------ for changes to Gary within one week. He will present his final draft at our next regular meeting. We will also tie up any loose ends at that time.\n\n**135.**\n(A) taken\n(B) driven\n(C) earned\n(D) decided\n\n**136.**\n(A) Remember to turn off your phone at the end of the workday.\n(B) This gives us one month to generate consumer excitement.\n(C) The wholesale price can also be adjusted if necessary.\n(D) These new features will surely increase Turbo Omega 2 sales.\n\n**137.**\n(A) Rather\n(B) Soon\n(C) After all\n(D) That is\n\n**138.**\n(A) suggesting\n(B) suggested\n(C) suggestions\n(D) suggests\n\n**296**\n\n**Questions 139-142** refer to the following product information.\n\n> **Handmade Silk Blouse by Coreopsis Textiles, Size Medium, £45**\n>\n> Coreopsis Textiles' silk blouses are created from vintage fabrics and other recycled components that we sew together in a patchwork fashion. Because all 139. ______ garments are handcrafted, each is one of a kind. 140. ______. Unique variations within each piece are part of the charm of Coreopsis Textiles' products. The blouse you receive will be similar in style but not identical to the one pictured.\n>\n> Please note that this garment is 141. ______. It is recommended that you either hand-wash it or wash it in cold water on the gentle cycle in a mesh bag. While the item has been prewashed, dryer heat may cause it to shrink. 142. ______, it is important that it be hung to air dry.\n\n**139.**\n(A) its\n(B) our\n(C) your\n(D) their\n\n**140.**\n(A) This is a hassle-free return policy.\n(B) Always check your receipt.\n(C) They cannot be exactly replicated.\n(D) Extra shipping charges may apply.\n\n**141.**\n(A) popular\n(B) delicate\n(C) mild\n(D) unavailable\n\n**142.**\n(A) If not\n(B) Likewise\n(C) Therefore\n(D) On the contrary\n\nGO ON TO THE NEXT PAGE\n\nTEST 10 **297**\n\n**Questions 143-146** refer to the following e-mail.\n\n> To: Shu Jiang <sjiang@rowanatech.ca>\n> From: Maxwell Baschet <mbaschet@mapleroadstorage.ca>\n> Date: 4 April\n> Subject: Your contract\n> Attachment: Jiang contract\n>\n> Dear Ms. Jiang,\n>\n> We are pleased you 143. ______ Maple Road Storage for your storage needs. I have attached a copy of your signed contract. 144. ______.\n>\n> Do you know about our referral program? You will receive one free month of storage if someone you recommend signs a contract with us. The new tenant will receive a free month 145. ______. You can find more information about this program and all our special 146. ______ on our Web site at www.mapleroadstorage.ca.\n>\n> Sincerely,\n>\n> Maxwell Baschet, Site Manager\n\n**143.**\n(A) chooses\n(B) will choose\n(C) chosen\n(D) have chosen\n\n**144.**\n(A) If your contact information changes, please let us know.\n(B) We hope you will enjoy working here.\n(C) We will reply as soon as possible.\n(D) However, business contracts can be difficult to understand.\n\n**145.**\n(A) after all\n(B) again\n(C) as well\n(D) since\n\n**146.**\n(A) offers\n(B) schedules\n(C) classes\n(D) amounts\n\n**298**\n\n# PART 7\n\n**Directions:** In this part you will read a selection of texts, such as magazine and newspaper articles, e-mails, and instant messages. Each text or set of texts is followed by several questions. Select the best answer for each question and mark the letter (A), (B), (C), or (D) on your answer sheet.\n\n**Questions 147-148** refer to the following notice.\n\n> **Cardinal Street Project—Update**\n>\n> Because of unusually wet and cold weather conditions, the road closure on Cardinal Street between Lee Drive and Petunia Lane will be extended until late spring. Construction will continue; however, final paving on Cardinal Street cannot occur until the weather conditions improve. Workers will begin the pavement work once construction of the bridge on Cardinal Street has been completed. If you have questions or comments, please contact Vy Nguyen in the city planning office at 615-555-0184.\n\n**147.** What is a purpose of the notice?\n(A) To report a change in weather patterns\n(B) To announce a new detour route\n(C) To explain a change in road construction plans\n(D) To highlight causes of road deterioration\n\n**148.** What is indicated about the Cardinal Street project?\n(A) It includes building a bridge.\n(B) It is being handled by Ms. Nguyen's company.\n(C) It does not involve street paving.\n(D) It cannot be completed in hot weather.\n\nGO ON TO THE NEXT PAGE\n\nTEST 10 **299**\n\n**Questions 149-150** refer to the following sign.\n\n> **George's Orchard Farm**\n> **2232 Alpine Lane**\n>\n> Pick your own! Select from five varieties of juicy peaches in our orchard! Buckets provided at no cost.\n>\n> Stop by our market to purchase jams, pies, and sauces made from farm-fresh fruit.\n> We sell lunches to enjoy in our picnic area.\n>\n> Follow the signs ahead for designated parking areas.\n>\n> Wednesday to Friday, 12 noon to 5:00 P.M.\n> Saturday and Sunday, 10:00 A.M. to 6:00 P.M.\n\n**149.** What does George's Orchard Farm offer visitors?\n(A) Free buckets for fruit gathering\n(B) Customized picnic baskets\n(C) Samples of pies and jams\n(D) Tours of the farm\n\n**150.** What is indicated about the market?\n(A) It has a new parking area.\n(B) It sells products made with peaches.\n(C) It is under new management.\n(D) It is open every day of the week.\n\n**300**\n\n**Questions 151-152** refer to the following e-mail.\n\n| Field | Value |\n|---|---|\n| To: | Thandiwe Ngxongo <tngxongo@fancyandformal.co.uk> |\n| From: | Customer Service <service@homethings.co.uk> |\n| Date: | 26 October |\n| Subject: | Performa lint roller (Model PL293) |\n\nDear Ms. Ngxongo,\n\nI am sorry to inform you that the Performa lint roller you selected is on back order because of a shortage of its ultra-strong adhesive. We expect a new shipment within three to four weeks. However, if you prefer not to wait, Home Things will be glad to ship the Extreme2 lint roller to you at no extra charge. The Extreme2 model includes a perforated sticky tape for ease of use and comes with two refills. Like the Performa model, it has a strong adhesive that effectively removes hair, fuzz, lint, and dust from most fabrics.\n\nYou can request this similar product to be shipped to you in place of the one you ordered, as long as you make the change to your order before the original item ships. Thank you for your understanding.\n\nSincerely,\n\nGlen McCraine\nCustomer Service Specialist\nHome Things\n\n**151.** Why did Mr. McCraine write the e-mail?\n(A) To highlight a new product\n(B) To apologize for a delay\n(C) To respond to a question\n(D) To provide details about a return\n\n**152.** What is indicated about the Extreme2 lint roller?\n(A) It is less expensive than the Performa model.\n(B) It comes with additional tape.\n(C) It is more effective than the Performa model.\n(D) It has received high user ratings.\n\nGO ON TO THE NEXT PAGE\n\nTEST 10 **301**\n\n**Questions 153-154** refer to the following text-message chain.\n\n> **Sen Chai (6:51 P.M.):**\n> We're on a dinner break from the negotiation meeting. Mr. Geraci did not accept our offer.\n>\n> **Mateo Michelacci (6:52 P.M.):**\n> That's frustrating. Do you think if we offered another €10,000 he would sell? You and I have agreed that this is the right facility: it's in a convenient location for customers, the access from the highway is perfect for incoming and outgoing deliveries, and potential tenants have already expressed interest.\n>\n> **Sen Chai (6:53 P.M.):**\n> I can't see that happening. But I'll try again. How high can I go?\n>\n> **Mateo Michelacci (6:54 P.M.):**\n> The bank approved us for another €20,000. Offer Mr. Geraci €10,000 more, plus we will fix any building code violations at our expense. Go up to the full €20,000 only if necessary.\n>\n> **Sen Chai (6:55 P.M.):**\n> I'll do my best.\n\n**153.** What is suggested about Mr. Geraci?\n(A) He owns a building.\n(B) He recently renovated a facility.\n(C) He will approve a loan.\n(D) He will meet with Mr. Michelacci.\n\n**154.** At 6:53 P.M., what does Ms. Chai most likely mean when she writes, \"I can't see that happening\"?\n(A) She thinks that renters will be difficult to attract.\n(B) She believes that an offer will still be rejected.\n(C) She doubts that shipping will be easy to organize.\n(D) She thinks that clients will have trouble finding a location.\n\n**302**\n\n**Questions 155-157** refer to the following advertisement.\n\n> **Blossom Sales Systems**\n>\n> Blossom Sales Systems (BSS) makes running your business a breeze with its sleek, intuitive point-of-sale devices. As a small business owner, you have many responsibilities and a reputation to build. BSS has all the tools needed to make transactions safe, seamless, and hassle-free.\n>\n> Enjoy the convenience of a system that has you covered wherever you conduct your business. Whether you sell in a store, over the phone, or online, BSS simplifies the transaction process while backing you with 24-7 technical expertise. Our innovative devices enable you to accept a variety of payment types—from magnetic-stripe and chip readers for credit cards to digital scanners for checks to popular mobile app payment services—ensuring that no potential sales are missed.\n>\n> Sign up for BSS today and enjoy a free ten-day trial. Registration takes just fifteen minutes to complete. Once approved, save $50 on the purchase of any BSS device that connects to your phone or tablet. Call 931-555-0148 to schedule a demonstration and see how BSS can make your sales bloom!\n\n**155.** The word \"backing\" in paragraph 2, line 3, is closest in meaning to\n- (A) favoring\n- (B) reversing\n- (C) supporting\n- (D) establishing\n\n**156.** What payment method is NOT mentioned in the advertisement?\n- (A) Cash\n- (B) Check\n- (C) Credit card\n- (D) Mobile app\n\n**157.** What is BSS offering as a sales promotion?\n- (A) A new mobile phone\n- (B) A fifteen-day free trial\n- (C) A free device for a tablet\n- (D) A discount on equipment",
+      "page_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "overlap_page_ids": [],
+      "page_offset_ranges": [
+        {
+          "page_id": 1,
+          "local_start": 0,
+          "local_end": 12,
+          "global_start": 0,
+          "global_end": 12,
+          "is_overlap": false
+        },
+        {
+          "page_id": 2,
+          "local_start": 14,
+          "local_end": 1851,
+          "global_start": 14,
+          "global_end": 1851,
+          "is_overlap": false
+        },
+        {
+          "page_id": 3,
+          "local_start": 1853,
+          "local_end": 3691,
+          "global_start": 1853,
+          "global_end": 3691,
+          "is_overlap": false
+        },
+        {
+          "page_id": 4,
+          "local_start": 3693,
+          "local_end": 5242,
+          "global_start": 3693,
+          "global_end": 5242,
+          "is_overlap": false
+        },
+        {
+          "page_id": 5,
+          "local_start": 5244,
+          "local_end": 6460,
+          "global_start": 5244,
+          "global_end": 6460,
+          "is_overlap": false
+        },
+        {
+          "page_id": 6,
+          "local_start": 6462,
+          "local_end": 7692,
+          "global_start": 6462,
+          "global_end": 7692,
+          "is_overlap": false
+        },
+        {
+          "page_id": 7,
+          "local_start": 7694,
+          "local_end": 8893,
+          "global_start": 7694,
+          "global_end": 8893,
+          "is_overlap": false
+        },
+        {
+          "page_id": 8,
+          "local_start": 8895,
+          "local_end": 10041,
+          "global_start": 8895,
+          "global_end": 10041,
+          "is_overlap": false
+        },
+        {
+          "page_id": 9,
+          "local_start": 10043,
+          "local_end": 11432,
+          "global_start": 10043,
+          "global_end": 11432,
+          "is_overlap": false
+        },
+        {
+          "page_id": 10,
+          "local_start": 11434,
+          "local_end": 12300,
+          "global_start": 11434,
+          "global_end": 12300,
+          "is_overlap": false
+        },
+        {
+          "page_id": 11,
+          "local_start": 12302,
+          "local_end": 13841,
+          "global_start": 12302,
+          "global_end": 13841,
+          "is_overlap": false
+        },
+        {
+          "page_id": 12,
+          "local_start": 13843,
+          "local_end": 15271,
+          "global_start": 13843,
+          "global_end": 15271,
+          "is_overlap": false
+        },
+        {
+          "page_id": 13,
+          "local_start": 15273,
+          "local_end": 16868,
+          "global_start": 15273,
+          "global_end": 16868,
+          "is_overlap": false
+        }
+      ],
+      "raw_chunk_text_file": "chunk_1_p1_p13_source.txt",
+      "parsed_xml_file": "chunk_1_p1_p13_parsed.xml",
+      "parse_status": "ok",
+      "parse_diagnostics": {
+        "attempts": 1,
+        "validation_errors": [],
+        "request_id": "0f16379388"
+      }
+    },
+    {
+      "chunk_index": 1,
+      "raw_chunk_text": "**Questions 155-157** refer to the following advertisement.\n\n> **Blossom Sales Systems**\n>\n> Blossom Sales Systems (BSS) makes running your business a breeze with its sleek, intuitive point-of-sale devices. As a small business owner, you have many responsibilities and a reputation to build. BSS has all the tools needed to make transactions safe, seamless, and hassle-free.\n>\n> Enjoy the convenience of a system that has you covered wherever you conduct your business. Whether you sell in a store, over the phone, or online, BSS simplifies the transaction process while backing you with 24-7 technical expertise. Our innovative devices enable you to accept a variety of payment types—from magnetic-stripe and chip readers for credit cards to digital scanners for checks to popular mobile app payment services—ensuring that no potential sales are missed.\n>\n> Sign up for BSS today and enjoy a free ten-day trial. Registration takes just fifteen minutes to complete. Once approved, save $50 on the purchase of any BSS device that connects to your phone or tablet. Call 931-555-0148 to schedule a demonstration and see how BSS can make your sales bloom!\n\n**155.** The word \"backing\" in paragraph 2, line 3, is closest in meaning to\n- (A) favoring\n- (B) reversing\n- (C) supporting\n- (D) establishing\n\n**156.** What payment method is NOT mentioned in the advertisement?\n- (A) Cash\n- (B) Check\n- (C) Credit card\n- (D) Mobile app\n\n**157.** What is BSS offering as a sales promotion?\n- (A) A new mobile phone\n- (B) A fifteen-day free trial\n- (C) A free device for a tablet\n- (D) A discount on equipment\n\n**Questions 158-160** refer to the following e-mail.\n\n> **\\*E-mail\\***\n>\n> | | |\n> |---|---|\n> | To: | cbrandt@prebleevents.com |\n> | From: | chsiao@yanvillefestival.com |\n> | Date: | May 15 |\n> | Subject: | Festival support |\n>\n> Dear Mr. Brandt,\n>\n> Thank you for contacting us regarding the Yanville Festival. — [1] —. We have already contracted with Breemer's Staging to provide lighting equipment for our main stages.\n>\n> — [2] —. Do you provide catering services? — [3] —. We do not have anyone yet to manage the food for our actors and stage crews. Would you be interested in this work? Please let me know. — [4] —.\n>\n> Best regards,\n>\n> Cecily IIsiao\n> Vice-Chair, Yanville Festival\n\n**158.** What is one reason that Ms. Hsiao wrote the e-mail?\n- (A) To confirm an order\n- (B) To request a price\n- (C) To provide a report\n- (D) To make an offer\n\n**159.** What most likely is the focus of the Yanville Festival?\n- (A) Music\n- (B) Books\n- (C) Theater\n- (D) Fashion\n\n**160.** In which of the positions marked [1], [2], [3], and [4] does the following sentence best belong?\n\n> \"However, we have heard good reports about your company, Preble Events, from our partners.\"\n\n- (A) [1]\n- (B) [2]\n- (C) [3]\n- (D) [4]\n\n**Questions 161-163** refer to the following advertisement.\n\n> **Kramer's Emporium**\n> 2323 Raleigh Street • Houston, TX 77021\n>\n> After 25 years in business, our store is closing. Everything must go!\n>\n> From refrigerators to washing machines, we have hundreds of brand-new appliances for your home or office. Most items have been marked down by 30 percent. Delivery is available within 60 miles of our store for a flat fee of $50.00. We are open daily from 9:00 A.M. to 7:00 P.M.\n>\n> Don't wait! Merchandise is selling fast!\n\n**161.** What most likely can be purchased at Kramer's Emporium?\n- (A) Computers\n- (B) Sofas\n- (C) Dishwashers\n- (D) Food\n\n**162.** Why is Kramer's Emporium selling merchandise at a discount?\n- (A) It will soon move to a new location.\n- (B) It wants to promote a specific brand.\n- (C) It needs to make room for new items.\n- (D) It will soon go out of business.\n\n**163.** What is mentioned about delivery?\n- (A) It is free for purchases of two or more items.\n- (B) It is available only in a specific area.\n- (C) It is limited to large items.\n- (D) It is included in the price of the item.\n\n**Questions 164-167** refer to the following e-mail.\n\n> | | |\n> |---|---|\n> | To: | Bruce Holt |\n> | From: | Shamonica Walker |\n> | Date: | April 9 |\n> | Subject: | Immediate and confidential |\n>\n> Dear Bruce,\n>\n> Beginning with the new fiscal year, a change in retirement benefits will be applied for all full-time employees here in Blanen Industries. They will no longer be given their matching retirement funds in the form of cash. Instead, their retirement funds will be provided in the form of company stock to be deposited in their retirement portfolios.\n>\n> Our current retirement management firm, Proxave Futures, has been informed of this change in retirement benefits. The firm will manage the transition and will continue to provide customer support to Blanen Industries employees. Questions should be directed to Pierre Dehaene at Proxave Futures rather than our human resources department.\n>\n> Please work with Yua Suzuki, head of human resources, to provide her with the information she should include in her all-staff communication about this important change in employee benefits. Our president notified me that he would like to receive all reports related to this transition. Also, please continue to send me daily financial reports.\n>\n> Best,\n>\n> Shamonica Walker, CFO\n> Blanen Industries\n\n**164.** What is a purpose of the e-mail?\n- (A) To inquire about a transaction\n- (B) To plan a meeting agenda\n- (C) To provide instructions\n- (D) To ask for an opinion\n\n**165.** The word \"applied\" in paragraph 1, line 1, is closest in meaning to\n- (A) requested\n- (B) delayed\n- (C) discussed\n- (D) implemented\n\n**166.** What is suggested about Proxave Futures?\n- (A) It is giving employees a bonus.\n- (B) It offers company stock shares to its employees.\n- (C) It will address any concerns of Blanen Industries employees.\n- (D) It is merging with Blanen Industries.\n\n**167.** Who is responsible for notifying all employees about the policy change?\n- (A) Mr. Holt\n- (B) Ms. Walker\n- (C) Mr. Dehaene\n- (D) Ms. Suzuki\n\n**Questions 168-171** refer to the following online chat discussion.\n\n> **Monica Zia (8:27 A.M.)** Hi, Yuji and Sung-ho. I wonder if one of you could help me later today. Dejani Jones was going to help, but she's going to be out of the office today.\n>\n> **Yuji Saito (8:28 A.M.)** That's too bad. Did she say why?\n>\n> **Monica Zia (8:28 A.M.)** She said she had a slight cold but that she should be able to work from home on the data analyses for her clients.\n>\n> **Sung-ho Suh (8:29 A.M.)** So, she won't be coming in at all today?\n>\n> **Monica Zia (8:31 A.M.)** No. And Dejani and I were going to go to Willi's Market to buy food and beverages for tomorrow's office picnic. You remember, right? Saturday at noon at City Park. Anyhow, Dejani has a car and was going to drive us to the store and use her credit card to purchase the supplies. I know that both of you drive to work, so I thought one of you could help.\n>\n> **Sung-ho Suh (8:32 A.M.)** When were you thinking of going?\n>\n> **Yuji Saito (8:32 A.M.)** Sure. I can help, and we can use my credit card.\n>\n> **Monica Zia (8:33 A.M.)** Around two.\n>\n> **Yuji Saito (8:34 A.M.)** No problem. Just stop by my cubicle, and we can take my car to go to the store.\n>\n> **Sung-ho Suh (8:35 A.M.)** That's great, Yuji. I have several meetings this afternoon, so I wouldn't be able to get away.\n>\n> **Monica Zia (8:35 A.M.)** Thanks, Yuji. I'll see you this afternoon.\n\n**168.** Why is Ms. Jones going to be out of the office today?\n- (A) She is feeling ill.\n- (B) She works from home every Friday.\n- (C) She is meeting with clients.\n- (D) She is having car trouble.\n\n**169.** What had Ms. Jones previously agreed to do?\n- (A) Drive Ms. Zia to work\n- (B) Choose a location for a picnic\n- (C) Move to a new office cubicle\n- (D) Help with some shopping\n\n**170.** Who most likely will purchase food and beverages for the picnic?\n- (A) Ms. Zia\n- (B) Ms. Jones\n- (C) Mr. Saito\n- (D) Mr. Suh\n\n**171.** At 8:33 A.M., what does Ms. Zia mean when she writes, \"Around two\"?\n- (A) She needs at least two people to help her at Willi's Market.\n- (B) She has reserved two tickets for an event at City Park.\n- (C) She plans to meet with Mr. Suh in about two hours.\n- (D) She wants to leave the office this afternoon at about two o'clock.\n\n**Questions 172-175** refer to the following e-mail.\n\n> | | |\n> |---|---|\n> | To: | Dorota Kucharski <dkucharski@internationaltechnologicalsociety.org> |\n> | From: | Luciano Moretti <lmoretti@internationaltechnologicalsociety.org> |\n> | Date: | 8 August |\n> | Subject: | Research results |\n>\n> Ms. Kucharski,\n>\n> The following is a summary of what I have learned in my research about where to hold our next annual technology conference in June of next year.\n>\n> In Rome, the best option I have found is Hotel al Ponte. The total cost for conference events there would be €31,500. — [1] —. Individual hotel rooms would cost €80 per night for participants. In the event that attendance is high, we could also house participants in the nearby Hotel Milvio at €120 per night. — [2] —.\n>\n> I also looked into hotels in Genoa and Florence, but I could not find any that would be much cheaper in overall conference costs. — [3] —. More importantly, I am concerned that the greater cost of flights to those smaller cities could discourage some attendees. Rome, on the other hand, has affordable direct flights from most European cities. — [4] —. It will also be more affordable for our colleagues coming from Buenos Aires.\n>\n> If you would like to pursue the Hotel al Ponte option, I will provide a detailed write-up of the anticipated costs and of the amenities offered by the hotel.\n>\n> Best,\n>\n> Luciano Moretti\n> Secretary, International Technological Society\n\n**172.** What is the main purpose of the e-mail?\n(A) To book travel for a conference\n(B) To compare possible venues for a conference\n(C) To request a budget increase for organizing a conference\n(D) To inquire about the cost of attending a conference\n\n**173.** What is indicated about the conference?\n(A) It is for professionals in the travel industry.\n(B) It takes place every year.\n(C) It is usually held in Buenos Aires.\n(D) It will occur in August.\n\n**174.** What is true about Hotel Milvio?\n(A) It is more expensive than Hotel al Ponte.\n(B) It is usually fully booked.\n(C) It has locations in Genoa and Florence.\n(D) It has more rooms than Hotel al Ponte.\n\n**175.** In which of the positions marked [1], [2], [3], and [4] does the following sentence best belong?\n\n\"The savings to host the conference in one of those cities would be €500 at most.\"\n(A) [1]\n(B) [2]\n(C) [3]\n(D) [4]\n\nGO ON TO THE NEXT PAGE\n\nTEST 10   309\n\n**Questions 176-180** refer to the following Web page and online review.\n\n> https://www.centraluniversity.edu/nutrition/newsletter\n>\n> | Home | Customer Service | Subscribe | Account | Log In |\n>\n> **Central University Health Newsletter—Your Guide to Nutrition and Well-Being**\n>\n> Tips on healthful eating are available almost everywhere—from TV shows to online cooking forums. It's often difficult to know whether the advice you encounter is based on scientific evidence. That's why the *Central University Health Newsletter* is indispensable. Each month, it delivers informative, easy-to-understand articles that summarize findings by researchers at the Central University School of Nutrition. For example, last April's issue evaluated nutritional supplements that are sold in supermarkets. The back page features our Ask an Expert column, in which the director of the School of Nutrition answers readers' questions.\n>\n> A one-year subscription is $20 and includes online access to all previous issues. We also offer a 10 percent discount on your first subscription renewal. What's more, subscribers receive our free weekly \"Healthy Living\" e-mail update, which includes special reports plus links to videos and podcasts.\n>\n> To get started, simply go to our Subscribe page and follow the instructions.\n\n> https://www.centraluniversity.edu/nutrition/newsletter/reviews\n>\n> **Publication:** *Central University Health Newsletter*\n> ★★★★★\n> **Reviewed by:** Ari Kipp\n> **Date posted:** August 4\n>\n> This is my second year subscribing to the *Central University Health Newsletter*, which I read cover to cover. I'm particularly impressed with the Ask an Expert column, and I always learn something new. This month, for instance, Dr. Stella Booth gives a surprising answer to the question of which pasta is most nutritious. I didn't know that bean-based pasta even existed, much less how much fiber it contains. I tried it and will never go back to regular pasta. My sole complaint is that the newsletter is only twelve pages long!\n\n310\n\n**176.** What is the purpose of the Web page?\n(A) To explain the reason for a price increase\n(B) To increase the size of the audience for a publication\n(C) To recruit volunteers for a research project\n(D) To sell nutritional supplements\n\n**177.** In the Web page, the word \"delivers\" in paragraph 1, line 4, is closest in meaning to\n(A) presents\n(B) transports\n(C) guides\n(D) claims\n\n**178.** What is true about Mr. Kipp?\n(A) He is a health-care professional.\n(B) He received a 20 percent discount on a subscription.\n(C) He gets nutrition tips from a television program.\n(D) He gets a weekly e-mail from Central University.\n\n**179.** What is indicated about the Central University School of Nutrition?\n(A) It creates lesson plans for local teachers.\n(B) It is headed by Dr. Booth.\n(C) It offers online cooking classes.\n(D) It has a job opening for a researcher.\n\n**180.** According to the online review, what is a weakness of the newsletter?\n(A) The limited range of topics\n(B) The complexity of the articles\n(C) The lack of photographs\n(D) The overall length\n\nGO ON TO THE NEXT PAGE\n\nTEST 10   311\n\n**Questions 181-185** refer to the following invoice and e-mail.\n\n> **Brit-Revision Editing Services Invoice**\n>\n> **Freelance Editor:** Lisa Yamashita\n> **Invoice Date:** 30 September\n> **Address:** 178 Upsala Road\n> LONDON\n> E16 1DJ\n> **Contact:** (020) 7946 0612\n> lisa.yamashita@bluesun.co.uk\n> Stashcash ID: Lisa.Yamashita8\n>\n> | Client Name | Project Description | Date Completed | Time |\n> |---|---|---|---|\n> | Eddie Kent | University thesis editing | 5 September | 2 hours |\n> | Ben Gallagher | Grant proposal editing | 9 September | 10 hours |\n> | Lydia Quinn of Hyden Interiors | Marketing copy editing | 17 September | 8.5 hours |\n> | Winona Rogers | Journal article editing | 22 September | 2 hours |\n> | Tony Withers | CV and cover letter editing | 28 September | 2.5 hours |\n\n> | | |\n> |---|---|\n> | **To:** | Lisa Yamashita <lisa.yamashita@bluesun.co.uk> |\n> | **From:** | Claudio Aguilar <caguilar@britrevision.co.uk> |\n> | **Date:** | 1 October |\n> | **Subject:** | Your recent invoice |\n>\n> Dear Lisa,\n>\n> Thank you for sending your invoice for services rendered in the month of September. I want to commend you on your superb start as one of our independent freelance editors. Our clients have nothing but positive things to say about your work. As you know, we do not dictate how you structure your workday; instead, Brit-Revision (BRV) guidelines require simply that deadlines be met and that work quality be maintained. You have done both admirably.\n>\n> Also, we will pay you for an additional 30 minutes of work that you did for Mr. Kent. He reported that you did consulting work for him over the phone on a short oral presentation that he created. As for the work that you did for our long-standing corporate client Lydia Quinn, you will see on your receipt that we have paid you at a higher hourly rate.\n>\n> I have initiated the transfer of £750 into your Stashcash account. The funds should appear in your account by tomorrow morning.\n>\n> Sincerely,\n>\n> Claudio Aguilar\n> Accounts Payable, Brit-Revision Editing Services\n\n312\n\n**181.** What client of BRV's is most likely seeking new employment?\n(A) Mr. Gallagher\n(B) Ms. Quinn\n(C) Ms. Rogers\n(D) Mr. Withers\n\n**182.** What does the e-mail indicate about Ms. Yamashita?\n(A) She can set her own hours.\n(B) She visits the BRV office every week.\n(C) She must find new clients for BRV.\n(D) She will be eligible for a job promotion soon.\n\n**183.** According to the e-mail, what did Ms. Yamashita NOT include on the invoice?\n(A) A change of address\n(B) An additional task\n(C) A project end date\n(D) An account number\n\n**184.** For what project will Ms. Yamashita earn the most per hour?\n(A) The university thesis\n(B) The grant proposal\n(C) The marketing copy\n(D) The journal article\n\n**185.** When can Ms. Yamashita expect a payment to arrive?\n(A) On September 28\n(B) On September 30\n(C) On October 1\n(D) On October 2\n\nGO ON TO THE NEXT PAGE\n\nTEST 10   313",
+      "page_ids": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "overlap_page_ids": [
+        13
+      ],
+      "page_offset_ranges": [
+        {
+          "page_id": 13,
+          "local_start": 0,
+          "local_end": 1595,
+          "global_start": 15273,
+          "global_end": 16868,
+          "is_overlap": true
+        },
+        {
+          "page_id": 14,
+          "local_start": 1597,
+          "local_end": 2810,
+          "global_start": 16870,
+          "global_end": 18083,
+          "is_overlap": false
+        },
+        {
+          "page_id": 15,
+          "local_start": 2812,
+          "local_end": 3927,
+          "global_start": 18085,
+          "global_end": 19200,
+          "is_overlap": false
+        },
+        {
+          "page_id": 16,
+          "local_start": 3929,
+          "local_end": 5950,
+          "global_start": 19202,
+          "global_end": 21223,
+          "is_overlap": false
+        },
+        {
+          "page_id": 17,
+          "local_start": 5952,
+          "local_end": 8222,
+          "global_start": 21225,
+          "global_end": 23495,
+          "is_overlap": false
+        },
+        {
+          "page_id": 18,
+          "local_start": 8224,
+          "local_end": 9679,
+          "global_start": 23497,
+          "global_end": 24952,
+          "is_overlap": false
+        },
+        {
+          "page_id": 19,
+          "local_start": 9681,
+          "local_end": 10602,
+          "global_start": 24954,
+          "global_end": 25875,
+          "is_overlap": false
+        },
+        {
+          "page_id": 20,
+          "local_start": 10604,
+          "local_end": 12639,
+          "global_start": 25877,
+          "global_end": 27912,
+          "is_overlap": false
+        },
+        {
+          "page_id": 21,
+          "local_start": 12641,
+          "local_end": 13739,
+          "global_start": 27914,
+          "global_end": 29012,
+          "is_overlap": false
+        },
+        {
+          "page_id": 22,
+          "local_start": 13741,
+          "local_end": 15793,
+          "global_start": 29014,
+          "global_end": 31066,
+          "is_overlap": false
+        },
+        {
+          "page_id": 23,
+          "local_start": 15795,
+          "local_end": 16668,
+          "global_start": 31068,
+          "global_end": 31941,
+          "is_overlap": false
+        }
+      ],
+      "raw_chunk_text_file": "chunk_2_p13_p23_source.txt",
+      "parsed_xml_file": "chunk_2_p13_p23_parsed.xml",
+      "parse_status": "ok",
+      "parse_diagnostics": {
+        "attempts": 1,
+        "validation_errors": [],
+        "request_id": "d95d0d26e8"
+      }
+    },
+    {
+      "chunk_index": 2,
+      "raw_chunk_text": "**181.** What client of BRV's is most likely seeking new employment?\n(A) Mr. Gallagher\n(B) Ms. Quinn\n(C) Ms. Rogers\n(D) Mr. Withers\n\n**182.** What does the e-mail indicate about Ms. Yamashita?\n(A) She can set her own hours.\n(B) She visits the BRV office every week.\n(C) She must find new clients for BRV.\n(D) She will be eligible for a job promotion soon.\n\n**183.** According to the e-mail, what did Ms. Yamashita NOT include on the invoice?\n(A) A change of address\n(B) An additional task\n(C) A project end date\n(D) An account number\n\n**184.** For what project will Ms. Yamashita earn the most per hour?\n(A) The university thesis\n(B) The grant proposal\n(C) The marketing copy\n(D) The journal article\n\n**185.** When can Ms. Yamashita expect a payment to arrive?\n(A) On September 28\n(B) On September 30\n(C) On October 1\n(D) On October 2\n\nGO ON TO THE NEXT PAGE\n\nTEST 10   313\n\n**Questions 186-190** refer to the following e-mails and instructions.\n\n> | | |\n> |---|---|\n> | **To:** | New Employees |\n> | **From:** | Hemi Amos <hamos@motmanmotors.com> |\n> | **Date:** | June 8 |\n> | **Subject:** | Welcome to Motman Motors |\n> | **Attachment:** | 📎 Information |\n>\n> Dear New Employees,\n>\n> Welcome! We are thrilled that all of you are joining Motman Motors.\n>\n> New-employee orientation for all is on June 10 from 9:00 A.M. to 12:00 noon. Please report to the proper room in the Pimzler Building on our campus as indicated below. I will come around to each room to meet the new employees briefly.\n>\n> - Marketing and Customer Service: both groups report to room 320.\n> - Engineering: report to room 215.\n> - Technology Services: report to room 158.\n>\n> I can confirm that the employee paperwork has been finalized for most of you, so at this point we just need to ensure that the Motman Motors portal account is set up using the employee identification number recently sent to you and that your bank account information is entered there. Please follow the attached instructions to complete this final step. It should not take any more than fifteen minutes, and I ask that you do this by June 17. Don't hesitate to reach out if you have any questions.\n>\n> Welcome aboard!\n>\n> Hemi Amos\n> Human Resources, Motman Motors\n\n> Please follow these steps to create and activate your new Motman Motors portal account. Go to https://motmanmotors.com/portal/activation to begin.\n>\n> 1. Go to the \"New User Registration\" page and enter your employee ID number.\n> 2. Your name and address will appear. Confirm that this information is correct.\n> 3. A new screen titled \"Bank Account\" will appear. Fill in your bank account information.\n> 4. Finally, you will be asked to select two security questions and provide the answers.\n>\n> Once you have created your account, your account will become active, the payroll department will be alerted, and your payment schedule will be set. Please e-mail Mr. Hemi Amos at hamos@motmanmotors.com if you have any difficulties or questions.\n\n314\n\n| | |\n|---|---|\n| **To:** | Hemi Amos <hamos@motmanmotors.com> |\n| **From:** | Karuna Dimaano <kdimaano@motmanmotors.com> |\n| **Date:** | June 9 |\n| **Subject:** | Trouble with Motman Motors portal |\n\nDear Mr. Amos,\n\nThank you for the kind welcome e-mail yesterday.\n\nI am trying to set up my Motman Motors portal account, but I seem to be having trouble with my employee ID number. Each time I put the information into the system, I get an error message. I might not have the right number. Can you please advise me on how to address this?\n\nI also have another question. Will the orientation include any information for newcomers to San Antonio? I am excited to start exploring everything here that this great city offers.\n\nI look forward to meeting you tomorrow in room 215 in the Pimzler Building.\n\nThank you,\n\nKaruna Dimaano\n\n**186.** According to the first e-mail, what was previously sent to new employees?\n(A) An advertisement\n(B) An application form\n(C) An employee ID number\n(D) Directions to an office complex\n\n**187.** According to the first e-mail, what is the deadline to complete an online task?\n(A) June 8\n(B) June 10\n(C) June 15\n(D) June 17\n\n**188.** What step is Ms. Dimaano having trouble with?\n(A) Step 1\n(B) Step 2\n(C) Step 3\n(D) Step 4\n\n**189.** What department will Ms. Dimaano join?\n(A) Marketing\n(B) Customer Service\n(C) Engineering\n(D) Technology Services\n\n**190.** In the second e-mail, what is suggested about Ms. Dimaano?\n(A) She has just graduated from university.\n(B) She has met Mr. Amos before.\n(C) She is concerned about finding a building.\n(D) She has recently moved to San Antonio.\n\nGO ON TO THE NEXT PAGE\n\nTEST 10 **315**\n\n**Questions 191-195** refer to the following e-mail, invoice, and memo.\n\n| | |\n|---|---|\n| **To:** | Felix Herman <felixh@videogenieproductions.com> |\n| **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> |\n| **Date:** | September 17 |\n| **Subject:** | Notes on rough cut of video |\n| **Attachment:** | Information |\n\nDear Mr. Herman,\n\nThank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version.\n\n- At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail.\n- At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot?\n- At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down?\n\nI look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work.\n\nSincerely,\n\nMs. Sapna Mathai, Project Manager\nThe Hospital Equipment Company\n\n### The Hospital Equipment Company\n\nInvoice 9984\n**Billing date:** October 25\n**Installation date:** October 26\n\nBill to:\nAll-City Hospital\n3 Shoreline Road\nClear Lake, Minnesota 55319\n\n| Quantity | Item Number | Description | Unit Price | Total |\n|----------|-------------|-------------|------------|-------|\n| 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 |\n| | | **Delivery and Installation** | | $2,350 |\n| | | **Total** | | **$486,950** |\n\n316\n\n## MEMO\n\n**To:** All The Hospital Equipment Company Employees\n**From:** Marcia Oliver, Vice President of Sales\n**Date:** October 27\n**Re:** Good work!\n\nCongratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered.\n\nI would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution.\n\n**191.** What is attached to the e-mail?\n(A) Details about an invoice\n(B) Reviews of Video Genie Productions\n(C) A timeline for completing a project\n(D) A graphic outlining a company's history\n\n**192.** Why does Ms. Mathai want to replace the scene at 1 minute?\n(A) Some content is not clearly visible.\n(B) Some equipment is labeled incorrectly.\n(C) The video of the scene moves too quickly.\n(D) The medical technician speaks too quietly.\n\n**193.** What does the invoice indicate about the Fluorolook Imagers?\n(A) They were sold at a discount.\n(B) The delivery was free of charge.\n(C) The purchaser ordered two of them.\n(D) They were installed on October 25.\n\n**194.** Whom does Ms. Oliver specifically praise?\n(A) A medical technician\n(B) A hospital administrator\n(C) A project manager\n(D) A video producer\n\n**195.** Where does Mr. Lamontagne most likely work?\n(A) At MDP Delivery\n(B) At Video Genie Productions\n(C) At The Hospital Equipment Company\n(D) At All-City Hospital\n\nGO ON TO THE NEXT PAGE\n\nTEST 10 **317**\n\n**Questions 196-200** refer to the following packing slip and e-mails.\n\n### Packing Slip\n\n| | |\n|---|---|\n| **From:** Reina Olive Oil Company | **To:** Best Products Supermarket |\n| Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu |\n| 18002 Granada, Spain | Incheon 22382, Republic of Korea |\n\n**Order Date:** 28 November\n**Order Number:** SK6224\n\n| Item Number | Description | Quantity |\n|-------------|-------------|----------|\n| EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases |\n| EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases |\n| EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases |\n| EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases |\n| EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases |\n\nCelebrate the season with us! Place your next order by 31 January to receive 10 percent off.\n\n### *E-mail*\n\n| | |\n|---|---|\n| **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **Date:** | 12 December |\n| **Subject:** | Order number SK6224 |\n\nDear Mr. Nadal:\n\nWe appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error.\n\nWe would like to arrange to send these products back. Please inform us how to proceed.\n\nThank you,\n\nMin Hae Seong\nReceiving and Distribution, Best Products Supermarket\n\n318\n\n| | |\n|---|---|\n| **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |\n| **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |\n| **Date:** | 14 December |\n| **Subject:** | RE: Order number SK6224 |\n\nDear Ms. Seong,\n\nI apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake.\n\nWe are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments.\n\nWe hope to continue providing Best Products Supermarket with the finest olive oils.\n\nSincerely yours,\n\nPablo Nadal\nExport Division Manager, Reina Olive Oil Company\n\n**196.** What is the purpose of the first e-mail?\n(A) To place an order\n(B) To inquire about delivery costs\n(C) To discuss a shipping mistake\n(D) To make a payment\n\n**197.** What item number does Ms. Seong refer to?\n(A) EVO160\n(B) EVO161\n(C) EVO162\n(D) EVO163\n\n**198.** What does the second e-mail suggest about Reina Olive Oil Company?\n(A) It is seeking new clients.\n(B) It cannot accept returns.\n(C) It is owned by Mr. Nadal.\n(D) It distributes more than olive oil.\n\n**199.** What does Mr. Nadal mention he will do for Ms. Seong?\n(A) Begin an investigation\n(B) Send some company brochures\n(C) Arrange for a refund\n(D) Send a revised bill\n\n**200.** Why was item number EVO001 included in the shipment?\n(A) To recognize and celebrate a festival\n(B) To introduce a company's new product\n(C) To replace an item that was out of stock\n(D) To resolve an issue with a company's database\n\n**Stop! This is the end of the test. If you finish before time is called, you may go back to Parts 5, 6, and 7 and check your work.**\n\nTEST 10 **319**",
+      "page_ids": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "overlap_page_ids": [
+        23
+      ],
+      "page_offset_ranges": [
+        {
+          "page_id": 23,
+          "local_start": 0,
+          "local_end": 873,
+          "global_start": 31068,
+          "global_end": 31941,
+          "is_overlap": true
+        },
+        {
+          "page_id": 24,
+          "local_start": 875,
+          "local_end": 2963,
+          "global_start": 31943,
+          "global_end": 34031,
+          "is_overlap": false
+        },
+        {
+          "page_id": 25,
+          "local_start": 2965,
+          "local_end": 4620,
+          "global_start": 34033,
+          "global_end": 35688,
+          "is_overlap": false
+        },
+        {
+          "page_id": 26,
+          "local_start": 4622,
+          "local_end": 6404,
+          "global_start": 35690,
+          "global_end": 37472,
+          "is_overlap": false
+        },
+        {
+          "page_id": 27,
+          "local_start": 6406,
+          "local_end": 8159,
+          "global_start": 37474,
+          "global_end": 39227,
+          "is_overlap": false
+        },
+        {
+          "page_id": 28,
+          "local_start": 8161,
+          "local_end": 9784,
+          "global_start": 39229,
+          "global_end": 40852,
+          "is_overlap": false
+        },
+        {
+          "page_id": 29,
+          "local_start": 9786,
+          "local_end": 11930,
+          "global_start": 40854,
+          "global_end": 42998,
+          "is_overlap": false
+        }
+      ],
+      "raw_chunk_text_file": "chunk_3_p23_p29_source.txt",
+      "parsed_xml_file": "chunk_3_p23_p29_parsed.xml",
+      "parse_status": "ok",
+      "parse_diagnostics": {
+        "attempts": 1,
+        "validation_errors": [],
+        "request_id": "d392a126e8"
+      }
+    }
+  ]
+}

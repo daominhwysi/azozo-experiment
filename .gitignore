@@ -21,6 +21,7 @@ build/
 .cache/
 
 # Logs & App Temp Data
+backend/logs/
 ocr_logs/
 logs/
 output/
@@ -28,6 +29,9 @@ tmp/
 *.log
 *.db
 *.json.bak
+.queue_state.json
+data/
+export_onnx/
 
 # OS & IDE
 .DS_Store

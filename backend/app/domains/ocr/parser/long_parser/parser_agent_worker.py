@@ -25,18 +25,34 @@ class ParserAgentWorker:
     Parser Agent Worker utilizing Two-Pass Multi-Role XML Sequence Annotation with Compact Anchors.
     Extracts structured questions from raw chunk text using Role A (Parser) & Role B (Validator).
     """
-    def __init__(self, model: Optional[str] = None, provider: Optional[str] = None):
+    def __init__(
+        self,
+        model: Optional[str] = None,
+        provider: Optional[str] = None,
+        thinking: Optional[str] = None,
+        annotator_ready: bool = True,
+        max_attempts: int = 2,
+        enable_validator: bool = True,
+    ):
         self.model = model
         self.provider = provider
-        self.max_attempts = 4
-        self.anchored_parser = AnchoredXMLLLMExamParser(model=model, provider=provider)
-        try:
-            self.annotator = OCRAnnotator(model=model, provider=provider)
-            self.annotator_ready = True
-        except Exception as e:
-            print(f"[ParserAgentWorker] OCRAnnotator init warning: {e}.")
+        self.max_attempts = max_attempts
+        self.enable_validator = enable_validator
+        self.anchored_parser = AnchoredXMLLLMExamParser(
+            model=model,
+            provider=provider,
+            thinking=thinking,
+        )
+        self.annotator_ready = annotator_ready
+        if self.annotator_ready:
+            try:
+                self.annotator = OCRAnnotator(model=model, provider=provider)
+            except Exception as e:
+                print(f"[ParserAgentWorker] OCRAnnotator init warning: {e}.")
+                self.annotator = None
+                self.annotator_ready = False
+        else:
             self.annotator = None
-            self.annotator_ready = False
 
     @staticmethod
     def _normalize_text_for_comparison(text: str) -> str:
@@ -103,6 +119,8 @@ class ParserAgentWorker:
         structured_questions: List[Dict[str, Any]] = []
         stimuli: Dict[str, str] = {}
         annotation_res: Dict[str, Any] = {}
+        anchored_res: Dict[str, Any] = {}
+        tagged_text = ""
         chunk_request_id = uuid.uuid4().hex[:10]
         validation_errors: List[str] = []
         attempts_used = 0
@@ -112,10 +130,11 @@ class ParserAgentWorker:
         try:
             attempts_used = 1
             anchored_res = self.anchored_parser.parse_exam_chunk(
-                raw_chunk_text, chunk_index=chunk_index
+                raw_chunk_text, enable_validator=self.enable_validator
             )
             structured_questions = anchored_res.get("questions") or []
             stimuli = anchored_res.get("stimuli") or {}
+            tagged_text = anchored_res.get("role_b_xml") or anchored_res.get("role_a_xml") or ""
         except Exception as e:
             validation_errors.append(f"Two-pass anchored LLM parsing failed: {e}")
             print(f"[Parser Worker Warning] Two-pass anchored parser error: {e}")
@@ -123,8 +142,10 @@ class ParserAgentWorker:
 
         # Fallback to XML Sequence Annotator if two-pass anchored returned no questions
         if not structured_questions and self.annotator_ready and self.annotator is not None:
+            print(f"[RETRY NOTICE] Chunk {chunk_index} returned 0 questions from two-pass parser. Triggering Fallback Annotator...")
             for attempt in range(1, self.max_attempts + 1):
                 attempts_used += 1
+                print(f"  -> [Fallback Attempt {attempt}/{self.max_attempts}] Executing SequenceLabellingAnnotator...")
                 try:
                     attempt_request_id = f"{chunk_request_id}_fallback_{attempt}"
                     annotation_res = self.annotator.annotate_text_stream(
@@ -137,9 +158,11 @@ class ParserAgentWorker:
                             annotation_res["raw_text"], annotation_res.get("spans", [])
                         )
                         method = "llm_xml_fallback"
+                        print(f"  -> [Fallback Success] Recovered {len(structured_questions)} question(s) on attempt {attempt}.")
                         break
                 except Exception as e:
                     validation_errors.append(f"Fallback XML attempt {attempt} failed: {e}")
+                    print(f"  -> [Fallback Warning] Attempt {attempt} failed: {e}")
                     if attempt >= self.max_attempts:
                         break
                     time.sleep(2.0 * attempt)
@@ -206,6 +229,8 @@ class ParserAgentWorker:
             "stimuli": scoped_stimuli,
             "spans_count": len(annotation_res.get("spans", [])),
             "recovered_count": recovered_count,
+            "role_b_rating": anchored_res.get("role_b_rating", "5/5") if isinstance(anchored_res, dict) else "5/5",
+            "role_b_status": anchored_res.get("role_b_status", "APPROVED") if isinstance(anchored_res, dict) else "APPROVED",
             "method": method,
             "raw_xml": tagged_text
         }

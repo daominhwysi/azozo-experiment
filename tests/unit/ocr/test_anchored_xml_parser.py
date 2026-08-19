@@ -31,7 +31,7 @@ def test_system_prompt_defines_xml_and_roles():
     assert "ROLE A (PARSER)" in STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE
     assert "ROLE B (VALIDATOR)" in STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE
     assert "<question_label>" in STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE
-    assert "<section start_anchor=" in STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE
+    assert "<section>" in STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE
     assert "<stimulus id=" in STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE
 
 
@@ -58,25 +58,14 @@ def test_anchor_resolution_in_xml():
 
 
 def test_two_pass_xml_mock_completion():
-    def mock_completion(messages, model=None, provider=None, max_tokens=None):
+    def mock_completion(messages, model=None, provider=None, max_tokens=None, **kwargs):
         system_content = messages[0]["content"]
         assert "ROLE A (PARSER)" in system_content
         assert "ROLE B (VALIDATOR)" in system_content
 
         if len(messages) == 2:
             assert "ACTIVATE ROLE A" in messages[1]["content"]
-            return """<section start_anchor="PHẦN I. Câu trắc nghiệm" end_anchor="câu 1 đến câu 2." />
-<stimulus id="stim_1" start_anchor="Read the following passage" end_anchor="zero-emission future." />
-<question_label>Câu 1.</question_label> <stem>What is the main topic of the passage?</stem>
-- <option_label>A.</option_label> <option_text>The history of fossil fuels</option_text>
-- <option_label>B.</option_label> <option_text>Solar and wind power leading energy transition</option_text>
-"""
-
-        if len(messages) == 4:
-            assert "ACTIVATE ROLE A" in messages[1]["content"]
-            assert "ACTIVATE ROLE B" in messages[3]["content"]
-            assert messages[2]["role"] == "assistant"
-            return """<section start_anchor="PHẦN I. Câu trắc nghiệm" end_anchor="câu 1 đến câu 2." />
+            return """<section>PHẦN I. Câu trắc nghiệm nhiều lựa chọn. Thí sinh trả lời từ câu 1 đến câu 2.</section>
 <stimulus id="stim_1" start_anchor="Read the following passage" end_anchor="zero-emission future." />
 <question_label>Câu 1.</question_label> <stem>What is the main topic of the passage?</stem>
 - <option_label>A.</option_label> <option_text>The history of fossil fuels</option_text>
@@ -85,6 +74,14 @@ def test_two_pass_xml_mock_completion():
 - <option_label>D.</option_label> <option_text>Space exploration technologies</option_text>
 <|END|>
 """
+
+        if len(messages) == 4:
+            assert "ACTIVATE ROLE B" in messages[3]["content"]
+            assert messages[2]["role"] == "assistant"
+            return """REASONING: Output is complete and accurate.
+RATING: 5/5
+DECISION: APPROVED"""
+        return ""
         return ""
 
     parser = AnchoredXMLLLMExamParser()

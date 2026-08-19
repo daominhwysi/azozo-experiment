@@ -1,0 +1,222 @@
+<stimulus id="stim_1" start_anchor="**Questions 155-157** refer" end_anchor="make your sales bloom!" />
+
+<question_label>**155.**</question_label> <stem>The word "backing" in paragraph 2, line 3, is closest in meaning to</stem>
+- <option_label>(A)</option_label> <option_text>favoring</option_text>
+- <option_label>(B)</option_label> <option_text>reversing</option_text>
+- <option_label>(C)</option_label> <option_text>supporting</option_text>
+- <option_label>(D)</option_label> <option_text>establishing</option_text>
+
+<question_label>**156.**</question_label> <stem>What payment method is NOT mentioned in the advertisement?</stem>
+- <option_label>(A)</option_label> <option_text>Cash</option_text>
+- <option_label>(B)</option_label> <option_text>Check</option_text>
+- <option_label>(C)</option_label> <option_text>Credit card</option_text>
+- <option_label>(D)</option_label> <option_text>Mobile app</option_text>
+
+<question_label>**157.**</question_label> <stem>What is BSS offering as a sales promotion?</stem>
+- <option_label>(A)</option_label> <option_text>A new mobile phone</option_text>
+- <option_label>(B)</option_label> <option_text>A fifteen-day free trial</option_text>
+- <option_label>(C)</option_label> <option_text>A free device for a tablet</option_text>
+- <option_label>(D)</option_label> <option_text>A discount on equipment</option_text>
+
+<stimulus id="stim_2" start_anchor="**Questions 158-160** refer" end_anchor="Vice-Chair, Yanville Festival" />
+
+<question_label>**158.**</question_label> <stem>What is one reason that Ms. Hsiao wrote the e-mail?</stem>
+- <option_label>(A)</option_label> <option_text>To confirm an order</option_text>
+- <option_label>(B)</option_label> <option_text>To request a price</option_text>
+- <option_label>(C)</option_label> <option_text>To provide a report</option_text>
+- <option_label>(D)</option_label> <option_text>To make an offer</option_text>
+
+<question_label>**159.**</question_label> <stem>What most likely is the focus of the Yanville Festival?</stem>
+- <option_label>(A)</option_label> <option_text>Music</option_text>
+- <option_label>(B)</option_label> <option_text>Books</option_text>
+- <option_label>(C)</option_label> <option_text>Theater</option_text>
+- <option_label>(D)</option_label> <option_text>Fashion</option_text>
+
+<question_label>**160.**</question_label> <stem>In which of the positions marked [1], [2], [3], and [4] does the following sentence best belong?
+
+> "However, we have heard good reports about your company, Preble Events, from our partners."</stem>
+- <option_label>(A)</option_label> <option_text>[1]</option_text>
+- <option_label>(B)</option_label> <option_text>[2]</option_text>
+- <option_label>(C)</option_label> <option_text>[3]</option_text>
+- <option_label>(D)</option_label> <option_text>[4]</option_text>
+
+<stimulus id="stim_3" start_anchor="**Questions 161-163** refer" end_anchor="Merchandise is selling fast!" />
+
+<question_label>**161.**</question_label> <stem>What most likely can be purchased at Kramer's Emporium?</stem>
+- <option_label>(A)</option_label> <option_text>Computers</option_text>
+- <option_label>(B)</option_label> <option_text>Sofas</option_text>
+- <option_label>(C)</option_label> <option_text>Dishwashers</option_text>
+- <option_label>(D)</option_label> <option_text>Food</option_text>
+
+<question_label>**162.**</question_label> <stem>Why is Kramer's Emporium selling merchandise at a discount?</stem>
+- <option_label>(A)</option_label> <option_text>It will soon move to a new location.</option_text>
+- <option_label>(B)</option_label> <option_text>It wants to promote a specific brand.</option_text>
+- <option_label>(C)</option_label> <option_text>It needs to make room for new items.</option_text>
+- <option_label>(D)</option_label> <option_text>It will soon go out of business.</option_text>
+
+<question_label>**163.**</question_label> <stem>What is mentioned about delivery?</stem>
+- <option_label>(A)</option_label> <option_text>It is free for purchases of two or more items.</option_text>
+- <option_label>(B)</option_label> <option_text>It is available only in a specific area.</option_text>
+- <option_label>(C)</option_label> <option_text>It is limited to large items.</option_text>
+- <option_label>(D)</option_label> <option_text>It is included in the price of the item.</option_text>
+
+<stimulus id="stim_4" start_anchor="**Questions 164-167** refer" end_anchor="Shamonica Walker, CFO Blanen Industries" />
+
+<question_label>**164.**</question_label> <stem>What is a purpose of the e-mail?</stem>
+- <option_label>(A)</option_label> <option_text>To inquire about a transaction</option_text>
+- <option_label>(B)</option_label> <option_text>To plan a meeting agenda</option_text>
+- <option_label>(C)</option_label> <option_text>To provide instructions</option_text>
+- <option_label>(D)</option_label> <option_text>To ask for an opinion</option_text>
+
+<question_label>**165.**</question_label> <stem>The word "applied" in paragraph 1, line 1, is closest in meaning to</stem>
+- <option_label>(A)</option_label> <option_text>requested</option_text>
+- <option_label>(B)</option_label> <option_text>delayed</option_text>
+- <option_label>(C)</option_label> <option_text>discussed</option_text>
+- <option_label>(D)</option_label> <option_text>implemented</option_text>
+
+<question_label>**166.**</question_label> <stem>What is suggested about Proxave Futures?</stem>
+- <option_label>(A)</option_label> <option_text>It is giving employees a bonus.</option_text>
+- <option_label>(B)</option_label> <option_text>It offers company stock shares to its employees.</option_text>
+- <option_label>(C)</option_label> <option_text>It will address any concerns of Blanen Industries employees.</option_text>
+- <option_label>(D)</option_label> <option_text>It is merging with Blanen Industries.</option_text>
+
+<question_label>**167.**</question_label> <stem>Who is responsible for notifying all employees about the policy change?</stem>
+- <option_label>(A)</option_label> <option_text>Mr. Holt</option_text>
+- <option_label>(B)</option_label> <option_text>Ms. Walker</option_text>
+- <option_label>(C)</option_label> <option_text>Mr. Dehaene</option_text>
+- <option_label>(D)</option_label> <option_text>Ms. Suzuki</option_text>
+
+<stimulus id="stim_5" start_anchor="**Questions 168-171** refer" end_anchor="I'll see you this afternoon." />
+
+<question_label>**168.**</question_label> <stem>Why is Ms. Jones going to be out of the office today?</stem>
+- <option_label>(A)</option_label> <option_text>She is feeling ill.</option_text>
+- <option_label>(B)</option_label> <option_text>She works from home every Friday.</option_text>
+- <option_label>(C)</option_label> <option_text>She is meeting with clients.</option_text>
+- <option_label>(D)</option_label> <option_text>She is having car trouble.</option_text>
+
+<question_label>**169.**</question_label> <stem>What had Ms. Jones previously agreed to do?</stem>
+- <option_label>(A)</option_label> <option_text>Drive Ms. Zia to work</option_text>
+- <option_label>(B)</option_label> <option_text>Choose a location for a picnic</option_text>
+- <option_label>(C)</option_label> <option_text>Move to a new office cubicle</option_text>
+- <option_label>(D)</option_label> <option_text>Help with some shopping</option_text>
+
+<question_label>**170.**</question_label> <stem>Who most likely will purchase food and beverages for the picnic?</stem>
+- <option_label>(A)</option_label> <option_text>Ms. Zia</option_text>
+- <option_label>(B)</option_label> <option_text>Ms. Jones</option_text>
+- <option_label>(C)</option_label> <option_text>Mr. Saito</option_text>
+- <option_label>(D)</option_label> <option_text>Mr. Suh</option_text>
+
+<question_label>**171.**</question_label> <stem>At 8:33 A.M., what does Ms. Zia mean when she writes, "Around two"?</stem>
+- <option_label>(A)</option_label> <option_text>She needs at least two people to help her at Willi's Market.</option_text>
+- <option_label>(B)</option_label> <option_text>She has reserved two tickets for an event at City Park.</option_text>
+- <option_label>(C)</option_label> <option_text>She plans to meet with Mr. Suh in about two hours.</option_text>
+- <option_label>(D)</option_label> <option_text>She wants to leave the office this afternoon at about two o'clock.</option_text>
+
+<stimulus id="stim_6" start_anchor="**Questions 172-175** refer" end_anchor="Secretary, International Technological Society" />
+
+<question_label>**172.**</question_label> <stem>What is the main purpose of the e-mail?</stem>
+<option_label>(A)</option_label> <option_text>To book travel for a conference</option_text>
+<option_label>(B)</option_label> <option_text>To compare possible venues for a conference</option_text>
+<option_label>(C)</option_label> <option_text>To request a budget increase for organizing a conference</option_text>
+<option_label>(D)</option_label> <option_text>To inquire about the cost of attending a conference</option_text>
+
+<question_label>**173.**</question_label> <stem>What is indicated about the conference?</stem>
+<option_label>(A)</option_label> <option_text>It is for professionals in the travel industry.</option_text>
+<option_label>(B)</option_label> <option_text>It takes place every year.</option_text>
+<option_label>(C)</option_label> <option_text>It is usually held in Buenos Aires.</option_text>
+<option_label>(D)</option_label> <option_text>It will occur in August.</option_text>
+
+<question_label>**174.**</question_label> <stem>What is true about Hotel Milvio?</stem>
+<option_label>(A)</option_label> <option_text>It is more expensive than Hotel al Ponte.</option_text>
+<option_label>(B)</option_label> <option_text>It is usually fully booked.</option_text>
+<option_label>(C)</option_label> <option_text>It has locations in Genoa and Florence.</option_text>
+<option_label>(D)</option_label> <option_text>It has more rooms than Hotel al Ponte.</option_text>
+
+<question_label>**175.**</question_label> <stem>In which of the positions marked [1], [2], [3], and [4] does the following sentence best belong?
+
+"The savings to host the conference in one of those cities would be €500 at most."</stem>
+<option_label>(A)</option_label> <option_text>[1]</option_text>
+<option_label>(B)</option_label> <option_text>[2]</option_text>
+<option_label>(C)</option_label> <option_text>[3]</option_text>
+<option_label>(D)</option_label> <option_text>[4]</option_text>
+
+GO ON TO THE NEXT PAGE
+
+TEST 10   309
+
+<stimulus id="stim_7" start_anchor="**Questions 176-180** refer" end_anchor="only twelve pages long!" />
+
+310
+
+<question_label>**176.**</question_label> <stem>What is the purpose of the Web page?</stem>
+<option_label>(A)</option_label> <option_text>To explain the reason for a price increase</option_text>
+<option_label>(B)</option_label> <option_text>To increase the size of the audience for a publication</option_text>
+<option_label>(C)</option_label> <option_text>To recruit volunteers for a research project</option_text>
+<option_label>(D)</option_label> <option_text>To sell nutritional supplements</option_text>
+
+<question_label>**177.**</question_label> <stem>In the Web page, the word "delivers" in paragraph 1, line 4, is closest in meaning to</stem>
+<option_label>(A)</option_label> <option_text>presents</option_text>
+<option_label>(B)</option_label> <option_text>transports</option_text>
+<option_label>(C)</option_label> <option_text>guides</option_text>
+<option_label>(D)</option_label> <option_text>claims</option_text>
+
+<question_label>**178.**</question_label> <stem>What is true about Mr. Kipp?</stem>
+<option_label>(A)</option_label> <option_text>He is a health-care professional.</option_text>
+<option_label>(B)</option_label> <option_text>He received a 20 percent discount on a subscription.</option_text>
+<option_label>(C)</option_label> <option_text>He gets nutrition tips from a television program.</option_text>
+<option_label>(D)</option_label> <option_text>He gets a weekly e-mail from Central University.</option_text>
+
+<question_label>**179.**</question_label> <stem>What is indicated about the Central University School of Nutrition?</stem>
+<option_label>(A)</option_label> <option_text>It creates lesson plans for local teachers.</option_text>
+<option_label>(B)</option_label> <option_text>It is headed by Dr. Booth.</option_text>
+<option_label>(C)</option_label> <option_text>It offers online cooking classes.</option_text>
+<option_label>(D)</option_label> <option_text>It has a job opening for a researcher.</option_text>
+
+<question_label>**180.**</question_label> <stem>According to the online review, what is a weakness of the newsletter?</stem>
+<option_label>(A)</option_label> <option_text>The limited range of topics</option_text>
+<option_label>(B)</option_label> <option_text>The complexity of the articles</option_text>
+<option_label>(C)</option_label> <option_text>The lack of photographs</option_text>
+<option_label>(D)</option_label> <option_text>The overall length</option_text>
+
+GO ON TO THE NEXT PAGE
+
+TEST 10   311
+
+<stimulus id="stim_8" start_anchor="**Questions 181-185** refer" end_anchor="Accounts Payable, Brit-Revision Editing Services" />
+
+312
+
+<question_label>**181.**</question_label> <stem>What client of BRV's is most likely seeking new employment?</stem>
+<option_label>(A)</option_label> <option_text>Mr. Gallagher</option_text>
+<option_label>(B)</option_label> <option_text>Ms. Quinn</option_text>
+<option_label>(C)</option_label> <option_text>Ms. Rogers</option_text>
+<option_label>(D)</option_label> <option_text>Mr. Withers</option_text>
+
+<question_label>**182.**</question_label> <stem>What does the e-mail indicate about Ms. Yamashita?</stem>
+<option_label>(A)</option_label> <option_text>She can set her own hours.</option_text>
+<option_label>(B)</option_label> <option_text>She visits the BRV office every week.</option_text>
+<option_label>(C)</option_label> <option_text>She must find new clients for BRV.</option_text>
+<option_label>(D)</option_label> <option_text>She will be eligible for a job promotion soon.</option_text>
+
+<question_label>**183.**</question_label> <stem>According to the e-mail, what did Ms. Yamashita NOT include on the invoice?</stem>
+<option_label>(A)</option_label> <option_text>A change of address</option_text>
+<option_label>(B)</option_label> <option_text>An additional task</option_text>
+<option_label>(C)</option_label> <option_text>A project end date</option_text>
+<option_label>(D)</option_label> <option_text>An account number</option_text>
+
+<question_label>**184.**</question_label> <stem>For what project will Ms. Yamashita earn the most per hour?</stem>
+<option_label>(A)</option_label> <option_text>The university thesis</option_text>
+<option_label>(B)</option_label> <option_text>The grant proposal</option_text>
+<option_label>(C)</option_label> <option_text>The marketing copy</option_text>
+<option_label>(D)</option_label> <option_text>The journal article</option_text>
+
+<question_label>**185.**</question_label> <stem>When can Ms. Yamashita expect a payment to arrive?</stem>
+<option_label>(A)</option_label> <option_text>On September 28</option_text>
+<option_label>(B)</option_label> <option_text>On September 30</option_text>
+<option_label>(C)</option_label> <option_text>On October 1</option_text>
+<option_label>(D)</option_label> <option_text>On October 2</option_text>
+
+GO ON TO THE NEXT PAGE
+
+TEST 10   313
+<|END|>

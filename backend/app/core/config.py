@@ -48,6 +48,8 @@ def get_provider_api_key(provider_name: str) -> str:
         return os.environ.get("LLM_API_KEY") or ""
     elif provider_name == "deepseek":
         return os.environ.get("DEEPSEEK_API_KEY") or ""
+    elif provider_name in ["codex", "openai_codex"]:
+        return os.environ.get("OPENAI_API_KEY") or ""
     return ""
 
 # Model Configurations (Strictly loaded from config.yaml as single source of truth)
@@ -90,9 +92,15 @@ CHUNKER_TARGET_TOKENS = int(chunker_cfg.get("target_tokens", 48000))
 CHUNKER_MAX_TOKENS = int(chunker_cfg.get("max_tokens", 64000))
 CHUNKER_OVERLAP_PAGES = int(chunker_cfg.get("overlap_pages", 1))
 
-# Logs Directory
-LOGS_DIR = WORKSPACE_DIR / config_data.get("logging", {}).get("dir", "logs/ocr_logs")
+reviewer_cfg = models_cfg.get("reviewer", {})
+REVIEWER_MODEL = reviewer_cfg.get("model_name") or PARSER_MODEL
+REVIEWER_PROVIDER = reviewer_cfg.get("provider") or "deepseek"
+REVIEWER_THINKING = reviewer_cfg.get("thinking") or "medium"
+REVIEWER_MIN_SCORE = int(reviewer_cfg.get("min_score_threshold", 75))
+
+# Logs Directory (Strictly inside backend/logs/)
+LOGS_DIR = WORKSPACE_DIR / config_data.get("logging", {}).get("dir", "backend/logs/ocr_logs")
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
-LLM_LOGS_DIR = WORKSPACE_DIR / "logs" / "llm_logs"
+LLM_LOGS_DIR = WORKSPACE_DIR / "backend" / "logs" / "llm_logs"
 LLM_LOGS_DIR.mkdir(parents=True, exist_ok=True)

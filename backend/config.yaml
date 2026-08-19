@@ -16,12 +16,15 @@ providers:
   commandcode:
     base_url: "http://127.0.0.1:3050/v1"
     api_key_env: "CMD_API_KEY"
+  codex:
+    base_url: ""
+    api_key_env: "OPENAI_API_KEY"
 
 models:
   ocr:
-    model_name: "phatchau036/gpt-5.6-luna"
-    provider: "xah"
-    batch_size: 15
+    model_name: "gpt-5.6-luna"
+    provider: "commandcode"
+    batch_size: 10
     thinking: medium
     concurrency: 1
     description: "Vision LLM model for converting PDF pages to markdown text"
@@ -33,10 +36,10 @@ models:
       included_class_ids: [1]
 
   parser:
-    model_name: "deepseek-v4-flash-0731"
+    model_name: "phatchau036/gpt-5.6-luna"
     provider: "xah"
-    thinking: low
-    max_tokens: 65536
+    thinking: high
+    max_tokens: 128000
     description: "Sequence labeling LLM model for question stem and option annotation"
 
   linker:
@@ -52,12 +55,19 @@ models:
 
   chunker:
     target_tokens: 30000
-    max_tokens: 35000
+    max_tokens: 45000
     overlap_pages: 1
     description: "Passage-locked greedy chunker token budget"
 
+  reviewer:
+    model_name: "phatchau036/gpt-5.6-luna"
+    provider: "deepseek"
+    thinking: medium
+    min_score_threshold: 75
+    description: "Reviewer agent for rating sequence labelling XML quality and discarding malfunctioned documents"
+
 logging:
-  dir: "logs/ocr_logs"
+  dir: "backend/logs/ocr_logs"
   enabled: true
 
 server:

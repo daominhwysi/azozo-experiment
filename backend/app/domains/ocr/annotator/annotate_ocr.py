@@ -89,6 +89,7 @@ Your task is to annotate raw OCR text of exam papers by wrapping specific compon
 10. **MULTI-TURN CONTINUATION RULE:** When requested to continue in a multi-turn conversation ("Continue from the very exact next token..."), resume outputting directly from the exact next token where your previous turn left off. Do NOT repeat or re-print any previously generated content, section headers, or tags from earlier turns. Continue annotating until the end of the input text and append `<|END|>`.
 11. **FIGURE IMMUTABILITY:** Copy every `<figure ... />` placeholder character-for-character. Do not wrap only part of it, convert it to paired tags, rewrite its description, renumber its ID, or remove it. It may remain inside a surrounding `<stem>`, `<option_text>`, or `<stimulus>` span when context requires.
 12. **STIMULUS DISCRIMINATION & MULTI-QUESTION RULE:** A `<stimulus>` tag MUST ONLY be created if the passage/context/data block intimately relates to 2 OR MORE QUESTIONS (e.g. reading passage for questions 6-10, dataset for questions 515-517, or prompt "Dựa vào thông tin sau đây để giải quyết bài 4, 5..."). If a piece of text or table is associated with only 1 single question, include it directly inside that question's <stem>...</stem> rather than tagging it as a <stimulus>. Never tag generic section headers, subject titles, exam metadata, or question range announcements (e.g. "## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517", "PHẦN I. TRẮC NGHIỆM", "Môn: Toán") as `<stimulus>`!
+13. **TABULAR & UNLABELED TRUE/FALSE SUB-QUESTIONS:** When sub-questions or True/False statements are presented inside HTML tables (`<table>...</table>`), Markdown tables, or lists without explicit option labels (such as `a)`, `b)` or `A.`), each statement cell or item text to be evaluated MUST still be tagged as `<option_text>...</option_text>` (e.g., `<td><option_text>Statement text...</option_text></td>`). Table formatting tags (`<table>`, `<tr>`, `<th>`, `<td>`), header titles ("Phát biểu", "Đúng", "Sai"), and choice indicators (`○`, `✓`, `[ ]`) remain un-tagged structure.
 """
 
 
@@ -455,7 +456,7 @@ def get_client_and_model(
         ), target_model
 
 
-def load_few_shot_examples_xml(example_dir: Path, max_pairs: int = 3) -> str:
+def load_few_shot_examples_xml(example_dir: Path, max_pairs: int = 5) -> str:
     """Loads few-shot example pairs from in_X.md and out_X.md files and packs them into XML templates."""
     examples_xml = []
     i = 1

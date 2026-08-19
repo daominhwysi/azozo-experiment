@@ -1,0 +1,314 @@
+**181.** What client of BRV's is most likely seeking new employment?
+(A) Mr. Gallagher
+(B) Ms. Quinn
+(C) Ms. Rogers
+(D) Mr. Withers
+
+**182.** What does the e-mail indicate about Ms. Yamashita?
+(A) She can set her own hours.
+(B) She visits the BRV office every week.
+(C) She must find new clients for BRV.
+(D) She will be eligible for a job promotion soon.
+
+**183.** According to the e-mail, what did Ms. Yamashita NOT include on the invoice?
+(A) A change of address
+(B) An additional task
+(C) A project end date
+(D) An account number
+
+**184.** For what project will Ms. Yamashita earn the most per hour?
+(A) The university thesis
+(B) The grant proposal
+(C) The marketing copy
+(D) The journal article
+
+**185.** When can Ms. Yamashita expect a payment to arrive?
+(A) On September 28
+(B) On September 30
+(C) On October 1
+(D) On October 2
+
+GO ON TO THE NEXT PAGE
+
+TEST 10   313
+
+**Questions 186-190** refer to the following e-mails and instructions.
+
+> | | |
+> |---|---|
+> | **To:** | New Employees |
+> | **From:** | Hemi Amos <hamos@motmanmotors.com> |
+> | **Date:** | June 8 |
+> | **Subject:** | Welcome to Motman Motors |
+> | **Attachment:** | 📎 Information |
+>
+> Dear New Employees,
+>
+> Welcome! We are thrilled that all of you are joining Motman Motors.
+>
+> New-employee orientation for all is on June 10 from 9:00 A.M. to 12:00 noon. Please report to the proper room in the Pimzler Building on our campus as indicated below. I will come around to each room to meet the new employees briefly.
+>
+> - Marketing and Customer Service: both groups report to room 320.
+> - Engineering: report to room 215.
+> - Technology Services: report to room 158.
+>
+> I can confirm that the employee paperwork has been finalized for most of you, so at this point we just need to ensure that the Motman Motors portal account is set up using the employee identification number recently sent to you and that your bank account information is entered there. Please follow the attached instructions to complete this final step. It should not take any more than fifteen minutes, and I ask that you do this by June 17. Don't hesitate to reach out if you have any questions.
+>
+> Welcome aboard!
+>
+> Hemi Amos
+> Human Resources, Motman Motors
+
+> Please follow these steps to create and activate your new Motman Motors portal account. Go to https://motmanmotors.com/portal/activation to begin.
+>
+> 1. Go to the "New User Registration" page and enter your employee ID number.
+> 2. Your name and address will appear. Confirm that this information is correct.
+> 3. A new screen titled "Bank Account" will appear. Fill in your bank account information.
+> 4. Finally, you will be asked to select two security questions and provide the answers.
+>
+> Once you have created your account, your account will become active, the payroll department will be alerted, and your payment schedule will be set. Please e-mail Mr. Hemi Amos at hamos@motmanmotors.com if you have any difficulties or questions.
+
+314
+
+| | |
+|---|---|
+| **To:** | Hemi Amos <hamos@motmanmotors.com> |
+| **From:** | Karuna Dimaano <kdimaano@motmanmotors.com> |
+| **Date:** | June 9 |
+| **Subject:** | Trouble with Motman Motors portal |
+
+Dear Mr. Amos,
+
+Thank you for the kind welcome e-mail yesterday.
+
+I am trying to set up my Motman Motors portal account, but I seem to be having trouble with my employee ID number. Each time I put the information into the system, I get an error message. I might not have the right number. Can you please advise me on how to address this?
+
+I also have another question. Will the orientation include any information for newcomers to San Antonio? I am excited to start exploring everything here that this great city offers.
+
+I look forward to meeting you tomorrow in room 215 in the Pimzler Building.
+
+Thank you,
+
+Karuna Dimaano
+
+**186.** According to the first e-mail, what was previously sent to new employees?
+(A) An advertisement
+(B) An application form
+(C) An employee ID number
+(D) Directions to an office complex
+
+**187.** According to the first e-mail, what is the deadline to complete an online task?
+(A) June 8
+(B) June 10
+(C) June 15
+(D) June 17
+
+**188.** What step is Ms. Dimaano having trouble with?
+(A) Step 1
+(B) Step 2
+(C) Step 3
+(D) Step 4
+
+**189.** What department will Ms. Dimaano join?
+(A) Marketing
+(B) Customer Service
+(C) Engineering
+(D) Technology Services
+
+**190.** In the second e-mail, what is suggested about Ms. Dimaano?
+(A) She has just graduated from university.
+(B) She has met Mr. Amos before.
+(C) She is concerned about finding a building.
+(D) She has recently moved to San Antonio.
+
+GO ON TO THE NEXT PAGE
+
+TEST 10 **315**
+
+**Questions 191-195** refer to the following e-mail, invoice, and memo.
+
+| | |
+|---|---|
+| **To:** | Felix Herman <felixh@videogenieproductions.com> |
+| **From:** | Sapna Mathai <smathai@thehospitalequipmentco.com> |
+| **Date:** | September 17 |
+| **Subject:** | Notes on rough cut of video |
+| **Attachment:** | Information |
+
+Dear Mr. Herman,
+
+Thank you for sending the rough version of the informational video for our new Fluorolook Imager. I think that the video looks great so far. It clearly demonstrates why the Fluorolook is the best medical imaging device available. I have just a few notes before you proceed to create the final version.
+
+- At 20 seconds: Could you insert a short timeline of the history of The Hospital Equipment Company? I have attached the relevant information to this e-mail.
+- At 1 minute: I had a hard time seeing the details of the control panel in this scene. Could you please replace it with a close-up shot?
+- At 2 minutes: The sequence in which the medical technician positions the patient and adjusts the machine moves too quickly. Can this be slowed down?
+
+I look forward to seeing the final version on September 23. As always, thank you and your colleagues at Video Genie Productions for the excellent work.
+
+Sincerely,
+
+Ms. Sapna Mathai, Project Manager
+The Hospital Equipment Company
+
+### The Hospital Equipment Company
+
+Invoice 9984
+**Billing date:** October 25
+**Installation date:** October 26
+
+Bill to:
+All-City Hospital
+3 Shoreline Road
+Clear Lake, Minnesota 55319
+
+| Quantity | Item Number | Description | Unit Price | Total |
+|----------|-------------|-------------|------------|-------|
+| 2 | 62630 | Fluorolook Imager | $242,300 | $484,600 |
+| | | **Delivery and Installation** | | $2,350 |
+| | | **Total** | | **$486,950** |
+
+316
+
+## MEMO
+
+**To:** All The Hospital Equipment Company Employees
+**From:** Marcia Oliver, Vice President of Sales
+**Date:** October 27
+**Re:** Good work!
+
+Congratulations on the successful launch of the Fluorolook Imager! The Hospital Equipment Company has made its first sale—to a hospital in Clear Lake. And MDP Delivery has informed us that the two devices have been delivered.
+
+I would especially like to commend Ms. Mathai. She was instrumental in getting us to this point. The administrator of the hospital that made the purchase, Mr. Fabrice Lamontagne, credited his decision to the informational video. He remarked that the video effectively demonstrated why the Fluorolook Imager was the right device for his medical institution.
+
+**191.** What is attached to the e-mail?
+(A) Details about an invoice
+(B) Reviews of Video Genie Productions
+(C) A timeline for completing a project
+(D) A graphic outlining a company's history
+
+**192.** Why does Ms. Mathai want to replace the scene at 1 minute?
+(A) Some content is not clearly visible.
+(B) Some equipment is labeled incorrectly.
+(C) The video of the scene moves too quickly.
+(D) The medical technician speaks too quietly.
+
+**193.** What does the invoice indicate about the Fluorolook Imagers?
+(A) They were sold at a discount.
+(B) The delivery was free of charge.
+(C) The purchaser ordered two of them.
+(D) They were installed on October 25.
+
+**194.** Whom does Ms. Oliver specifically praise?
+(A) A medical technician
+(B) A hospital administrator
+(C) A project manager
+(D) A video producer
+
+**195.** Where does Mr. Lamontagne most likely work?
+(A) At MDP Delivery
+(B) At Video Genie Productions
+(C) At The Hospital Equipment Company
+(D) At All-City Hospital
+
+GO ON TO THE NEXT PAGE
+
+TEST 10 **317**
+
+**Questions 196-200** refer to the following packing slip and e-mails.
+
+### Packing Slip
+
+| | |
+|---|---|
+| **From:** Reina Olive Oil Company | **To:** Best Products Supermarket |
+| Calle Tablas 820 | 241 Yeonhae-ro, Jung-gu |
+| 18002 Granada, Spain | Incheon 22382, Republic of Korea |
+
+**Order Date:** 28 November
+**Order Number:** SK6224
+
+| Item Number | Description | Quantity |
+|-------------|-------------|----------|
+| EVO160 | 750-millilitre extra-virgin olive oil standard size glass cruet with handle | 15 cases |
+| EVO161 | 1-litre extra-virgin olive oil family size glass bottle | 20 cases |
+| EVO162 | 1.5-litre extra-virgin olive oil chef size glass bottle | 10 cases |
+| EVO163 | 3-litre extra-virgin olive oil bulk size Reina logo tin | 5 cases |
+| EVO001 | 50-millilitre extra-virgin olive oil December sample size | 2 cases |
+
+Celebrate the season with us! Place your next order by 31 January to receive 10 percent off.
+
+### *E-mail*
+
+| | |
+|---|---|
+| **To:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |
+| **From:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |
+| **Date:** | 12 December |
+| **Subject:** | Order number SK6224 |
+
+Dear Mr. Nadal:
+
+We appreciate your fulfilling our recent order of extra-virgin olive oil so quickly. Unfortunately, there is a small issue with the shipment, and we need your assistance. While nothing was damaged or missing, the 3-litre bulk size containers were delivered in error.
+
+We would like to arrange to send these products back. Please inform us how to proceed.
+
+Thank you,
+
+Min Hae Seong
+Receiving and Distribution, Best Products Supermarket
+
+318
+
+| | |
+|---|---|
+| **To:** | Min Hae Seong <seongmh@bestproductssupermarket.co.kr> |
+| **From:** | Pablo Nadal <pnadal@reinaoliveoilcompany.es> |
+| **Date:** | 14 December |
+| **Subject:** | RE: Order number SK6224 |
+
+Dear Ms. Seong,
+
+I apologise for the error in order number SK6224. We have determined that your order was accidentally combined with another in our electronic database. Unfortunately, we are unable to restock any items that have left our warehouse. Therefore, you may keep the additional olive oil and sell it in your stores. Also, you will receive a refund for the extra charge within the next five to ten business days because of our mistake.
+
+We are currently celebrating peak olive season by offering 10 percent off of your next order. Also, during our Olive Harvest Festival in December, every shipment includes samples of our company's classic olive oil that we encourage you to give to your shoppers with our compliments.
+
+We hope to continue providing Best Products Supermarket with the finest olive oils.
+
+Sincerely yours,
+
+Pablo Nadal
+Export Division Manager, Reina Olive Oil Company
+
+**196.** What is the purpose of the first e-mail?
+(A) To place an order
+(B) To inquire about delivery costs
+(C) To discuss a shipping mistake
+(D) To make a payment
+
+**197.** What item number does Ms. Seong refer to?
+(A) EVO160
+(B) EVO161
+(C) EVO162
+(D) EVO163
+
+**198.** What does the second e-mail suggest about Reina Olive Oil Company?
+(A) It is seeking new clients.
+(B) It cannot accept returns.
+(C) It is owned by Mr. Nadal.
+(D) It distributes more than olive oil.
+
+**199.** What does Mr. Nadal mention he will do for Ms. Seong?
+(A) Begin an investigation
+(B) Send some company brochures
+(C) Arrange for a refund
+(D) Send a revised bill
+
+**200.** Why was item number EVO001 included in the shipment?
+(A) To recognize and celebrate a festival
+(B) To introduce a company's new product
+(C) To replace an item that was out of stock
+(D) To resolve an issue with a company's database
+
+**Stop! This is the end of the test. If you finish before time is called, you may go back to Parts 5, 6, and 7 and check your work.**
+
+TEST 10 **319**

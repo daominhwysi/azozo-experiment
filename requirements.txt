@@ -6,3 +6,6 @@ openai
 python-dotenv
 tqdm
 pyyaml
+numpy
+opencv-python-headless
+onnxruntime

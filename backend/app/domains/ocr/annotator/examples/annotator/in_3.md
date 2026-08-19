@@ -14,12 +14,6 @@ You must mark your answers on the separate answer sheet. Do not write your answe
 - (C) is meeting
 - (D) meetings
 
-**102.** ------ employees are requested to submit a secondary contact number and email address.
-- (A) Every
-- (B) All
-- (C) Each
-- (D) Any
-
 **130.** Today, Ms. Vance will present ------ proposal to upgrade the department's database system.
 - (A) she
 - (B) her
@@ -33,24 +27,12 @@ You must mark your answers on the separate answer sheet. Do not write your answe
 
 144. (A) If your contact details change, please inform HR immediately.(B) We hope you enjoy your new position at the firm.(C) We will respond to your query promptly.(D) However, initial agreements can be complex to process.
 
-145.
-(A) after all
-(B) again
-(C) as well
-(D) since
 
-
-177. In the Web page, the word "delivers" in paragraph 1, line 4, is closest in meaning to
+177. In [...] to
    (A) presents
    (B) transports
    (C) guides
    (D) claims
-
-178. What is true about Dr. Aris?
-   (A) He is a certified medical director.
-   (B) He received a 20 percent rebate on annual equipment repairs.
-   (C) He receives wellness advice from a digital newsletter.
-   (D) He attends weekly seminars at Apex University.
 
 **Directions:** Read the texts that follow. A word, phrase, or sentence is missing in parts of each text. Four answer choices for each question are given below the text. Select the best answer to complete the text.
 

@@ -615,3 +615,63 @@ async def parse_exam_long_context(
     finally:
         if temp_pdf_path.exists():
             temp_pdf_path.unlink()
+
+
+@router.post("/review-annotation")
+async def review_annotation_endpoint(
+    xml_content: str = Form(...),
+    raw_ocr_text: Optional[str] = Form(None),
+    doc_id: Optional[str] = Form(None),
+    use_llm: bool = Form(True),
+    min_score: Optional[int] = Form(None),
+):
+    """
+    Reviewer Agent API: Rates XML sequence labelling quality and diagnoses malfunctions.
+    """
+    from backend.app.domains.ocr.annotator.reviewer import AnnotationReviewerAgent
+
+    agent = AnnotationReviewerAgent(
+        min_score=min_score or 75,
+    )
+    loop = asyncio.get_running_loop()
+    report = await loop.run_in_executor(
+        None,
+        agent.review_document,
+        xml_content,
+        raw_ocr_text,
+        doc_id,
+        None,
+        None,
+        use_llm,
+    )
+    return report.model_dump()
+
+
+@router.post("/batch-review")
+async def batch_review_endpoint(
+    annotated_dir: str = Form("data/sequence_labelling_annotated"),
+    raw_dir: Optional[str] = Form("data/sequence_labelling_input_data"),
+    discard_dir: Optional[str] = Form("data/sequence_labelling_discarded"),
+    auto_discard: bool = Form(False),
+    use_llm: bool = Form(True),
+    concurrency: int = Form(4),
+):
+    """
+    Batch Review API: Audits all XML annotations in a directory and optionally quarantines malfunctioned files.
+    """
+    from backend.app.domains.ocr.annotator.reviewer import AnnotationReviewerAgent
+
+    agent = AnnotationReviewerAgent()
+    loop = asyncio.get_running_loop()
+    summary = await loop.run_in_executor(
+        None,
+        agent.batch_review,
+        annotated_dir,
+        raw_dir,
+        discard_dir,
+        auto_discard,
+        use_llm,
+        concurrency,
+    )
+    return summary.model_dump()
+

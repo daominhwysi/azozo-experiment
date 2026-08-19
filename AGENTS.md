@@ -142,14 +142,14 @@ azozo/
 │   ├── app.py                    # Uvicorn server launcher
 │   ├── azozo.db                  # SQLite database store
 │   ├── config.yaml               # Model, provider, chunker & detector configuration
-│   └── db.json                   # JSON file-based database
+│   ├── db.json                   # JSON file-based database
+│   └── logs/                     # Structured audit logs
+│       ├── ocr_logs/             # OCR and annotation request dumps
+│       └── llm_logs/             # LLM token usage and call history
 ├── export_onnx/                  # Quantized ONNX detection models
 │   ├── iter1-haswell-int8.onnx   # Production INT8 RF-DETR figure detector (45MB)
 │   ├── rfdetr-small-int8.onnx    # Small quantized detector
 │   └── rfdetr-small.onnx         # Full precision reference model
-├── logs/                         # Structured audit logs
-│   ├── ocr_logs/                 # OCR and annotation request dumps
-│   └── llm_logs/                 # LLM token usage and call history
 ├── pytest.ini                    # Pytest configuration
 ├── requirements.txt              # Python dependency list for uv workflows
 ├── scripts/                      # Operational & data curation scripts
@@ -187,7 +187,7 @@ azozo/
 ### Database Architecture
 - **Primary Store**: JSON file database located at `backend/db.json` containing `exams` and `submissions` collections.
 - **Task Store**: In-memory dictionary `ocr_tasks` tracking background asynchronous OCR jobs (`/api/ocr-tasks`).
-- **Audit Logs**: Request/response payloads saved to `logs/ocr_logs/` and LLM call history to `logs/llm_logs/`.
+- **Audit Logs**: Request/response payloads saved to `backend/logs/ocr_logs/` and LLM call history to `backend/logs/llm_logs/`.
 
 ### Core API Endpoints
 
@@ -280,3 +280,5 @@ To ensure rigorous, unbiased, and state-of-the-art engineering pair programming,
 - **Unbiased Technical Rigor**: Evaluate code and architecture objectively based strictly on engineering trade-offs (correctness, edge cases, complexity, latency, and memory footprint).
 - **Direct Pushback & Trade-off Analysis**: If a user-suggested approach has drawbacks, edge cases, or potential over-engineering, state the trade-offs plainly and present comparative evidence before adopting any change.
 - **No Wavering or Flip-Flapping**: Stand by sound technical recommendations unless empirical log evidence or concrete edge cases demonstrate otherwise. When revising a plan, focus strictly on technical delta and factual justification.
+
+uv run python backend/review_annotations.py --input data/sequence_labelling_annotated --raw-dir data/sequence_labelling_input_data --provider codex --model gpt-5.3-codex-spark --concurrency 4 --report backend/logs/review_report.md

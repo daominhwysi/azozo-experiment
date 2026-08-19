@@ -4,6 +4,7 @@ import json
 import time
 import uuid
 import re
+import shutil
 import argparse
 from pathlib import Path
 from typing import List, Dict, Any, Optional
@@ -232,6 +233,12 @@ def process_single_document(
             },
         }
 
+    questions_count = len(merge_result.get("structured_questions", []))
+    if questions_count == 0:
+        if doc_out_dir.exists():
+            shutil.rmtree(doc_out_dir, ignore_errors=True)
+        raise RuntimeError(f"Parsing failed for '{rel_path}': 0 questions extracted across all chunks.")
+
     duration = time.time() - start_time
 
     # Save Merged Version
@@ -243,7 +250,7 @@ def process_single_document(
         "linker_skipped": True,
         "merge_status": merge_status,
         "merge_error": merge_error_msg,
-        "questions_count": len(merge_result["structured_questions"]),
+        "questions_count": questions_count,
         "stimuli_count": len(merge_result["structured_stimuli"]),
         "duration_seconds": round(duration, 2),
         "diagnostics": merge_result.get("diagnostics", {}),

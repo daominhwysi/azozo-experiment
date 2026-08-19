@@ -5,6 +5,12 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 try:
+    from openai_codex import Codex, Sandbox, ApprovalMode
+    CODEX_AVAILABLE = True
+except ImportError:
+    CODEX_AVAILABLE = False
+
+try:
     from src.token_tracker import log_response
 except ImportError:
     def log_response(response, model=""):
@@ -104,7 +110,63 @@ def chat(
     if target_max_tokens:
         kwargs["max_tokens"] = target_max_tokens
     
-    if target_provider == "nvidia":
+    if target_provider in ["codex", "openai_codex"]:
+        if not CODEX_AVAILABLE:
+            raise ImportError(
+                "openai-codex package is not installed. Install via `uv pip install openai-codex`."
+            )
+
+        dev_instructions = system
+        user_prompt = prompt or ""
+
+        if messages is not None:
+            user_parts = []
+            for msg in messages:
+                role = msg.get("role")
+                if role == "system":
+                    dev_instructions = msg.get("content", "")
+                elif role == "user":
+                    user_parts.append(msg.get("content", ""))
+            if user_parts:
+                user_prompt = "\n\n".join(user_parts)
+
+        base_instructions = (
+            "You are a pure text processing engine. "
+            "You have no tools, no workspace access, and no file system access. "
+            "Process only the input text provided."
+        )
+
+        import time
+        start_time = time.time()
+        codex_key = get_provider_api_key("codex")
+        with Codex() as codex_session:
+            if codex_key:
+                codex_session.login_api_key(codex_key)
+            thread = codex_session.thread_start(
+                model=target_model or "gpt-5.3-codex-spark",
+                base_instructions=base_instructions,
+                developer_instructions=dev_instructions,
+                approval_mode=ApprovalMode.auto_review,
+                sandbox=Sandbox.read_only,
+            )
+            result = thread.run(user_prompt)
+        duration_sec = time.time() - start_time
+
+        if result.error:
+            raise RuntimeError(f"Codex turn error: {result.error}")
+
+        from backend.app.domains.llm.llm_logger import log_llm_call
+        log_llm_call(
+            messages=chat_messages,
+            response=result,
+            model=target_model,
+            provider=target_provider,
+            duration_sec=duration_sec
+        )
+
+        return result.final_response or ""
+
+    elif target_provider == "nvidia":
         if nvidia_client is None:
             raise ValueError("Error: Provider requires NVIDIA_API_KEY but it is not set.")
         active_client = nvidia_client
@@ -134,16 +196,13 @@ def chat(
         if deepseek_client is None:
             raise ValueError("Error: DEEPSEEK_API_KEY is not set.")
         active_client = deepseek_client
-        kwargs["model"] = model
+        kwargs["model"] = target_model
         
         effort = None
         if thinking is True:
             effort = "high"
-        elif isinstance(thinking, str) and thinking in ["high", "max"]:
+        elif isinstance(thinking, str) and thinking in ["low", "medium", "high", "max"]:
             effort = thinking
-        elif thinking is None:
-            if "pro" in model or "reasoner" in model:
-                effort = "high"
 
         if effort is not None:
             kwargs["reasoning_effort"] = effort
