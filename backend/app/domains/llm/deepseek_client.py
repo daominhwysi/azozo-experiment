@@ -136,6 +136,28 @@ def chat(
             "Process only the input text provided."
         )
 
+        from openai_codex.api import ReasoningEffort
+
+        # Normalize model name for Codex (e.g. phatchau036/gpt-5.6-luna -> gpt-5.6-luna)
+        codex_model = target_model or "gpt-5.6-luna"
+        if "/" in codex_model:
+            codex_model = codex_model.split("/")[-1]
+
+        # Map thinking parameter to Codex ReasoningEffort
+        effort_val = None
+        if thinking:
+            thinking_str = str(thinking).lower().strip()
+            effort_map = {
+                "none": ReasoningEffort.none,
+                "minimal": ReasoningEffort.minimal,
+                "low": ReasoningEffort.low,
+                "medium": ReasoningEffort.medium,
+                "high": ReasoningEffort.high,
+                "xhigh": ReasoningEffort.xhigh,
+                "max": ReasoningEffort.max,
+            }
+            effort_val = effort_map.get(thinking_str)
+
         import time
         start_time = time.time()
         codex_key = get_provider_api_key("codex")
@@ -143,13 +165,16 @@ def chat(
             if codex_key:
                 codex_session.login_api_key(codex_key)
             thread = codex_session.thread_start(
-                model=target_model or "gpt-5.3-codex-spark",
+                model=codex_model,
                 base_instructions=base_instructions,
                 developer_instructions=dev_instructions,
                 approval_mode=ApprovalMode.auto_review,
                 sandbox=Sandbox.read_only,
             )
-            result = thread.run(user_prompt)
+            run_kwargs = {}
+            if effort_val is not None:
+                run_kwargs["effort"] = effort_val
+            result = thread.run(user_prompt, **run_kwargs)
         duration_sec = time.time() - start_time
 
         if result.error:
