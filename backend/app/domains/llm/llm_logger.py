@@ -6,9 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-# Define LLM logs base directory: backend/logs/llm_logs/
-WORKSPACE_DIR = Path(__file__).resolve().parent.parent.parent.parent
-LLM_LOGS_DIR = WORKSPACE_DIR / "backend" / "logs" / "llm_logs"
+from backend.app.core.config import LLM_LOGS_DIR
 
 
 def _to_int(value: Any) -> Optional[int]:

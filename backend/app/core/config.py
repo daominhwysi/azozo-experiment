@@ -99,8 +99,8 @@ REVIEWER_THINKING = reviewer_cfg.get("thinking") or "medium"
 REVIEWER_MIN_SCORE = int(reviewer_cfg.get("min_score_threshold", 75))
 
 # Logs Directory (Strictly inside backend/logs/)
-LOGS_DIR = WORKSPACE_DIR / config_data.get("logging", {}).get("dir", "backend/logs/ocr_logs")
+LOGS_DIR = BACKEND_DIR / "logs" / "ocr_logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
-LLM_LOGS_DIR = WORKSPACE_DIR / "backend" / "logs" / "llm_logs"
+LLM_LOGS_DIR = BACKEND_DIR / "logs" / "llm_logs"
 LLM_LOGS_DIR.mkdir(parents=True, exist_ok=True)
