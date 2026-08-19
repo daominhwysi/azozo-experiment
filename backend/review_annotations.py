@@ -192,6 +192,7 @@ def main():
             save_audit_json=not args.no_save_audit,
             use_llm=use_llm,
             concurrency=args.concurrency,
+            output_report_path=args.report,
             progress_callback=progress_cb,
         )
 

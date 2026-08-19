@@ -1134,10 +1134,12 @@ class AnnotationReviewerAgent:
         save_audit_json: bool = True,
         use_llm: bool = True,
         concurrency: int = 4,
+        output_report_path: Optional[Union[str, Path]] = None,
         progress_callback=None,
     ) -> BatchReviewSummary:
         """
         Performs batch review across all XML documents in a directory.
+        Saves progress, Markdown report, and JSON summary on the fly as documents finish.
         """
         start_time = time.time()
         base_dir = Path(annotated_dir)
@@ -1162,6 +1164,9 @@ class AnnotationReviewerAgent:
         total_score_sum = 0.0
 
         from concurrent.futures import ThreadPoolExecutor, as_completed
+        import threading
+
+        report_lock = threading.Lock()
 
         def process_single(xml_p: Path) -> Tuple[ReviewReport, Optional[Dict[str, Any]]]:
             # Locate raw path
@@ -1205,24 +1210,77 @@ class AnnotationReviewerAgent:
                 completed += 1
                 try:
                     rep, disc_info = future.result()
-                    reports.append(rep)
-                    total_score_sum += rep.overall_score
+                    with report_lock:
+                        reports.append(rep)
+                        total_score_sum += rep.overall_score
 
-                    if rep.decision == ReviewDecision.PASS:
-                        passed += 1
-                    elif rep.decision == ReviewDecision.NEEDS_REVISION:
-                        needs_revision += 1
-                    else:
-                        discarded += 1
-                        discarded_paths.append(str(f))
-                        seen_cats_for_doc = set()
-                        for r in rep.discard_reasons:
-                            cat = r.split("]")[0].lstrip("[") if "]" in r else "OTHER"
-                            if cat not in seen_cats_for_doc:
-                                failure_reasons_distribution[cat] = (
-                                    failure_reasons_distribution.get(cat, 0) + 1
-                                )
-                                seen_cats_for_doc.add(cat)
+                        if rep.decision == ReviewDecision.PASS:
+                            passed += 1
+                        elif rep.decision == ReviewDecision.NEEDS_REVISION:
+                            needs_revision += 1
+                        else:
+                            discarded += 1
+                            discarded_paths.append(str(f))
+                            seen_cats_for_doc = set()
+                            for r in rep.discard_reasons:
+                                cat = r.split("]")[0].lstrip("[") if "]" in r else "OTHER"
+                                if cat not in seen_cats_for_doc:
+                                    failure_reasons_distribution[cat] = (
+                                        failure_reasons_distribution.get(cat, 0) + 1
+                                    )
+                                    seen_cats_for_doc.add(cat)
+
+                        curr_avg = round(total_score_sum / max(1, len(reports)), 1)
+                        curr_duration = round(time.time() - start_time, 2)
+
+                        # On-the-fly report and progress export
+                        if output_report_path:
+                            partial_summary = BatchReviewSummary(
+                                total_documents=total_docs,
+                                passed_count=passed,
+                                needs_revision_count=needs_revision,
+                                discarded_count=discarded,
+                                discarded_paths=discarded_paths,
+                                average_score=curr_avg,
+                                duration_sec=curr_duration,
+                                reports=reports,
+                                failure_reasons_distribution=failure_reasons_distribution,
+                            )
+                            # 1. Update Markdown report on the fly
+                            self.export_markdown_report(partial_summary, output_report_path)
+
+                            # 2. Update JSON report on the fly
+                            out_p = Path(output_report_path)
+                            json_report_path = out_p.with_suffix(".json")
+                            with open(json_report_path, "w", encoding="utf-8") as f_j:
+                                json.dump(partial_summary.model_dump(), f_j, indent=2, ensure_ascii=False)
+
+                            # 3. Update review_progress.json on the fly
+                            progress_path = out_p.parent / "review_progress.json"
+                            pct = round((completed / max(1, total_docs)) * 100, 1)
+                            eta_sec = (
+                                round((curr_duration / completed) * (total_docs - completed), 1)
+                                if completed > 0
+                                else 0.0
+                            )
+                            prog_payload = {
+                                "status": "IN_PROGRESS" if completed < total_docs else "COMPLETED",
+                                "total_documents": total_docs,
+                                "completed_documents": completed,
+                                "progress_percent": pct,
+                                "passed_count": passed,
+                                "needs_revision_count": needs_revision,
+                                "discarded_count": discarded,
+                                "average_score": curr_avg,
+                                "elapsed_seconds": curr_duration,
+                                "eta_seconds": eta_sec,
+                                "last_completed_document": rep.doc_id,
+                                "last_decision": rep.decision.value,
+                                "last_overall_score": rep.overall_score,
+                                "updated_at": datetime.now().isoformat(),
+                            }
+                            with open(progress_path, "w", encoding="utf-8") as f_pr:
+                                json.dump(prog_payload, f_pr, indent=2, ensure_ascii=False)
 
                     if progress_callback:
                         progress_callback(completed, total_docs, rep)
@@ -1233,7 +1291,7 @@ class AnnotationReviewerAgent:
         avg_score = round(total_score_sum / max(1, len(reports)), 1)
         duration = round(time.time() - start_time, 2)
 
-        return BatchReviewSummary(
+        final_summary = BatchReviewSummary(
             total_documents=total_docs,
             passed_count=passed,
             needs_revision_count=needs_revision,
@@ -1245,21 +1303,39 @@ class AnnotationReviewerAgent:
             failure_reasons_distribution=failure_reasons_distribution,
         )
 
+        if output_report_path:
+            self.export_markdown_report(final_summary, output_report_path)
+            json_report_path = Path(output_report_path).with_suffix(".json")
+            with open(json_report_path, "w", encoding="utf-8") as f_j:
+                json.dump(final_summary.model_dump(), f_j, indent=2, ensure_ascii=False)
+
+        return final_summary
+
     @staticmethod
     def export_markdown_report(summary: BatchReviewSummary, output_path: Optional[Union[str, Path]] = None) -> str:
         """
-        Renders a clean, formatted Markdown audit summary report.
+        Renders a clean, formatted Markdown audit summary report with live progress status.
         """
+        is_in_progress = len(summary.reports) < summary.total_documents and summary.total_documents > 0
+        pct = (len(summary.reports) / max(1, summary.total_documents)) * 100
+
+        status_badge = (
+            f"⏳ **IN PROGRESS** (`{len(summary.reports)}/{summary.total_documents}` processed — `{pct:.1f}%`)"
+            if is_in_progress
+            else f"✅ **COMPLETED** (`{summary.total_documents}` documents)"
+        )
+
         lines = [
             "# 📋 Annotation Quality Audit & Document Review Report",
             "",
+            f"- **Status**: {status_badge}",
             f"- **Execution Timestamp**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-            f"- **Total Documents Reviewed**: {summary.total_documents}",
+            f"- **Documents Reviewed**: `{len(summary.reports)}` / `{summary.total_documents}`",
             f"- **Average Quality Score**: **{summary.average_score:.1f} / 100**",
-            f"- **Passed**: `{summary.passed_count}` ({summary.passed_count/max(1, summary.total_documents)*100:.1f}%)",
-            f"- **Needs Revision**: `{summary.needs_revision_count}` ({summary.needs_revision_count/max(1, summary.total_documents)*100:.1f}%)",
-            f"- **Discarded / Malfunctioned**: `{summary.discarded_count}` ({summary.discarded_count/max(1, summary.total_documents)*100:.1f}%)",
-            f"- **Audit Duration**: {summary.duration_sec:.1f}s",
+            f"- **Passed**: `{summary.passed_count}` ({summary.passed_count/max(1, len(summary.reports))*100:.1f}%)",
+            f"- **Needs Revision**: `{summary.needs_revision_count}` ({summary.needs_revision_count/max(1, len(summary.reports))*100:.1f}%)",
+            f"- **Discarded / Malfunctioned**: `{summary.discarded_count}` ({summary.discarded_count/max(1, len(summary.reports))*100:.1f}%)",
+            f"- **Duration / Elapsed**: {summary.duration_sec:.1f}s",
             "",
             "## 📊 Failure Reasons Distribution",
             "",
@@ -1271,7 +1347,7 @@ class AnnotationReviewerAgent:
             for cat, cnt in sorted(summary.failure_reasons_distribution.items(), key=lambda x: x[1], reverse=True):
                 lines.append(f"| `{cat}` | {cnt} |")
         else:
-            lines.append("*(No malfunctions detected - all documents passed)*")
+            lines.append("*(No malfunctions detected so far)*")
 
         lines.extend([
             "",
@@ -1282,7 +1358,7 @@ class AnnotationReviewerAgent:
         ])
 
         for r in summary.reports:
-            status_badge = (
+            symbol_badge = (
                 "🟢 PASS"
                 if r.decision == ReviewDecision.PASS
                 else ("🟡 REVISION" if r.decision == ReviewDecision.NEEDS_REVISION else "🔴 DISCARD")
@@ -1290,12 +1366,12 @@ class AnnotationReviewerAgent:
             q_cnt = r.metrics.get("questions_count", "N/A")
             llm_sc = f"{r.llm_score:.1f}" if r.llm_score is not None else "N/A"
             ret_str = f"{r.metrics.get('retention_ratio'):.1%}" if r.metrics.get("retention_ratio") is not None else "N/A"
-            
+
             reason_snip = "; ".join(r.discard_reasons[:2]) if r.discard_reasons else (r.summary[:60] + "..." if len(r.summary) > 60 else r.summary)
             reason_snip = reason_snip.replace("\n", " ").replace("|", "\\|")
 
             lines.append(
-                f"| `{r.doc_id}` | **{r.overall_score:.1f}** | {r.deterministic_score:.1f} | {llm_sc} | `{r.grade}` | {status_badge} | {q_cnt} | {ret_str} | {reason_snip} |"
+                f"| `{r.doc_id}` | **{r.overall_score:.1f}** | {r.deterministic_score:.1f} | {llm_sc} | `{r.grade}` | {symbol_badge} | {q_cnt} | {ret_str} | {reason_snip} |"
             )
 
         markdown_content = "\n".join(lines) + "\n"
