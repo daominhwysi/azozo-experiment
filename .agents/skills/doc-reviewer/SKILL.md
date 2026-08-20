@@ -16,24 +16,43 @@ The Reviewer Agent operates on a **2-Tier Hybrid Inspection Engine**:
 1. **Tier 1: High-Speed Deterministic Auditor (Static & Structural Validation)**
    - **XML Well-Formedness**: Validates tag matching, nesting, premature cutoffs, unclosed tags.
    - **Prohibited Tag Removal**: Enforces strict pruning of `<pages>`, `<page>`, `<page_metadata>`, `<think>`.
+   - **Stimulus Nesting Auto-Reject (CRITICAL)**: Automatically rejects any document where `<stimulus>` wraps or encloses other system tags (`<stem>`, `<question_label>`, `<option_label>`, `<option_text>`, `<explanation>`).
    - **Question & Choice Hierarchy**: Verifies all questions have `<question_label>` and non-empty `<stem>`, choice letters are paired with `<option_text>`, and sub-questions (`a)`, `b)`) in essay/true-false are correctly segmented.
+   - **Document Scale & Error Rate Proportionality**: Evaluates error frequencies relative to total question count. A 30-question exam with 1 isolated mislabelled stem or minor glitch has >96% accuracy and is scored favorably (e.g. 85–95 / `PASS`), NOT failed.
+   - **Table HTML Support**: Validates standard HTML table structures (`<table>`, `<tr>`, `<td>`, `<th>`). In tabular True/False questions, statement cells tagged as `<td><option_text>...</option_text></td>` are recognized as valid structure.
+   - **Figure Policy**: Figures (`<figure ... />`) are out of evaluation scope for now and are not penalized.
    - **Sequence Continuity**: Detects repetitive loops, duplicate questions, and large numbering gaps.
    - **Stimulus Verification**: Ensures `<stimulus>` tags have valid `start_anchor` and `end_anchor` resolving to real text and apply to $\ge 2$ questions.
    - **Verbatim Retention & Hallucination Check**: Compares pure text against raw OCR input, checking character/token retention ratio and detecting dropped or hallucinated passages.
 
 2. **Tier 2: DeepSeek Semantic Reviewer (LLM-Powered Pedagogical Audit)**
    - Uses `backend/app/domains/llm/deepseek_client.py` (multi-provider client supporting DeepSeek, Xah, NVIDIA).
+   - Informed by the complete ground-truth parser prompt rules and tag schema.
    - Audits math LaTeX expressions, sub-question absorption into stems, multi-question stimulus validity, and subtle educational nuances.
    - Generates rubric scores across 6 core dimensions and structured diagnostic feedback.
 
 3. **Tier 3: Automated Discard & Quarantine Manager**
-   - Documents with critical malfunctions (e.g. fatal syntax errors, 0 questions, severe hallucinations, retention $< 65\%$, unpruned page tags, score below threshold) are tagged with decision `DISCARD`.
+   - Documents with critical malfunctions (e.g. fatal syntax errors, stimulus nesting system tags, 0 questions, severe hallucinations, retention $< 65\%$, unpruned page tags, score below threshold) are tagged with decision `DISCARD`.
    - Automatically moves corrupted document folders into a quarantine directory (e.g. `data/sequence_labelling_discarded/`) along with a full diagnostic `audit_report.json`.
 
 ---
 
-## 🏷️ Rubric Dimensions & Scoring Schema
+## 🏷️ Severity Classification & Rubric Dimensions
 
+### Issue Severity Definitions:
+- **`CRITICAL` (Immediate Auto-Discard)**: Fatal structural failures making the document unusable:
+  - Truncated output mid-tag at EOF
+  - Zero questions in document
+  - Mismatched or unclosed tags
+  - Unpruned `<pages>`, `<page>`, or `<page_metadata>`
+  - `<stimulus>` illegally wrapping `<stem>`, `<question_label>`, `<option_label>`, `<option_text>`, or `<explanation>`
+  - Severe text loss (retention $< 65\%$) or severe hallucination (retention $> 140\%$)
+  - Infinite repetition loops ($\ge 4$ consecutive duplicates)
+- **`MAJOR` (Systemic Repetition)**: Repetitive errors occurring across a large portion ($\ge 15-20\%$) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions `a)`, `b)` into `<stem>` across multiple questions).
+- **`MINOR` (Isolated Glitches)**: One-off, low-frequency imperfections (1–2 isolated items in a 20–30+ question exam).
+- **`INFO` (Informational)**: Informative observations (mixed solved/unsolved problems, table layout).
+
+### Scoring Schema:
 Each document receives an overall score (0–100) and letter grade (`A`: 90–100, `B`: 80–89, `C`: 70–79, `D`: 60–69, `F`: <60):
 
 | Rubric Dimension | Weight | Critical Failure Triggers (Immediate Discard) |
@@ -43,12 +62,12 @@ Each document receives an overall score (0–100) and letter grade (`A`: 90–10
 | **Question/Choice Completeness** | 25% | 0 questions detected, empty stems, orphaned choice labels without text. |
 | **Verbatim Fidelity** | 15% | Retention ratio $< 65\%$ (severe text loss) or $> 140\%$ (severe hallucination). |
 | **Sequence Continuity** | 10% | Repetitive infinite loops ($\ge 4$ duplicate questions in a row), missing large sections. |
-| **Stimulus Accuracy** | 10% | Missing `start_anchor`/`end_anchor`, anchors not found in document text. |
+| **Stimulus Accuracy** | 10% | Stimulus wrapping system tags, missing anchors, anchors not found in document text. |
 
 ### Decision Thresholds:
-- **`PASS`**: Overall Score $\ge 75$, zero critical malfunctions.
-- **`NEEDS_REVISION`**: Overall Score $60 - 74$, minor repairable warnings (e.g. single missing option label).
-- **`DISCARD`**: Overall Score $< 60$ OR any critical malfunction flag.
+- **`PASS`**: Overall Score $\ge 75$, zero critical malfunctions, no systemic major errors.
+- **`NEEDS_REVISION`**: Overall Score $60 - 74$, minor repairable warnings.
+- **`DISCARD`**: Overall Score $< 60$ OR any critical malfunction flag (e.g. stimulus nesting system tags).
 
 ---
 
@@ -109,6 +128,6 @@ print(f"Passed: {summary.passed_count}, Discarded: {summary.discarded_count}")
 
 When reviewing single documents directly inside the Antigravity conversation:
 1. Read the annotated XML file with `view_file`.
-2. Inspect the XML against the 6 Rubric Dimensions above.
+2. Inspect the XML against the 6 Rubric Dimensions above, checking scale, stimulus nesting, and HTML tables.
 3. Compute the quality score and diagnose any critical malfunctions.
 4. Output the structured audit table and, if malfunctioned, recommend discarding or revising the document.

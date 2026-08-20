@@ -287,3 +287,126 @@ def test_sample_xml_safely_preserves_tag_boundaries():
     assert not sampled.startswith(">")
     assert "<question_label>**Câu 1.**</question_label>" in sampled
 
+
+def test_stimulus_wrapping_system_tags_auto_reject():
+    # Paired stimulus wrapping stem and question_label
+    bad_stim_xml = """<section># ĐỀ THI TOÁN</section>
+<stimulus id="stim_1">
+<question_label>**Câu 1.**</question_label>
+<stem>Nội dung câu hỏi bị stimulus bao bọc sai quy tắc.</stem>
+- <option_label>A.</option_label> <option_text>1</option_text>
+- <option_label>B.</option_label> <option_text>2</option_text>
+</stimulus>
+"""
+    issues, score = DeterministicAuditor.check_stimulus_wrapping_system_tags(bad_stim_xml)
+    assert score == 0.0
+    assert any(iss.severity == IssueSeverity.CRITICAL for iss in issues)
+    assert any("Stimulus tag illegally wraps system tag" in iss.message for iss in issues)
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    report = agent.review_document(bad_stim_xml, use_llm=False)
+    assert report.decision == ReviewDecision.DISCARD
+    assert report.is_malfunctioned is True
+    assert any("STIMULUS_NESTING" in r for r in report.discard_reasons)
+
+
+def test_isolated_error_in_large_document_passes():
+    # 30-question document with 29 perfect questions and 1 isolated question having sub-items in stem
+    blocks = []
+    for i in range(1, 30):
+        blocks.append(
+            f"<question_label>**Câu {i}.**</question_label> <stem>Câu hỏi số {i} tiêu chuẩn.</stem>\n"
+            f"- <option_label>A.</option_label> <option_text>Đáp án A</option_text>\n"
+            f"- <option_label>B.</option_label> <option_text>Đáp án B</option_text>"
+        )
+    # 30th question has a single un-tagged sub-item in stem
+    blocks.append(
+        "<question_label>**Câu 30.**</question_label> <stem>Câu hỏi có ý phụ:\n- a) ý thứ nhất</stem>\n"
+        "- <option_label>A.</option_label> <option_text>Đáp án A</option_text>\n"
+        "- <option_label>B.</option_label> <option_text>Đáp án B</option_text>"
+    )
+    large_xml = "\n\n".join(blocks)
+
+    issues, q_score, metrics = DeterministicAuditor.check_question_and_option_structure(large_xml)
+    assert metrics["questions_count"] == 30
+    assert q_score >= 90.0
+    # 1 error in 30 questions (3.3%) should be MINOR, not MAJOR
+    subitem_issues = [iss for iss in issues if "sub-questions" in iss.message]
+    assert len(subitem_issues) == 1
+    assert subitem_issues[0].severity == IssueSeverity.MINOR
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    report = agent.review_document(large_xml, use_llm=False)
+    assert report.decision == ReviewDecision.PASS
+    assert report.overall_score >= 85.0
+    assert not report.is_malfunctioned
+
+
+def test_systemic_major_errors_across_document():
+    # 10 questions where 4 have un-tagged sub-items in stem (40% error rate -> systemic MAJOR)
+    blocks = []
+    for i in range(1, 11):
+        if i <= 4:
+            blocks.append(
+                f"<question_label>**Câu {i}.**</question_label> <stem>Đề bài {i}:\n- a) Ý a\n- b) Ý b</stem>\n"
+                f"- <option_label>A.</option_label> <option_text>Opt A</option_text>"
+            )
+        else:
+            blocks.append(
+                f"<question_label>**Câu {i}.**</question_label> <stem>Đề bài {i}</stem>\n"
+                f"- <option_label>A.</option_label> <option_text>Opt A</option_text>"
+            )
+    systemic_xml = "\n\n".join(blocks)
+    issues, q_score, metrics = DeterministicAuditor.check_question_and_option_structure(systemic_xml)
+    subitem_issues = [iss for iss in issues if "sub-questions" in iss.message]
+    assert len(subitem_issues) == 1
+    assert subitem_issues[0].severity == IssueSeverity.MAJOR
+
+
+def test_table_html_structure_valid():
+    table_xml = """<section># ĐỀ THI HÓA HỌC</section>
+<question_label>## Câu 1:</question_label> <stem>Phát biểu sau đúng hay sai?</stem>
+<table>
+<tr>
+<th>Phát biểu</th>
+<th>Đúng</th>
+<th>Sai</th>
+</tr>
+<tr>
+<td><option_text>Chất chỉ thị màu là chất có màu biến đổi phụ thuộc pH.</option_text></td>
+<td>○</td>
+<td>○</td>
+</tr>
+<tr>
+<td><option_text>So với thymolphthalein, methyl da cam chuyển màu ở pH cao hơn.</option_text></td>
+<td>○</td>
+<td>○</td>
+</tr>
+</table>
+"""
+    issues, score = DeterministicAuditor.check_xml_syntax(table_xml)
+    assert score == 100.0
+    assert len(issues) == 0
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    report = agent.review_document(table_xml, use_llm=False)
+    assert report.decision == ReviewDecision.PASS
+    assert report.overall_score >= 85.0
+
+
+def test_figures_out_of_scope_no_penalties():
+    figure_xml = """<section># ĐỀ THI VẬT LÝ</section>
+<question_label>**Câu 1.**</question_label> <stem>Cho mạch điện như hình vẽ: <figure id="fig_1" description="Mạch điện RLC nối tiếp" bbox="100,200,300,400" />. Tính cường độ dòng điện.</stem>
+- <option_label>A.</option_label> <option_text>1 A</option_text>
+- <option_label>B.</option_label> <option_text>2 A</option_text>
+"""
+    issues, score = DeterministicAuditor.check_xml_syntax(figure_xml)
+    assert score == 100.0
+    assert len(issues) == 0
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    report = agent.review_document(figure_xml, use_llm=False)
+    assert report.decision == ReviewDecision.PASS
+    assert report.overall_score >= 90.0
+
+

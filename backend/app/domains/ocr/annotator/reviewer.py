@@ -304,11 +304,87 @@ class DeterministicAuditor:
         return issues, score
 
     @staticmethod
+    def check_stimulus_wrapping_system_tags(xml_content: str) -> Tuple[List[AuditIssue], float]:
+        """
+        Audits whether any <stimulus> tag illegally wraps or encloses system question elements
+        (<stem>, <question_label>, <option_label>, <option_text>, <explanation>).
+        Violations are fatal architectural malfunctions and trigger immediate auto-reject (CRITICAL).
+        """
+        issues: List[AuditIssue] = []
+        deductions = 0.0
+
+        if not xml_content:
+            return issues, 100.0
+
+        # 1. Check paired <stimulus ...>...</stimulus>
+        for m in re.finditer(r"<stimulus\b([^>]*)>(.*?)</stimulus>", xml_content, re.DOTALL | re.IGNORECASE):
+            inner_content = m.group(2)
+            start_pos = m.start()
+            line_num = xml_content.count("\n", 0, start_pos) + 1
+
+            nested_tags = re.findall(
+                r"<(stem|question_label|option_label|option_text|explanation)\b",
+                inner_content,
+                re.IGNORECASE,
+            )
+            if nested_tags:
+                unique_nested = sorted(list(set(nested_tags)))
+                issues.append(
+                    AuditIssue(
+                        category="stimulus_nesting",
+                        severity=IssueSeverity.CRITICAL,
+                        message=(
+                            f"Stimulus tag illegally wraps system tag(s): {', '.join('<' + t + '>' for t in unique_nested)}. "
+                            f"Stimulus must be a self-closing anchor tag or standalone passage, NEVER enclosing question elements."
+                        ),
+                        line_number=line_num,
+                        context_snippet=m.group(0)[:120],
+                    )
+                )
+                deductions += 100.0
+
+        # 2. Check for unclosed paired <stimulus ...> tags that precede system tags without closing
+        stim_open_pattern = re.compile(r"<stimulus\b(?![^>]*/>)([^>]*)>", re.IGNORECASE)
+        for m in stim_open_pattern.finditer(xml_content):
+            start_pos = m.end()
+            # check if followed by closing </stimulus> before EOF
+            close_match = xml_content.find("</stimulus>", start_pos)
+            if close_match == -1:
+                # Unclosed stimulus: check if system tags appear after this
+                rem_text = xml_content[start_pos:]
+                nested_tags = re.findall(
+                    r"<(stem|question_label|option_label|option_text|explanation)\b",
+                    rem_text,
+                    re.IGNORECASE,
+                )
+                if nested_tags:
+                    line_num = xml_content.count("\n", 0, m.start()) + 1
+                    unique_nested = sorted(list(set(nested_tags)))
+                    issues.append(
+                        AuditIssue(
+                            category="stimulus_nesting",
+                            severity=IssueSeverity.CRITICAL,
+                            message=(
+                                f"Unclosed stimulus tag encloses system tag(s): {', '.join('<' + t + '>' for t in unique_nested)}. "
+                                f"Stimulus must be a self-closing anchor tag, NEVER wrapping question elements."
+                            ),
+                            line_number=line_num,
+                            context_snippet=m.group(0),
+                        )
+                    )
+                    deductions += 100.0
+
+        score = max(0.0, 100.0 - deductions)
+        return issues, score
+
+    @staticmethod
     def check_question_and_option_structure(
         xml_content: str,
     ) -> Tuple[List[AuditIssue], float, Dict[str, Any]]:
         """
         Audits questions, stems, choices, and sub-questions completeness and integrity.
+        Considers error rate relative to the size of the entire document (e.g. 1 error in 30 questions is minor).
+        Note: Figures (<figure ... />) are out of evaluation scope for now and are not penalized.
         """
         issues: List[AuditIssue] = []
         deductions = 0.0
@@ -322,8 +398,10 @@ class DeterministicAuditor:
         sections = re.findall(r"<section>(.*?)</section>", xml_content, re.DOTALL)
         figures = re.findall(r"<figure\b([^>]*)/?>", xml_content, re.DOTALL)
 
+        total_questions = len(q_labels)
+
         metrics = {
-            "questions_count": len(q_labels),
+            "questions_count": total_questions,
             "stems_count": len(stems),
             "option_labels_count": len(opt_labels),
             "option_texts_count": len(opt_texts),
@@ -332,7 +410,7 @@ class DeterministicAuditor:
             "figures_count": len(figures),
         }
 
-        if len(q_labels) == 0:
+        if total_questions == 0:
             issues.append(
                 AuditIssue(
                     category="question_structure",
@@ -342,32 +420,37 @@ class DeterministicAuditor:
             )
             return issues, 0.0, metrics
 
-        # Empty stems check
+        # Empty stems check - scale severity and deduction by total questions
         empty_stems = [s for s in stems if not s.strip()]
         if empty_stems:
+            stem_err_rate = len(empty_stems) / max(1, total_questions)
+            is_major = stem_err_rate >= 0.15 or len(empty_stems) >= 4
             issues.append(
                 AuditIssue(
                     category="question_structure",
-                    severity=IssueSeverity.MAJOR,
-                    message=f"Detected {len(empty_stems)} empty <stem> tags.",
+                    severity=IssueSeverity.MAJOR if is_major else IssueSeverity.MINOR,
+                    message=f"Detected {len(empty_stems)}/{total_questions} ({stem_err_rate:.1%}) empty <stem> tags.",
                 )
             )
-            deductions += 15.0 * len(empty_stems)
+            deductions += min(35.0, stem_err_rate * 40.0 + (3.0 if not is_major else 15.0))
 
-        # Empty option text check
+        # Empty option text check - scale severity and deduction
         empty_opts = [o for o in opt_texts if not o.strip()]
         if empty_opts:
+            total_opts = max(1, len(opt_texts))
+            opt_err_rate = len(empty_opts) / total_opts
+            is_major = opt_err_rate >= 0.15 or len(empty_opts) >= 4
             issues.append(
                 AuditIssue(
                     category="option_structure",
-                    severity=IssueSeverity.MAJOR,
-                    message=f"Detected {len(empty_opts)} empty <option_text> tags.",
+                    severity=IssueSeverity.MAJOR if is_major else IssueSeverity.MINOR,
+                    message=f"Detected {len(empty_opts)}/{total_opts} ({opt_err_rate:.1%}) empty <option_text> tags.",
                 )
             )
-            deductions += 10.0 * len(empty_opts)
+            deductions += min(25.0, opt_err_rate * 35.0 + (2.0 if not is_major else 10.0))
 
         # Ratio of option_labels to option_texts
-        # Normally option_labels and option_texts should be close, unless tabular true/false is present
+        # Note: Tabular True/False questions may have option_text inside <td> without option_label (standard table HTML)
         if len(opt_labels) > 0 and len(opt_texts) == 0:
             issues.append(
                 AuditIssue(
@@ -377,16 +460,21 @@ class DeterministicAuditor:
                 )
             )
             deductions += 40.0
-        elif abs(len(opt_labels) - len(opt_texts)) > max(5, int(len(opt_labels) * 0.4)):
-            # Warning about potential mismatch
-            issues.append(
-                AuditIssue(
-                    category="option_structure",
-                    severity=IssueSeverity.MINOR,
-                    message=f"Imbalance between option labels ({len(opt_labels)}) and option texts ({len(opt_texts)}).",
+        elif len(opt_labels) > 0 and len(opt_texts) > 0:
+            diff = abs(len(opt_labels) - len(opt_texts))
+            max_opts = max(len(opt_labels), len(opt_texts))
+            diff_ratio = diff / max_opts
+            # Only flag if substantial mismatch and not standard table variance
+            if diff_ratio >= 0.30 and diff > 3:
+                is_major = diff_ratio >= 0.50
+                issues.append(
+                    AuditIssue(
+                        category="option_structure",
+                        severity=IssueSeverity.MAJOR if is_major else IssueSeverity.MINOR,
+                        message=f"Imbalance between option labels ({len(opt_labels)}) and option texts ({len(opt_texts)}) ({diff_ratio:.1%} mismatch).",
+                    )
                 )
-            )
-            deductions += 10.0
+                deductions += min(15.0, diff_ratio * 20.0)
 
         # Sub-question check: check if stems contain un-tagged sub-item patterns (e.g. "\n- a)" or "\n- b)")
         subitem_in_stem_count = 0
@@ -395,14 +483,20 @@ class DeterministicAuditor:
                 subitem_in_stem_count += 1
 
         if subitem_in_stem_count > 0:
+            subitem_ratio = subitem_in_stem_count / max(1, total_questions)
+            # MAJOR severity means systemic/repetitive error across a large portion (>= 15%) of the document
+            is_major = subitem_ratio >= 0.15 or subitem_in_stem_count >= 4
             issues.append(
                 AuditIssue(
                     category="question_structure",
-                    severity=IssueSeverity.MAJOR,
-                    message=f"Found {subitem_in_stem_count} question stems containing un-tagged sub-questions ('a)', 'b)'). These must be tagged in <option_label> + <option_text>.",
+                    severity=IssueSeverity.MAJOR if is_major else IssueSeverity.MINOR,
+                    message=(
+                        f"Found {subitem_in_stem_count}/{total_questions} ({subitem_ratio:.1%}) question stems containing "
+                        f"un-tagged sub-questions ('a)', 'b)'). These must be tagged in <option_label> + <option_text>."
+                    ),
                 )
             )
-            deductions += 15.0 * min(subitem_in_stem_count, 3)
+            deductions += min(30.0, subitem_ratio * 40.0 + (3.0 if not is_major else 12.0))
 
         score = max(0.0, 100.0 - deductions)
         return issues, score, metrics
@@ -411,6 +505,7 @@ class DeterministicAuditor:
     def check_sequence_continuity(xml_content: str) -> Tuple[List[AuditIssue], float]:
         """
         Audits question numbering sequence, detecting gaps, duplicates, and infinite loops.
+        Scales deductions and severity by total question count.
         """
         issues: List[AuditIssue] = []
         deductions = 0.0
@@ -428,6 +523,8 @@ class DeterministicAuditor:
         if not question_numbers:
             return issues, 100.0
 
+        total_q = len(question_numbers)
+
         # Check for repetition loops (e.g. [1, 1, 1, 1, 1] or [101, 101, 101])
         consecutive_dups = 0
         for i in range(1, len(question_numbers)):
@@ -444,32 +541,36 @@ class DeterministicAuditor:
             )
             deductions += 60.0
         elif consecutive_dups > 0:
+            dup_ratio = consecutive_dups / max(1, total_q)
+            is_major = dup_ratio >= 0.15 or consecutive_dups >= 3
             issues.append(
                 AuditIssue(
                     category="continuity",
-                    severity=IssueSeverity.MINOR,
-                    message=f"Found {consecutive_dups} duplicate question numbers in sequence.",
+                    severity=IssueSeverity.MAJOR if is_major else IssueSeverity.MINOR,
+                    message=f"Found {consecutive_dups}/{total_q} duplicate question numbers in sequence.",
                 )
             )
-            deductions += 5.0 * consecutive_dups
+            deductions += min(20.0, dup_ratio * 30.0 + (2.0 if not is_major else 8.0))
 
         # Check for large numbering gaps if monotonically increasing
         is_increasing = all(
             question_numbers[i] <= question_numbers[i + 1]
             for i in range(len(question_numbers) - 1)
         )
-        if is_increasing and len(question_numbers) >= 5:
+        if is_increasing and total_q >= 5:
             full_set = set(range(question_numbers[0], question_numbers[-1] + 1))
             missing = sorted(list(full_set - set(question_numbers)))
-            if len(missing) > max(3, int(len(question_numbers) * 0.3)):
+            missing_ratio = len(missing) / max(1, len(full_set))
+            if missing_ratio >= 0.25 and len(missing) >= 4:
+                is_major = missing_ratio >= 0.40
                 issues.append(
                     AuditIssue(
                         category="continuity",
-                        severity=IssueSeverity.MAJOR,
-                        message=f"Large numbering gap detected ({len(missing)} missing questions between {question_numbers[0]} and {question_numbers[-1]}): {missing[:8]}...",
+                        severity=IssueSeverity.MAJOR if is_major else IssueSeverity.MINOR,
+                        message=f"Numbering gap detected ({len(missing)} missing questions between {question_numbers[0]} and {question_numbers[-1]}): {missing[:8]}...",
                     )
                 )
-                deductions += 20.0
+                deductions += min(25.0, missing_ratio * 30.0)
 
         score = max(0.0, 100.0 - deductions)
         return issues, score
@@ -662,28 +763,38 @@ class DeterministicAuditor:
 class DeepSeekReviewer:
     """
     LLM-powered Semantic Reviewer using DeepSeek Client for in-depth quality analysis.
+    Informed by the complete original parser ground-truth prompt rules and constraints.
     """
 
     SYSTEM_PROMPT = """# [System Config]
-Role: You are an expert AI Quality Assurance & Sequence Labelling Auditor for Exam Documents.
-Your task is to critically inspect an annotated XML exam document against strict sequence labelling guidelines.
+Role: You are an expert AI Quality Assurance & Sequence Labelling Auditor for Exam Documents (TOEIC, SAT, High School National Exams).
+Your task is to critically inspect an annotated XML exam document against strict sequence labelling ground-truth specifications.
 
-## Schema & Tag Dictionary:
-1. <section>...</section>: Section headers, part titles, exam directions.
-2. <stimulus id="..." start_anchor="..." end_anchor="..." />: Shared reading passages, tables, context prompts serving 2 OR MORE QUESTIONS.
-3. <question_label>...</question_label>: Question prefixes (e.g. "**101.**", "Câu 1:", "### Ví dụ 1").
-4. <stem>...</stem>: Question body text.
-5. <option_label>...</option_label>: Choice labels (A., B., (A)) AND sub-question labels (a), b), c)) in essay/true-false.
-6. <option_text>...</option_text>: Choice or sub-question body text.
-7. <explanation>...</explanation>: Solutions / answer keys / explanations.
-8. <figure id="..." description="..." bbox="..." />: Vision OCR figure placeholder.
+## 🏷️ Complete Schema & Tag Dictionary:
+1. <section>...</section>: Section headers, part titles, exam directions, and subject block titles (e.g. "<section>PHẦN I. Câu trắc nghiệm...</section>", "<section>## PART 5</section>", "<section>## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517</section>"). Output full paired tags containing verbatim text. Never use anchor tags for section titles.
+2. <stimulus id="stim_N" start_anchor="..." end_anchor="..." />: Compact anchor tag ONLY for shared reading passages, emails, articles, tables, datasets, multi-passage sets, and explicit context prompts serving 2 OR MORE QUESTIONS. Must include id, start_anchor (first 3-10 verbatim words), and end_anchor (last 3-10 verbatim words).
+   CRITICAL CONSTRAINT: A stimulus MUST NEVER wrap or enclose other system tags (<stem>, <question_label>, <option_label>, <option_text>, <explanation>). If context relates to only 1 single question, include it inside that question's <stem> instead of creating a <stimulus>.
+3. <question_label>...</question_label>: Question prefix indicators (e.g. "**101.**", "Câu 1:", "### Ví dụ 1").
+4. <stem>...</stem>: Main text body of a question following the question label.
+5. <option_label>...</option_label>: Choice letters/prefixes (A., B., (A)) AND sub-item/sub-question indicators (a), b), c), d)) in essay, constructed-response, or True/False questions.
+6. <option_text>...</option_text>: Textual content of choices or sub-questions following <option_label>, or statement cells in tabular True/False questions.
+7. <explanation>...</explanation>: Solutions, explanations, and answer key texts.
+8. <figure id="fig_N" description="..." bbox="x1,y1,x2,y2" />: Vision OCR figure placeholder. (Preserved as source text).
 
-## Strict Rules:
-- Rule 1: 100% Verbatim preservation. No text modification, no translation, LaTeX formulas intact. Standard mathematical abbreviations (e.g. 'VT' = Vế Trái, 'VP' = Vế Phải, 'đpcm' = điều phải chứng minh) and comparison symbols (<, >) inside math text are valid.
-- Rule 2: Multi-Question Stimulus Rule. <stimulus> ONLY for shared context with 2+ questions. 1-question context stays in <stem>.
-- Rule 3: Sub-question labels (a), b)) must be wrapped in <option_label> + <option_text>, NEVER absorbed into <stem>.
-- Rule 4: Prohibited tags (<pages>, <page>, <page_metadata>, <think>) must be pruned.
-- Rule 5: Malfunctions include: truncated generation mid-sentence, zero questions, hallucinated text, unclosed tags, corrupted math. Mixed sections (e.g., worked examples with <explanation> alongside practice problems with <stem> only) are valid.
+## ⛔ Strict Rules & Evaluation Principles:
+- Rule 1 (100% Verbatim): Zero paraphrasing, zero rewriting. LaTeX math expressions ($...$, $$...$$), standard mathematical abbreviations (e.g. 'VT' = Vế Trái, 'VP' = Vế Phải, 'đpcm' = điều phải chứng minh), and comparison symbols (<, >) inside math text are VALID content, not broken XML tags.
+- Rule 2 (Table HTML): Standard HTML table markup (<table>, <tr>, <td>, <th>, <tbody>, <thead>, <tfoot>) is standard and valid for tabular questions and choices. In tabular True/False questions without explicit choice letters, statement cells are tagged as <td><option_text>...</option_text></td>. HTML table tags and headers are valid structure, NOT syntax errors.
+- Rule 3 (Figures Out of Scope): Figure tags (<figure ... />) are out of evaluation scope for now. Do NOT penalize or deduce points for missing, extra, malformed, or misplaced figure tags, nor if question stems do or do not mention figures.
+- Rule 4 (Error Rate vs. Document Scale): Assess error rate proportionally relative to total question count. A document with 30 questions and only 1 isolated mislabelled stem or minor glitch has >96% accuracy and must be rated favorably (e.g. 85-95 / PASS with minor notes), NOT failed or discarded.
+- Rule 5 (Severity Definitions):
+  * CRITICAL: Fatal structural failures (syntax cut off mid-tag at EOF, zero questions in document, unclosed/mismatched tags, unpruned page tags <pages>/<page>/<page_metadata>, stimulus wrapping system tags, retention <65% or >140%, infinite repetition loops). Must trigger decision: "DISCARD" and is_malfunctioned: true.
+  * MAJOR: Systemic, repetitive errors occurring across a large portion (>= 15-20%) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions a), b) across the entire paper, massive missing sections).
+  * MINOR: Isolated, low-frequency, non-systemic anomalies or one-off glitches (1-2 isolated items in a 20-30+ question exam).
+  * INFO: Informative observations (mixed solved/unsolved problems, table layout).
+- Rule 6 (Stimulus Nesting Auto-Reject): Any <stimulus> tag that wraps or encloses other system tags (<stem>, <question_label>, <option_label>, <option_text>, <explanation>) is a fatal architectural violation and MUST immediately trigger decision: "DISCARD" and is_malfunctioned: true.
+- Rule 7 (Multi-Question Stimulus): <stimulus> is ONLY for shared context serving 2+ questions. Single-question context belongs in <stem>.
+- Rule 8 (Sub-Question Segmentation): Sub-items "a)", "b)" in essay/true-false questions must be tagged in <option_label> + <option_text>, not absorbed into <stem>.
+- Rule 9 (Page Tag Pruning): Page tags (<pages>, <page>, <page_metadata>) must be pruned. Continuous elements span seamlessly across page breaks.
 
 ## Output Format:
 Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
@@ -702,7 +813,7 @@ Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
   },
   "issues": [
     {
-      "category": "xml_syntax" | "prohibited_tags" | "question_structure" | "option_structure" | "stimulus" | "verbatim_fidelity" | "continuity" | "llm_semantic",
+      "category": "xml_syntax" | "prohibited_tags" | "question_structure" | "option_structure" | "stimulus" | "stimulus_nesting" | "verbatim_fidelity" | "continuity" | "llm_semantic",
       "severity": "CRITICAL" | "MAJOR" | "MINOR" | "INFO",
       "message": "<description of issue>",
       "context_snippet": "<snippet if applicable>"
@@ -783,11 +894,16 @@ Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
             f"- Retention Ratio: {deterministic_metrics.get('retention_ratio', 'N/A')}\n\n"
             f"### Target Annotated XML:\n"
             f"```xml\n{xml_sample}\n```\n\n"
-            f"### Evaluation Instructions:\n"
-            f"- Mathematical '<' or '>' comparison symbols inside math formulas/LaTeX are valid content, not broken XML tags.\n"
-            f"- Vietnamese mathematical abbreviations (e.g. 'VT' = Vế Trái, 'VP' = Vế Phải, 'đpcm' = điều phải chứng minh) are valid standard notation.\n"
-            f"- Documents may legitimately mix solved examples (<stem> + <explanation>) and unsolved exercises (<stem> only).\n"
-            f"- If an [AUDITOR_SAMPLING_WINDOW] comment is present, it was injected by the test auditor tool for large files; do not treat the sampling marker or jump across it as an omission or error.\n\n"
+            f"### Evaluation Guidelines & Context:\n"
+            f"1. Error Rate vs Document Size: Consider error frequency relative to total questions. If a document has 30 questions and only 1 isolated mislabelled stem or minor glitch (>96% accuracy), classify it as MINOR and score favorably (e.g. 85-95, PASS), do NOT discard.\n"
+            f"2. Figures Out of Scope: Do NOT evaluate or penalize figure tags (<figure ... />) or figure mentions.\n"
+            f"3. Table HTML: HTML table markup (<table>, <tr>, <td>, <th>) is valid. In tabular True/False questions, statement cells wrapped in <td><option_text>...</option_text></td> are valid.\n"
+            f"4. MAJOR vs MINOR: Reserve MAJOR for repetitive/systemic errors across a large portion of the document (>= 15-20%) that could poison the model.\n"
+            f"5. Auto-Reject Stimulus Nesting: If <stimulus> wraps <stem>, <option_label>, <question_label>, <option_text>, or <explanation>, immediately flag as CRITICAL with decision DISCARD.\n"
+            f"6. Mathematical '<' or '>' comparison symbols inside math formulas/LaTeX are valid content, not broken XML tags.\n"
+            f"7. Vietnamese mathematical abbreviations ('VT', 'VP', 'đpcm') are valid standard notation.\n"
+            f"8. Documents may legitimately mix solved examples (<stem> + <explanation>) and unsolved exercises (<stem> only).\n"
+            f"9. If an [AUDITOR_SAMPLING_WINDOW] comment is present, it was injected by the test auditor tool for large files; do not treat the sampling marker or jump across it as an omission or error.\n\n"
             f"Evaluate the quality, rate each rubric dimension, detect any hallucinations or malfunctions, and return your audit JSON."
         )
 
@@ -872,25 +988,33 @@ class AnnotationReviewerAgent:
         )
         issues.extend(prohibited_issues)
 
-        # 3. Question & option structure
+        # 3. Stimulus nesting check (CRITICAL AUTO-REJECT)
+        stim_nesting_issues, stim_nesting_score = (
+            DeterministicAuditor.check_stimulus_wrapping_system_tags(xml_content)
+        )
+        issues.extend(stim_nesting_issues)
+
+        # 4. Question & option structure
         q_issues, q_score, metrics = DeterministicAuditor.check_question_and_option_structure(
             xml_content
         )
         issues.extend(q_issues)
 
-        # 4. Sequence continuity
+        # 5. Sequence continuity
         continuity_issues, continuity_score = DeterministicAuditor.check_sequence_continuity(
             xml_content
         )
         issues.extend(continuity_issues)
 
-        # 5. Stimulus anchors
-        stim_issues, stim_score = DeterministicAuditor.check_stimulus_anchors(
+        # 6. Stimulus anchors & validity
+        stim_anchor_issues, stim_anchor_score = DeterministicAuditor.check_stimulus_anchors(
             xml_content, pure_text, raw_ocr_text
         )
-        issues.extend(stim_issues)
+        issues.extend(stim_anchor_issues)
 
-        # 6. Verbatim alignment
+        stim_score = min(stim_nesting_score, stim_anchor_score)
+
+        # 7. Verbatim alignment
         verbatim_issues, verbatim_score, verbatim_metrics = (
             DeterministicAuditor.check_verbatim_alignment(xml_content, raw_ocr_text)
         )
@@ -928,7 +1052,7 @@ class AnnotationReviewerAgent:
 
         # 7. LLM Semantic Review (if enabled and no fatal syntax blocker)
         llm_result = None
-        if use_llm and syntax_score > 20.0:
+        if use_llm and syntax_score > 20.0 and len(critical_issues) == 0:
             llm_result = self.llm_reviewer.review_semantic(
                 xml_content=xml_content,
                 deterministic_metrics=metrics,
