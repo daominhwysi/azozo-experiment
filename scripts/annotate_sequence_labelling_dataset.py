@@ -35,6 +35,7 @@ from backend.app.domains.ocr.parser.long_parser.greedy_chunker import (
     greedy_oversize_chunker,
 )
 from backend.app.domains.ocr.parser.long_parser.parser_agent_worker import ParserAgentWorker
+from backend.app.domains.ocr.annotator.xml_checker import XMLChecker
 
 
 def extract_pages_from_markdown(full_markdown: str) -> List[str]:
@@ -197,7 +198,16 @@ def process_single_document(
         diag = cres.get("parse_diagnostics", {})
         attempts = diag.get("attempts", 1)
         v_errors = diag.get("validation_errors", [])
-        if attempts > 1 or v_errors:
+        
+        # Check XML syntax & tag matching
+        chunk_xml_check = XMLChecker.check(cres.get("raw_xml", ""))
+        if not chunk_xml_check.is_valid:
+            v_errors.extend(chunk_xml_check.error_messages)
+            tqdm.write(
+                f"  ⚠️ [XML TAG MISMATCH / ISSUE] Document '{rel_path}' Chunk {idx}: "
+                f"{len(chunk_xml_check.issues)} issue(s) detected. Diagnostics: {chunk_xml_check.error_messages[:3]}"
+            )
+        elif attempts > 1 or v_errors:
             tqdm.write(
                 f"  ⚠️ [RETRY / WARNING] Document '{rel_path}' Chunk {idx}: "
                 f"{attempts} attempt(s) used. Diagnostics: {v_errors}"
@@ -241,6 +251,11 @@ def process_single_document(
 
     duration = time.time() - start_time
 
+    # Validate merged XML output with XMLChecker
+    merged_xml_check = XMLChecker.check(merge_result.get("merged_xml", ""))
+    if not merged_xml_check.is_valid:
+        tqdm.write(f"  ❌ [MERGED XML TAG ISSUE] '{rel_path}': {len(merged_xml_check.issues)} issue(s) found in merged.xml")
+
     # Save Merged Version
     merged_data = {
         "doc_id": doc_id,
@@ -254,6 +269,13 @@ def process_single_document(
         "stimuli_count": len(merge_result["structured_stimuli"]),
         "duration_seconds": round(duration, 2),
         "diagnostics": merge_result.get("diagnostics", {}),
+        "xml_validation": {
+            "is_valid": merged_xml_check.is_valid,
+            "issues_count": len(merged_xml_check.issues),
+            "issues": [str(i) for i in merged_xml_check.issues],
+            "has_mismatched_tags": merged_xml_check.has_mismatched_tags,
+            "has_unclosed_tags": merged_xml_check.has_unclosed_tags,
+        },
         "questions": merge_result["structured_questions"],
         "stimuli": merge_result["structured_stimuli"],
         "merged_xml": merge_result["merged_xml"],

@@ -5,6 +5,7 @@ from typing import Dict, Any, List, Optional
 
 from backend.app.core.config import PARSER_MODEL, PARSER_PROVIDER, PARSER_THINKING
 from backend.app.domains.ocr.annotator.annotate_ocr import OCRAnnotator
+from backend.app.domains.ocr.annotator.xml_checker import XMLChecker
 from backend.app.domains.ocr.parser.parser import parse_spans_into_structured_questions
 from backend.app.domains.ocr.parser.long_parser.anchored_xml_llm_parser import AnchoredXMLLLMExamParser
 
@@ -64,32 +65,7 @@ class ParserAgentWorker:
     def _is_valid_annotation_xml(raw_ocr_text: str, raw_xml: str) -> bool:
         if not raw_xml:
             return False
-
-        # remove service markers and comments
-        normalized_xml = raw_xml.replace("<|END|>", "")
-        normalized_xml = re.sub(r"<\|[^>]*\|>", "", normalized_xml)
-        normalized_xml = normalized_xml.strip()
-
-        if not normalized_xml:
-            return False
-
-        tag_re = re.compile(r"</?([a-zA-Z_][a-zA-Z0-9_]*)>")
-        stack: List[str] = []
-        for match in tag_re.finditer(normalized_xml):
-            full_tag = match.group(0)
-            tag_name = match.group(1).strip()
-
-            if tag_name not in _ALLOWED_XML_TAGS:
-                continue
-
-            if full_tag.startswith("</"):
-                if not stack or stack[-1] != tag_name:
-                    return False
-                stack.pop()
-            else:
-                stack.append(tag_name)
-
-        return len(stack) == 0
+        return XMLChecker.is_valid_xml(raw_xml)
 
     def process_chunk(
         self,

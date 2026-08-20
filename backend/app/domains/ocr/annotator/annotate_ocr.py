@@ -25,6 +25,7 @@ from backend.app.core.config import (
     get_provider_base_url,
 )
 from backend.app.domains.llm.deepseek_client import chat
+from backend.app.domains.ocr.annotator.xml_checker import XMLChecker
 
 try:
     from src.token_tracker import log_response
@@ -97,6 +98,8 @@ Your task is to annotate raw OCR text of exam papers by wrapping specific compon
 11. **FIGURE IMMUTABILITY:** Copy every `<figure ... />` placeholder character-for-character. Do not wrap only part of it, convert it to paired tags, rewrite its description, renumber its ID, or remove it. It may remain inside a surrounding `<stem>`, `<option_text>`, or `<stimulus>` span when context requires.
 12. **STIMULUS DISCRIMINATION & MULTI-QUESTION RULE:** A `<stimulus>` tag MUST ONLY be created if the passage/context/data block intimately relates to 2 OR MORE QUESTIONS (e.g. reading passage for questions 6-10, dataset for questions 515-517, or prompt "Dựa vào thông tin sau đây để giải quyết bài 4, 5..."). If a piece of text or table is associated with only 1 single question, include it directly inside that question's <stem>...</stem> rather than tagging it as a <stimulus>. Never tag generic section headers, subject titles, exam metadata, or question range announcements (e.g. "## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517", "PHẦN I. TRẮC NGHIỆM", "Môn: Toán") as `<stimulus>`!
 13. **TABULAR & UNLABELED TRUE/FALSE SUB-QUESTIONS:** When sub-questions or True/False statements are presented inside HTML tables (`<table>...</table>`), Markdown tables, or lists without explicit option labels (such as `a)`, `b)` or `A.`), each statement cell or item text to be evaluated MUST still be tagged as `<option_text>...</option_text>` (e.g., `<td><option_text>Statement text...</option_text></td>`). Table formatting tags (`<table>`, `<tr>`, `<th>`, `<td>`), header titles ("Phát biểu", "Đúng", "Sai"), and choice indicators (`○`, `✓`, `[ ]`) remain un-tagged structure.
+14. **PAGE TAGS & METADATA PRUNING:** Prune and omit `<pages>`, `</pages>`, `<page>`, `</page>`, and `<page_metadata>...</page_metadata>` from the XML output. Do not retain page boundary tags or metadata blocks in the annotated XML. Maintain continuous elements (<stem>, <option_text>, <explanation>, <section>) seamlessly across page breaks without splitting them.
+15. **XML TAG MATCHING & INTEGRITY (NO MISMATCHED/UNCLOSED TAGS):** Every opened tag (`<section>`, `<question_label>`, `<stem>`, `<option_label>`, `<option_text>`, `<explanation>`) MUST have its exact matching closing tag (`</section>`, `</question_label>`, `</stem>`, `</option_label>`, `</option_text>`, `</explanation>`). NEVER produce mismatched closing tags (e.g. `<stem>...</option_text>`) or leave opening tags unclosed. Compact stimulus anchor tags `<stimulus ... />` and vision figures `<figure ... />` MUST always be formatted as self-closing tags with `/>`.
 """
 
 
@@ -709,6 +712,9 @@ class OCRAnnotator:
         )
 
         validate_bio_sequence(bio_tags)
+        xml_check_res = XMLChecker.check(raw_xml)
+        if not xml_check_res.is_valid:
+            print(f"  [XML Checker Warning] Issues detected in annotated XML:\n{xml_check_res.summary()}")
 
         return {
             "raw_text": raw_ocr_text,
@@ -720,6 +726,8 @@ class OCRAnnotator:
             "labels": label_ids,
             "label_mapping": TAG_TO_ID,
             "annotated": True,
+            "xml_is_valid": xml_check_res.is_valid,
+            "xml_issues": [str(i) for i in xml_check_res.issues],
             "total_tokens": total_prompt_tokens + total_completion_tokens,
             "prompt_tokens": total_prompt_tokens,
             "completion_tokens": total_completion_tokens,
@@ -934,6 +942,9 @@ class OCRAnnotator:
         )
 
         validate_bio_sequence(bio_tags)
+        xml_check_res = XMLChecker.check(raw_xml)
+        if not xml_check_res.is_valid:
+            print(f"  [XML Checker Warning] Issues detected in streamed XML:\n{xml_check_res.summary()}")
 
         return {
             "raw_text": raw_ocr_text,
@@ -945,6 +956,8 @@ class OCRAnnotator:
             "labels": label_ids,
             "label_mapping": TAG_TO_ID,
             "annotated": True,
+            "xml_is_valid": xml_check_res.is_valid,
+            "xml_issues": [str(i) for i in xml_check_res.issues],
             "total_tokens": total_prompt_tokens + streamed_token_count,
             "prompt_tokens": total_prompt_tokens,
             "completion_tokens": streamed_token_count,

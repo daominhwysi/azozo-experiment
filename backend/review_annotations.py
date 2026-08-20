@@ -113,8 +113,7 @@ def parse_args():
         dest="filter_decision",
         type=str,
         default="all",
-        choices=["all", "discards", "needs_revision", "pass"],
-        help="Filter re-evaluation to specific document status (all, discards, needs_revision, pass). Default: all",
+        help="Filter re-evaluation to specific document status (all, discards, needs_revision, failed, discards,needs_revision, pass). Default: all",
     )
     parser.add_argument(
         "--limit",
@@ -142,10 +141,17 @@ def main():
     filter_decision_map = {
         "all": None,
         "discards": "DISCARD",
+        "discard": "DISCARD",
         "needs_revision": "NEEDS_REVISION",
+        "revision": "NEEDS_REVISION",
+        "failed": ["DISCARD", "NEEDS_REVISION"],
+        "discard_and_revision": ["DISCARD", "NEEDS_REVISION"],
+        "discards,needs_revision": ["DISCARD", "NEEDS_REVISION"],
         "pass": "PASS",
+        "passed": "PASS",
     }
-    target_filter = filter_decision_map.get(args.filter_decision.lower())
+    raw_filter = args.filter_decision.lower().strip()
+    target_filter = filter_decision_map.get(raw_filter, raw_filter.split(",") if "," in raw_filter else raw_filter)
 
     print("=" * 70)
     print("🔍 AZOZO ANNOTATION QUALITY REVIEWER & DISCARD AGENT")

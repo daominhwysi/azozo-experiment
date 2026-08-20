@@ -63,7 +63,7 @@ Subagents annotate using the following tag schema:
   "enable_write_tools": true,
   "enable_subagent_tools": false,
   "enable_mcp_tools": false,
-  "system_prompt": "<CONTENT_OF_PROMPT_ANNOTATOR_MD>\n\n---\n# ⛔ STRICT WORKER EXECUTION PROTOCOL (ZERO-EXPLORATION RULE):\nYou are a focused, single-document XML parser worker.\nYou MUST adhere to the following strict execution rules:\n1. **ZERO CODEBASE EXPLORATION**:\n   - DO NOT run `find_by_name`, `grep_search`, `list_dir`, `run_command`, or inspect any other files or directories in the codebase.\n   - DO NOT search for examples, other XML files, or external references. All tagging rules and examples you need are already provided in your system prompt.\n2. **STRICT 2-STEP TOOL EXECUTION**:\n   - **Step 1**: Use `view_file` ONLY on the exact `Input file` path provided in your user prompt to read the document.\n   - **Step 2**: Parse and annotate the entire text strictly adhering to the Tag Dictionary and Rules above (ensuring `<pages>`, `<page>`, and `<page_metadata>` are pruned and continuous tags concatenated), then call `write_to_file` ONLY on the exact `Output file` path specified in your user prompt.\n3. **CONCLUSION**:\n   - Immediately conclude by outputting a single-line JSON status:\n   {\"status\": \"SUCCESS\", \"input\": \"<in_path>\", \"output\": \"<output_path>\", \"questions_count\": <int>}\n   - Finish immediately. Do not execute any further commands."
+  "system_prompt": "<CONTENT_OF_PROMPT_ANNOTATOR_MD>\n\n---\n# ⛔ STRICT WORKER EXECUTION PROTOCOL (ZERO-EXPLORATION RULE):\nYou are a focused, single-document XML parser worker.\nYou MUST adhere to the following strict execution rules:\n1. **ZERO CODEBASE EXPLORATION**:\n   - DO NOT run `find_by_name`, `grep_search`, `list_dir`, `run_command`, or inspect any other files or directories in the codebase.\n   - DO NOT search for examples, other XML files, or external references. All tagging rules and examples you need are already provided in your system prompt.\n2. **STRICT 2-STEP TOOL EXECUTION**:\n   - **Step 1**: Use `view_file` ONLY on the exact `Input file` path provided in your user prompt to read the document.\n   - **Step 2**: Parse and annotate the entire text strictly adhering to the Tag Dictionary and Rules above (ensuring `<pages>`, `<page>`, and `<page_metadata>` are pruned and continuous tags concatenated).\n     *CRITICAL XML TAG CHECKER RULE*: Verify tag integrity before writing—ensure 100% matching opening and closing tags (no `<stem>...</option_text>` mismatches, no unclosed tags, and all `<stimulus ... />` and `<figure ... />` self-closing). Then call `write_to_file` ONLY on the exact `Output file` path specified in your user prompt.\n3. **CONCLUSION**:\n   - Immediately conclude by outputting a single-line JSON status:\n   {\"status\": \"SUCCESS\", \"input\": \"<in_path>\", \"output\": \"<output_path>\", \"questions_count\": <int>}\n   - Finish immediately. Do not execute any further commands."
 }
 ```
 
@@ -85,14 +85,18 @@ Subagents annotate using the following tag schema:
    - `Prompt`: `"Input file: '{in_path}', Output file: '{output_path}'"`
 3. After dispatching the batch, **stop calling tools** to yield execution and allow subagents to execute in the background.
 
-### Step 4: Reactive Wake-Up & Queue Replenishment
+### Step 4: Reactive Wake-Up, XML Integrity Validation & Queue Replenishment
 
 1. When a subagent completes, the system automatically wakes up the orchestrator with the worker's completion message.
 2. Parse the worker's status and record the outcome (Success / Failed).
-3. If there are remaining documents in the pending queue:
+3. Validate XML tag integrity of generated files using the standalone XML Checker (`backend/app/domains/ocr/annotator/xml_checker.py`) to detect any mismatched or unclosed tags:
+   ```bash
+   uv run python backend/app/domains/ocr/annotator/xml_checker.py <output_path>
+   ```
+4. If there are remaining documents in the pending queue:
    - Dequeue the next document.
    - Immediately call `invoke_subagent` to keep active concurrency at `CONCURRENCY`.
-4. If the queue is empty and all dispatched subagents have completed, proceed to Step 5.
+5. If the queue is empty and all dispatched subagents have completed, proceed to Step 5.
 
 ### Step 5: Output Metrics & Summary Table
 

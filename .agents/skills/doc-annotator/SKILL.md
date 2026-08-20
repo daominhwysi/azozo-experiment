@@ -65,6 +65,8 @@ When this skill is active, the agent **MUST** adhere to the following mandatory 
    - Prune and omit `<pages>`, `</pages>`, `<page>`, `</page>`, and `<page_metadata>...</page_metadata>` from the XML output. Do not retain page boundary tags or metadata blocks. Maintain continuous elements (`<stem>`, `<option_text>`, `<explanation>`, `<section>`) seamlessly across page breaks without splitting them.
 8. **End Delimiter**:
    - Append `<|END|>` at the very end of the output XML document.
+9. **XML Tag Matching & Closing Integrity**:
+   - Every opened tag (`<section>`, `<question_label>`, `<stem>`, `<option_label>`, `<option_text>`, `<explanation>`) MUST have its exact matching closing tag. Never emit mismatched closing tags (e.g. `<stem>...</option_text>`) or leave tags unclosed. Compact stimulus anchor tags `<stimulus ... />` and vision figures `<figure ... />` must be self-closing.
 
 ---
 

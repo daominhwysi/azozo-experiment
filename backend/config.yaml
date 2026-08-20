@@ -38,7 +38,7 @@ models:
   parser:
     model_name: "gpt-5.6-luna"
     provider: "codex"
-    thinking: high
+    thinking: low
     max_tokens: 128000
     description: "Sequence labeling LLM model for question stem and option annotation"
 

@@ -1474,8 +1474,20 @@ class AnnotationReviewerAgent:
                     is_done = False
 
             if filter_decision and is_done and cached_rep:
-                target_decision_str = filter_decision.upper().strip()
-                if cached_rep.decision.value == target_decision_str or cached_rep.decision.name == target_decision_str:
+                if isinstance(filter_decision, (list, tuple, set)):
+                    allowed_filters = {str(d).upper().strip() for d in filter_decision}
+                else:
+                    allowed_filters = {d.upper().strip() for d in str(filter_decision).split(",") if d.strip()}
+
+                if "FAILED" in allowed_filters or "DISCARD_AND_REVISION" in allowed_filters:
+                    allowed_filters.update({"DISCARD", "NEEDS_REVISION"})
+                if "DISCARDS" in allowed_filters:
+                    allowed_filters.add("DISCARD")
+
+                if (
+                    cached_rep.decision.value.upper() in allowed_filters
+                    or cached_rep.decision.name.upper() in allowed_filters
+                ):
                     to_process_files.append(xml_p)
                 else:
                     cached_reports_map[xml_p] = cached_rep
