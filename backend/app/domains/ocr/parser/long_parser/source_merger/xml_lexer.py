@@ -63,10 +63,17 @@ def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, An
         tag_name = match.group(2).strip().lower()
         attrs = match.group(3)
         raw_tag_str = match.group(0)
-        is_self_closing = raw_tag_str.endswith("/>") or attrs.strip().endswith("/")
+        is_self_closing = (
+            raw_tag_str.endswith("/>")
+            or attrs.strip().endswith("/")
+            or (tag_name == "stimulus" and "start_anchor=" in raw_tag_str)
+            or (tag_name == "figure")
+        )
 
         if tag_name in ALLOWED_TAGS:
             if is_self_closing:
+                if not raw_tag_str.endswith("/>"):
+                    raw_tag_str = raw_tag_str[:-1].rstrip() + " />"
                 events.append((p_offset, tag_name, "self_closing", raw_tag_str))
             elif is_closing:
                 events.append((p_offset, tag_name, "close", raw_tag_str))
