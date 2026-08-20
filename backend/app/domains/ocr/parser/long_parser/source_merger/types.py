@@ -34,8 +34,12 @@ class GlobalSpan:
     text: Optional[str] = None
     question_num: Optional[str] = None
     exam_code: Optional[str] = None
+    is_self_closing: bool = False
+    raw_tag: Optional[str] = None
 
     def overlaps_with(self, other: "GlobalSpan") -> bool:
+        if self.is_self_closing or other.is_self_closing:
+            return False
         return max(self.start, other.start) < min(self.end, other.end)
 
 

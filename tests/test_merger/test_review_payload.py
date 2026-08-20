@@ -1,7 +1,7 @@
 import re
 
-from backend.app.domains.ocr.parser.long_parser.deterministic_parser import parse_chunk_deterministic
-from backend.app.domains.ocr.parser.long_parser.review_payload import (
+from backend.app.domains.ocr.parser.long_parser.old.deterministic_parser import parse_chunk_deterministic
+from backend.app.domains.ocr.parser.long_parser.old.review_payload import (
     GAP_HEAD,
     build_review_payload,
     collect_review_regions,

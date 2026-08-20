@@ -29,38 +29,35 @@ def serialize_annotations(canonical_text: str, selected_spans: List[GlobalSpan])
     """
     Serialize selected opening and closing tags around unchanged canonical_text.
     Events at the same offset follow strict ordering:
-    1. Close inner before outer (is_open=False, label_priority descending).
-    2. Open outer before inner (is_open=True, label_priority ascending).
+    1. Close inner before outer (type_order=0, label_priority descending).
+    2. Self-closing anchor tags (type_order=1, label_priority ascending).
+    3. Open outer before inner (type_order=2, label_priority ascending).
     """
-    events: List[Tuple[int, int, int, int, str]] = []
+    events: List[Tuple[int, int, int, int, str, bool, Optional[str]]] = []
 
     for span in selected_spans:
         prio = LABEL_PRIORITY.get(span.label, 99)
-        # Ordering is driven by span extent, not by label priority. Priority only
-        # breaks ties between spans covering the identical range: two spans that
-        # share a boundary must nest by length, otherwise the shorter one closes
-        # while the longer one is still open and the output is unbalanced.
-        # (offset, is_open, extent_key, priority_key, tag_name)
-        events.append((span.start, 1, -span.end, prio, span.label))
-        events.append((span.end, 0, -span.start, -prio, span.label))
+        if span.is_self_closing:
+            events.append((span.start, 1, 0, prio, span.label, True, span.raw_tag))
+        else:
+            events.append((span.start, 2, -span.end, prio, span.label, False, None))
+            events.append((span.end, 0, -span.start, -prio, span.label, False, None))
 
-    # For the same offset:
-    # 1. Close tags before open tags.
-    # 2. Closes: the most recently opened span closes first -> largest start first.
-    # 3. Opens: the outermost span opens first -> largest end first.
     events.sort(key=lambda ev: (ev[0], ev[1], ev[2], ev[3]))
 
     out_chunks = []
     curr_pos = 0
 
-    for offset, is_open, _extent, _prio, tag in events:
+    for offset, type_order, _extent, _prio, tag, is_self, raw_tag in events:
         if offset > curr_pos:
             out_chunks.append(canonical_text[curr_pos:offset])
             curr_pos = offset
 
-        if is_open:
+        if is_self:
+            out_chunks.append(raw_tag if raw_tag else f"<{tag} />")
+        elif type_order == 2:  # open
             out_chunks.append(f"<{tag}>")
-        else:
+        else:  # close
             out_chunks.append(f"</{tag}>")
 
     if curr_pos < len(canonical_text):
@@ -82,13 +79,17 @@ def validate_result(
 
     # Check balanced tags for recognized annotation tags only
     allowed_tags = "|".join(LABEL_PRIORITY.keys())
-    tag_re = re.compile(r"</?(" + allowed_tags + r")>", flags=re.IGNORECASE)
+    tag_re = re.compile(r"</?(" + allowed_tags + r")(?:\s+[^>]*)?>", flags=re.IGNORECASE)
     stack = []
     balanced_ok = True
 
     for m in tag_re.finditer(merged_xml):
         full_tag = m.group(0)
         tag_name = m.group(1).lower()
+
+        # Ignore self-closing tags
+        if full_tag.endswith("/>") or full_tag.endswith("/ >"):
+            continue
 
         if full_tag.startswith("</"):
             if not stack or stack[-1] != tag_name:
@@ -141,11 +142,38 @@ def build_structured_stimuli(
         key=lambda item: (item.start, item.end),
     ):
         stimulus_id = f"stim_{span.start}_{span.end}"
-        stimuli[stimulus_id] = {
-            "text": canonical_text[span.start:span.end].strip(),
-            "source_range": {"start": span.start, "end": span.end},
-            "provenance_chunk_indices": [span.chunk_index],
-        }
+        if span.is_self_closing and span.raw_tag:
+            start_m = re.search(r'start_anchor="([^"]*)"', span.raw_tag)
+            end_m = re.search(r'end_anchor="([^"]*)"', span.raw_tag)
+            id_m = re.search(r'id="([^"]*)"', span.raw_tag)
+            if id_m:
+                stimulus_id = id_m.group(1)
+
+            stim_text = ""
+            s_range = {"start": span.start, "end": span.end}
+            if start_m and end_m:
+                s_anc = start_m.group(1).strip()
+                e_anc = end_m.group(1).strip()
+                s_idx = canonical_text.find(s_anc, max(0, span.start - 500))
+                if s_idx != -1:
+                    e_idx = canonical_text.find(e_anc, s_idx)
+                    if e_idx != -1:
+                        end_pos = e_idx + len(e_anc)
+                        stim_text = canonical_text[s_idx:end_pos].strip()
+                        s_range = {"start": s_idx, "end": end_pos}
+
+            stimuli[stimulus_id] = {
+                "text": stim_text or span.raw_tag,
+                "source_range": s_range,
+                "provenance_chunk_indices": [span.chunk_index],
+                "raw_tag": span.raw_tag,
+            }
+        else:
+            stimuli[stimulus_id] = {
+                "text": canonical_text[span.start:span.end].strip(),
+                "source_range": {"start": span.start, "end": span.end},
+                "provenance_chunk_indices": [span.chunk_index],
+            }
     return stimuli
 
 
@@ -211,20 +239,30 @@ def build_structured_questions(
                 "text": txt_str,
             })
 
-        # Find enclosing stimulus
+        # Find enclosing or preceding stimulus
         stim_id = None
         stim_text = ""
-        preceding_stims = [s for s in stimulus_spans if s.end <= q_lab.start]
-        enclosing_stims = [
-            s for s in stimulus_spans
-            if s.start <= q_lab.start and s.end >= q_lab.end
-        ]
-        active_stim = enclosing_stims[-1] if enclosing_stims else (
-            preceding_stims[-1] if preceding_stims else None
-        )
-        if active_stim:
-            stim_text = canonical_text[active_stim.start:active_stim.end].strip()
-            stim_id = f"stim_{active_stim.start}_{active_stim.end}"
+        if structured_stimuli:
+            for s_id, s_data in structured_stimuli.items():
+                s_range = s_data.get("source_range", {})
+                s_end = s_range.get("end", 0)
+                s_start = s_range.get("start", 0)
+                if s_start <= q_lab.start and s_end <= q_lab.start:
+                    if q_lab.start - s_end < 5000:
+                        stim_id = s_id
+                        stim_text = s_data.get("text", "")
+        if not stim_id:
+            preceding_stims = [s for s in stimulus_spans if s.end <= q_lab.start]
+            enclosing_stims = [
+                s for s in stimulus_spans
+                if s.start <= q_lab.start and s.end >= q_lab.end
+            ]
+            active_stim = enclosing_stims[-1] if enclosing_stims else (
+                preceding_stims[-1] if preceding_stims else None
+            )
+            if active_stim:
+                stim_text = canonical_text[active_stim.start:active_stim.end].strip()
+                stim_id = f"stim_{active_stim.start}_{active_stim.end}"
 
         # Find explanation
         exp_text = ""

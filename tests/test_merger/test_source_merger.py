@@ -200,3 +200,36 @@ def test_literal_split_tag_is_replaced_by_valid_overlap_candidate():
     assert remove_annotation_tags(result.merged_xml) == raw
     assert result.merged_xml.count("<option_label>Option A.</option_label>") == 1
     assert "<option_la\n" not in result.merged_xml
+
+
+def test_self_closing_stimulus_anchor_tag_merging():
+    raw = (
+        "Dựa vào thông tin sau đây để trả lời câu hỏi 1 và 2:\n"
+        "Đoạn văn đọc hiểu chung.\n\n"
+        "**1.** Câu hỏi 1?\n"
+        "A. Lựa chọn A\n\n"
+        "**2.** Câu hỏi 2?\n"
+        "A. Lựa chọn B"
+    )
+    parsed = (
+        '<stimulus id="stim_1" start_anchor="Dựa vào thông tin" end_anchor="đọc hiểu chung." />\n'
+        "Dựa vào thông tin sau đây để trả lời câu hỏi 1 và 2:\n"
+        "Đoạn văn đọc hiểu chung.\n\n"
+        "<question_label>**1.**</question_label> <stem>Câu hỏi 1?</stem>\n"
+        "<option_label>A.</option_label> <option_text>Lựa chọn A</option_text>\n\n"
+        "<question_label>**2.**</question_label> <stem>Câu hỏi 2?</stem>\n"
+        "<option_label>A.</option_label> <option_text>Lựa chọn B</option_text>"
+    )
+
+    result = merge_chunks([
+        ChunkInput(index=0, original_text=raw, parsed_xml=parsed),
+    ])
+
+    assert remove_annotation_tags(result.merged_xml) == raw
+    assert '<stimulus id="stim_1" start_anchor="Dựa vào thông tin" end_anchor="đọc hiểu chung." />' in result.merged_xml
+    assert "</stimulus>" not in result.merged_xml
+    assert len(result.structured_questions) == 2
+    assert result.structured_questions[0]["stimulus_id"] == "stim_1"
+    assert "Đoạn văn đọc hiểu chung." in result.structured_questions[0]["stimulus_text"]
+    assert result.structured_questions[1]["stimulus_id"] == "stim_1"
+

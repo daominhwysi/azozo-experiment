@@ -57,6 +57,26 @@ def project_local_spans_to_global(
     global_spans: List[GlobalSpan] = []
 
     for l_span in local_spans:
+        if l_span.is_self_closing:
+            s_start, s_end, quality, alignment_kind = aligner.map_span_to_source(l_span.p_start, l_span.p_start)
+            g_start = piecewise_map.map_local_to_global(s_start)
+            g_start_clamped = max(0, min(len(canonical_text), g_start))
+            global_spans.append(GlobalSpan(
+                start=g_start_clamped,
+                end=g_start_clamped,
+                label=l_span.label,
+                chunk_index=chunk_input.index,
+                confidence=1.0,
+                alignment_kind=alignment_kind,
+                structural_quality=1.0,
+                text="",
+                question_num=l_span.question_num,
+                exam_code=l_span.exam_code,
+                is_self_closing=True,
+                raw_tag=l_span.raw_tag,
+            ))
+            continue
+
         # Step 1: Map parsed text offset P -> original chunk text offset S
         s_start, s_end, quality, alignment_kind = aligner.map_span_to_source(l_span.p_start, l_span.p_end)
 
@@ -109,6 +129,8 @@ def project_local_spans_to_global(
             text=span_text,
             question_num=l_span.question_num,
             exam_code=l_span.exam_code,
+            is_self_closing=False,
+            raw_tag=l_span.raw_tag,
         ))
 
     return global_spans

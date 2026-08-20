@@ -23,24 +23,27 @@ class LocalSpan:
     text: str = ""
     question_num: Optional[str] = None
     exam_code: Optional[str] = None
+    is_self_closing: bool = False
+    raw_tag: Optional[str] = None
 
 
 def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, Any]]:
     """
     Tolerant XML lexer that extracts de-tagged parsed text and paired LocalSpan objects.
     Records any malformed tags or mismatched nesting in lexical_report.
+    Properly recognizes and preserves self-closing anchor tags (e.g. <stimulus ... />).
     """
     if not parsed_xml:
         return "", [], {"errors": []}
 
-    # Clean out comments
+    # Clean out comments and terminal end sentinels
     cleaned_xml = re.sub(r"<!--.*?-->", "", parsed_xml, flags=re.DOTALL)
+    cleaned_xml = re.sub(r"<\s*\|\s*END\s*\|\s*>", "", cleaned_xml)
     
     parsed_chars = []
-    events = []  # List of (p_offset, tag_name, is_open, raw_tag_str)
+    events = []  # List of (p_offset, tag_name, event_type, raw_tag_str)
     errors = []
 
-    pos = 0
     n = len(cleaned_xml)
     p_offset = 0
 
@@ -57,17 +60,24 @@ def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, An
             p_offset += len(chunk_str)
 
         is_closing = match.group(1) == "/"
-        tag_name = match.group(2).strip()
+        tag_name = match.group(2).strip().lower()
+        attrs = match.group(3)
+        raw_tag_str = match.group(0)
+        is_self_closing = raw_tag_str.endswith("/>") or attrs.strip().endswith("/")
 
         if tag_name in ALLOWED_TAGS:
-            # Recognized annotation tag
-            events.append((p_offset, tag_name, not is_closing, match.group(0)))
+            if is_self_closing:
+                events.append((p_offset, tag_name, "self_closing", raw_tag_str))
+            elif is_closing:
+                events.append((p_offset, tag_name, "close", raw_tag_str))
+            else:
+                events.append((p_offset, tag_name, "open", raw_tag_str))
         else:
             # Unknown or split/malformed tag name (e.g. <option_la\nbel>)
-            errors.append(f"Unrecognized or malformed tag: {match.group(0)}")
+            errors.append(f"Unrecognized or malformed tag: {raw_tag_str}")
             # Treat contents of unknown tag as non-authoritative text
-            parsed_chars.append(match.group(0))
-            p_offset += len(match.group(0))
+            parsed_chars.append(raw_tag_str)
+            p_offset += len(raw_tag_str)
 
         last_idx = match_end
 
@@ -80,17 +90,30 @@ def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, An
 
     # Pair events into LocalSpans
     spans: List[LocalSpan] = []
-    stack: List[Tuple[str, int]] = []
+    stack: List[Tuple[str, int, str]] = []
     current_q_num: Optional[str] = None
     current_exam_code: Optional[str] = None
 
-    for offset, tag_name, is_open, raw_tag in events:
-        if is_open:
-            stack.append((tag_name, offset))
-        else:
+    for offset, tag_name, event_type, raw_tag in events:
+        if event_type == "self_closing":
+            # Direct self-closing point span at offset
+            spans.append(LocalSpan(
+                p_start=offset,
+                p_end=offset,
+                label=tag_name,
+                is_valid=True,
+                text="",
+                question_num=current_q_num,
+                exam_code=current_exam_code,
+                is_self_closing=True,
+                raw_tag=raw_tag,
+            ))
+        elif event_type == "open":
+            stack.append((tag_name, offset, raw_tag))
+        elif event_type == "close":
             # Closing tag
             if stack and stack[-1][0] == tag_name:
-                open_name, open_offset = stack.pop()
+                open_name, open_offset, open_raw = stack.pop()
                 span_text = parsed_text[open_offset:offset]
 
                 # Extract question_num if this is question_label
@@ -107,6 +130,8 @@ def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, An
                     text=span_text,
                     question_num=current_q_num,
                     exam_code=current_exam_code,
+                    is_self_closing=False,
+                    raw_tag=open_raw,
                 ))
             else:
                 # Mismatched tag
@@ -114,7 +139,7 @@ def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, An
 
     # Residual unclosed tags
     while stack:
-        open_name, open_offset = stack.pop()
+        open_name, open_offset, open_raw = stack.pop()
         errors.append(f"Unclosed tag <{open_name}> starting at offset {open_offset}")
         spans.append(LocalSpan(
             p_start=open_offset,
@@ -124,6 +149,8 @@ def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, An
             text=parsed_text[open_offset:],
             question_num=current_q_num,
             exam_code=current_exam_code,
+            is_self_closing=False,
+            raw_tag=open_raw,
         ))
 
     lexical_report = {

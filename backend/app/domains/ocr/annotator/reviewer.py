@@ -181,9 +181,11 @@ class DeterministicAuditor:
                 )
                 deductions += 40.0
 
-        # Lex tags with line numbers
+        # Lex tags with line numbers (stripping designated terminal sentinels <|END|>)
+        clean_xml = re.sub(r"<\s*\|\s*END\s*\|\s*>", "", xml_content)
+        clean_xml = re.sub(r"<\s*\|\s*endoftext\s*\|\s*>", "", clean_xml)
         tag_pattern = re.compile(r"<(/)?([a-zA-Z_0-9\-]+)(?:\s+([^>]*))?(/)?>")
-        lines = xml_content.splitlines()
+        lines = clean_xml.splitlines()
 
         tag_stack: List[Tuple[str, int, str]] = []  # (tag_name, line_num, full_tag)
         all_tags_found = 0
@@ -191,7 +193,7 @@ class DeterministicAuditor:
         current_line_num = 1
         pos = 0
 
-        for match in tag_pattern.finditer(xml_content):
+        for match in tag_pattern.finditer(clean_xml):
             all_tags_found += 1
             start_pos = match.start()
             # Calculate line number
@@ -811,6 +813,7 @@ Your task is to critically inspect an annotated XML exam document against strict
 - Rule 8 (Multi-Question Stimulus): <stimulus> is ONLY for shared context serving 2+ questions. Single-question context belongs in <stem>.
 - Rule 9 (Sub-Question Segmentation): Sub-items "a)", "b)" in essay/true-false questions must be tagged in <option_label> + <option_text>, not absorbed into <stem>.
 - Rule 10 (Page Tag Pruning): Page tags (<pages>, <page>, <page_metadata>) must be pruned. Continuous elements span seamlessly across page breaks.
+- Rule 11 (Terminal Sentinel): The `<|END|>` sentinel at the end of the document is the designated parser termination token from prompt specification. It is valid and MUST NOT be treated as a malformed XML tag or syntax error.
 
 ## Output Format:
 Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:

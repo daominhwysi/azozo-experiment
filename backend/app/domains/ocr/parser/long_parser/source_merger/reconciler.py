@@ -14,10 +14,10 @@ def reconcile_candidates(
     if not candidates:
         return [], []
 
-    # 1. Coalesce identical global spans (same label, start, end)
-    grouped: Dict[Tuple[str, int, int], List[GlobalSpan]] = {}
+    # 1. Coalesce identical global spans (same label, start, end, self-closing)
+    grouped: Dict[Tuple[str, int, int, bool, Optional[str]], List[GlobalSpan]] = {}
     for span in candidates:
-        key = (span.label, span.start, span.end)
+        key = (span.label, span.start, span.end, span.is_self_closing, span.raw_tag)
         if key not in grouped:
             grouped[key] = []
         grouped[key].append(span)
@@ -146,18 +146,13 @@ def enforce_well_nesting(
     """
     Clip or drop spans that cross an enclosing span, so the selection forms a
     forest and can always be serialized as balanced tags.
-
-    A crossing span is clipped to its enclosing span's end rather than dropped:
-    the annotation is partially recoverable and the source text is unaffected
-    either way. Spans that clip to nothing are dropped and reported. Spans are
-    replaced rather than mutated so that candidates still referenced elsewhere
-    (e.g. coalesced duplicates) do not acquire a stale ``text`` field.
+    Preserves self-closing point spans (e.g. <stimulus ... />).
     """
-    # Zero-width spans annotate nothing and cannot be serialized: at a shared
-    # offset closing tags precede opening ones, so an empty span emits its close
-    # before its open and unbalances everything nested around it.
     ordered: List[GlobalSpan] = []
     for span in sorted(spans, key=lambda s: (s.start, -s.end)):
+        if span.is_self_closing:
+            ordered.append(span)
+            continue
         if span.end <= span.start:
             conflict_reports.append({
                 "type": "EMPTY_SPAN_DROPPED",
@@ -172,6 +167,10 @@ def enforce_well_nesting(
     stack: List[GlobalSpan] = []
 
     for span in ordered:
+        if span.is_self_closing:
+            kept.append(span)
+            continue
+
         while stack and stack[-1].end <= span.start:
             stack.pop()
 
