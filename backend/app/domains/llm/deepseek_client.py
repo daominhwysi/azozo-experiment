@@ -145,18 +145,26 @@ def chat(
 
         # Map thinking parameter to Codex ReasoningEffort
         effort_val = None
-        if thinking:
-            thinking_str = str(thinking).lower().strip()
-            effort_map = {
-                "none": ReasoningEffort.none,
-                "minimal": ReasoningEffort.minimal,
-                "low": ReasoningEffort.low,
-                "medium": ReasoningEffort.medium,
-                "high": ReasoningEffort.high,
-                "xhigh": ReasoningEffort.xhigh,
-                "max": ReasoningEffort.max,
-            }
-            effort_val = effort_map.get(thinking_str)
+        if thinking is not None:
+            if isinstance(thinking, ReasoningEffort):
+                effort_val = thinking
+            elif thinking is True:
+                effort_val = ReasoningEffort.high
+            elif thinking is False or thinking == 0:
+                effort_val = ReasoningEffort.none
+            else:
+                thinking_str = str(thinking).lower().strip()
+                effort_map = {
+                    "none": ReasoningEffort.none,
+                    "minimal": ReasoningEffort.minimal,
+                    "low": ReasoningEffort.low,
+                    "medium": ReasoningEffort.medium,
+                    "high": ReasoningEffort.high,
+                    "xhigh": ReasoningEffort.xhigh,
+                    "max": ReasoningEffort.xhigh,
+                    "disabled": ReasoningEffort.none,
+                }
+                effort_val = effort_map.get(thinking_str)
 
         import time
         start_time = time.time()
