@@ -19,6 +19,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Set, Any, Union
 
+# Ensure workspace root is in sys.path
+_repo_root = Path(__file__).resolve().parents[5]
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+
 
 # Standard allowed sequence labeling tags
 SEQUENCE_PAIRED_TAGS: Set[str] = {
@@ -226,8 +231,8 @@ class XMLChecker:
         clean_xml = re.sub(r"<\s*\|\s*END\s*\|\s*>", "", clean_xml)
         clean_xml = re.sub(r"<\s*\|\s*endoftext\s*\|\s*>", "", clean_xml)
 
-        # Regex matching tags with optional leading '/', tag name, attributes, and optional trailing '/'
-        tag_pattern = re.compile(r"<(/)?([a-zA-Z_0-9\-]+)(?:\s+([^>]*?))?(/)?>")
+        # Regex matching tags with attribute-quote awareness (e.g. end_anchor="...</td>...")
+        tag_pattern = re.compile(r'<(/)?([a-zA-Z_0-9\-]+)(?:\s+((?:[^"\'>]|"[^"]*"|\'[^\']*\')*))?(/)?>')
 
         tag_stack: List[Tuple[str, int, int, str]] = []  # (tag_name, line_num, col_num, full_tag)
 
