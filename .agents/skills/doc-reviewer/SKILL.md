@@ -56,7 +56,6 @@ To ensure comprehensive audit coverage without duplicate processing:
   - Unpruned `<pages>`, `<page>`, or `<page_metadata>`
   - `<stimulus>` illegally wrapping `<stem>`, `<question_label>`, `<option_label>`, `<option_text>`, or `<explanation>`
   - Severe text loss with dropped questions (retention $< 25\%$) or severe hallucination (retention $> 140\%$)
-  - Infinite repetition loops ($\ge 4$ consecutive duplicates)
 - **`MAJOR` (Repairable Syntax & Systemic Errors $\to$ `NEEDS_REVISION`)**:
   - Mismatched closing tags or unclosed tags (repairable syntax issues)
   - Repetitive errors occurring across a large portion ($\ge 15-20\%$) of the document (e.g., systematic absorption of sub-questions `a)`, `b)` into `<stem>` across multiple questions, dropped exam questions).
@@ -72,7 +71,7 @@ Each document receives an overall score (0–100) and letter grade (`A`: 90–10
 | **Schema Conformance** | 15% | Unpruned `<pages>`, `<page>`, or `<page_metadata>` tags present. |
 | **Question/Choice Completeness** | 25% | 0 questions detected, empty stems, orphaned choice labels without text. |
 | **Verbatim Fidelity** | 15% | Retention ratio $< 65\%$ (severe text loss) or $> 140\%$ (severe hallucination). |
-| **Sequence Continuity** | 10% | Repetitive infinite loops ($\ge 4$ duplicate questions in a row), missing large sections. |
+| **Sequence Continuity** | 10% | Missing large sections or monotonic numbering gaps. |
 | **Stimulus Accuracy** | 10% | Stimulus wrapping system tags, missing anchors, anchors not found in document text. |
 
 ### Decision Thresholds:

@@ -527,33 +527,6 @@ class DeterministicAuditor:
 
         total_q = len(question_numbers)
 
-        # Check for repetition loops (e.g. [1, 1, 1, 1, 1] or [101, 101, 101])
-        consecutive_dups = 0
-        for i in range(1, len(question_numbers)):
-            if question_numbers[i] == question_numbers[i - 1]:
-                consecutive_dups += 1
-
-        if consecutive_dups >= 4:
-            issues.append(
-                AuditIssue(
-                    category="continuity",
-                    severity=IssueSeverity.CRITICAL,
-                    message=f"Detected infinite repetition loop: {consecutive_dups} consecutive duplicate question numbers ({question_numbers[:6]}...).",
-                )
-            )
-            deductions += 60.0
-        elif consecutive_dups > 0:
-            dup_ratio = consecutive_dups / max(1, total_q)
-            is_major = dup_ratio >= 0.15 or consecutive_dups >= 3
-            issues.append(
-                AuditIssue(
-                    category="continuity",
-                    severity=IssueSeverity.MAJOR if is_major else IssueSeverity.MINOR,
-                    message=f"Found {consecutive_dups}/{total_q} duplicate question numbers in sequence.",
-                )
-            )
-            deductions += min(20.0, dup_ratio * 30.0 + (2.0 if not is_major else 8.0))
-
         # Check for large numbering gaps if monotonically increasing
         is_increasing = all(
             question_numbers[i] <= question_numbers[i + 1]
@@ -805,7 +778,7 @@ Your task is to critically inspect an annotated XML exam document against strict
 - Rule 4 (Figures Out of Scope): Figure tags (<figure ... />) are out of evaluation scope for now. Do NOT penalize or deduce points for missing, extra, malformed, or misplaced figure tags, nor if question stems do or do not mention figures.
 - Rule 5 (Error Rate vs. Document Scale): Assess error rate proportionally relative to total question count. A document with 30 questions and only 1 isolated mislabelled stem or minor glitch has >96% accuracy and must be rated favorably (e.g. 85-95 / PASS with minor notes), NOT failed or discarded.
 - Rule 6 (Severity Definitions):
-  * CRITICAL: Fatal structural failures (syntax cut off mid-tag at EOF, zero questions in document, unpruned page tags <pages>/<page>/<page_metadata>, stimulus wrapping system tags, retention <25% with lost questions, retention >140%, infinite repetition loops). Must trigger decision: "DISCARD" and is_malfunctioned: true.
+  * CRITICAL: Fatal structural failures (syntax cut off mid-tag at EOF, zero questions in document, unpruned page tags <pages>/<page>/<page_metadata>, stimulus wrapping system tags, retention <25% with lost questions, retention >140%). Must trigger decision: "DISCARD" and is_malfunctioned: true.
   * MAJOR: Systemic errors or repairable syntax issues (e.g., unclosed tags, mismatched closing tags, systematic absorption of sub-questions a), b) across the entire paper, dropped exam questions). Documents with unclosed or mismatched tags are classified as NEEDS_REVISION, NOT discarded.
   * MINOR: Isolated, low-frequency, non-systemic anomalies or one-off glitches (1-2 isolated items in a 20-30+ question exam).
   * INFO: Informative observations (omitted non-question lecture notes, mixed solved/unsolved problems, table layout).
