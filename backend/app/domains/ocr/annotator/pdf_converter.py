@@ -15,6 +15,14 @@ import numpy as np
 from openai import OpenAI
 from tqdm import tqdm
 
+try:
+    from openai_codex import Codex, Sandbox, ApprovalMode
+    from openai_codex._inputs import ImageInput, TextInput
+    from openai_codex.api import ReasoningEffort
+    CODEX_AVAILABLE = True
+except ImportError:
+    CODEX_AVAILABLE = False
+
 # Reconfigure stdout to use UTF-8 encoding
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -33,6 +41,7 @@ from backend.app.core.config import (
     OCR_PROVIDER,
     OCR_BATCH_SIZE,
     OCR_CONCURRENCY,
+    OCR_THINKING,
     get_provider_base_url,
     get_provider_api_key,
 )
@@ -272,7 +281,7 @@ def load_few_shot_messages(example_dir: Path) -> List[Dict[str, Any]]:
 class PDFOCRConverter:
     """
     Renders PDF pages to high-resolution PNG images using PyMuPDF (fitz)
-    and passes them to a Vision LLM API (MiniMax / DeepSeek Vision / Qwen-VL) to produce Markdown OCR.
+    and passes them to a Vision LLM API (MiniMax / DeepSeek Vision / Qwen-VL / Codex) to produce Markdown OCR.
     """
 
     def __init__(
@@ -283,14 +292,16 @@ class PDFOCRConverter:
         provider: Optional[str] = None,
         batch_size: Optional[int] = None,
         concurrency: Optional[int] = None,
+        thinking: Optional[Any] = None,
         examples_dir: Optional[Union[str, Path]] = None,
         enable_figure_detection: Optional[bool] = None,
         figure_detector: Optional[RFDETRFigureDetector] = None,
     ):
         self.model = model or OCR_MODEL
-        self.provider = provider or OCR_PROVIDER or "xah"
+        self.provider = (provider or OCR_PROVIDER or "xah").lower()
         self.batch_size = batch_size if batch_size is not None else OCR_BATCH_SIZE
         self.concurrency = concurrency if concurrency is not None else OCR_CONCURRENCY
+        self.thinking = thinking if thinking is not None else OCR_THINKING
 
         self.base_url = (
             base_url
@@ -319,7 +330,7 @@ class PDFOCRConverter:
             )
         self.last_figures: list[dict[str, Any]] = []
         self.client = None
-        if self.api_key:
+        if self.provider not in ["codex", "openai_codex"] and self.api_key:
             self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
 
         # Load few-shot examples
@@ -429,40 +440,122 @@ class PDFOCRConverter:
             b_id, s_idx, e_idx = batch_info
             print(f"  [OCR Batch {b_id + 1}/{len(batches)}] Processing pages {s_idx + 1} to {e_idx}...")
 
-            if self.client is None:
-                raise RuntimeError(
-                    f"Vision LLM API client is not configured for OCR model '{self.model}'. "
-                    f"Please verify API key and provider configuration."
-                )
-
             try:
                 system_prompt = SYSTEM_PROMPT_LONG_CONTEXT
-                content_parts = [{"type": "text", "text": system_prompt}]
 
-                for idx in range(s_idx, e_idx):
-                    page_num = idx + 1
-                    content_parts.append(
-                        {
-                            "type": "text",
-                            "text": (
+                if self.provider in ["codex", "openai_codex"]:
+                    if not CODEX_AVAILABLE:
+                        raise ImportError(
+                            "openai-codex package is not installed. Install via `uv pip install openai-codex`."
+                        )
+                    codex_inputs = []
+                    for idx in range(s_idx, e_idx):
+                        page_num = idx + 1
+                        codex_inputs.append(
+                            TextInput(
                                 f"--- Document Page {page_num} ---\n"
                                 f"{format_figure_inventory(page_figures[idx])}"
-                            ),
-                        }
-                    )
-                    content_parts.append(
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": f"data:image/jpeg;base64,{page_images[idx]}"},
-                        }
-                    )
+                            )
+                        )
+                        codex_inputs.append(
+                            ImageInput(url=f"data:image/jpeg;base64,{page_images[idx]}")
+                        )
 
-                messages = self.few_shot_messages + [{"role": "user", "content": content_parts}]
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                )
-                raw_result = response.choices[0].message.content
+                    codex_model = self.model or "gpt-5.6-luna"
+                    if "/" in codex_model:
+                        codex_model = codex_model.split("/")[-1]
+
+                    effort_val = None
+                    if self.thinking is not None:
+                        if isinstance(self.thinking, ReasoningEffort):
+                            effort_val = self.thinking
+                        elif self.thinking is True:
+                            effort_val = ReasoningEffort.high
+                        elif self.thinking is False or self.thinking == 0:
+                            effort_val = ReasoningEffort.none
+                        else:
+                            thinking_str = str(self.thinking).lower().strip()
+                            effort_map = {
+                                "none": ReasoningEffort.none,
+                                "minimal": ReasoningEffort.minimal,
+                                "low": ReasoningEffort.low,
+                                "medium": ReasoningEffort.medium,
+                                "high": ReasoningEffort.high,
+                                "xhigh": ReasoningEffort.xhigh,
+                                "max": ReasoningEffort.xhigh,
+                                "disabled": ReasoningEffort.none,
+                            }
+                            effort_val = effort_map.get(thinking_str)
+
+                    import time
+                    start_time = time.time()
+                    with Codex() as codex_session:
+                        codex_key = get_provider_api_key("codex")
+                        if codex_key:
+                            codex_session.login_api_key(codex_key)
+                        thread = codex_session.thread_start(
+                            model=codex_model,
+                            base_instructions="You are an expert Document OCR and Structural Layout Mining Assistant.",
+                            developer_instructions=system_prompt,
+                            approval_mode=ApprovalMode.auto_review,
+                            sandbox=Sandbox.read_only,
+                        )
+                        run_kwargs = {}
+                        if effort_val is not None:
+                            run_kwargs["effort"] = effort_val
+                        result = thread.run(codex_inputs, **run_kwargs)
+                    duration_sec = time.time() - start_time
+
+                    if result.error:
+                        raise RuntimeError(f"Codex turn error: {result.error}")
+
+                    try:
+                        from backend.app.domains.llm.llm_logger import log_llm_call
+                        log_llm_call(
+                            messages=[{"role": "user", "content": f"OCR Batch {b_id + 1} (pages {s_idx + 1}-{e_idx})"}],
+                            response=result,
+                            model=self.model,
+                            provider=self.provider,
+                            duration_sec=duration_sec,
+                        )
+                    except Exception:
+                        pass
+
+                    raw_result = result.final_response or ""
+                else:
+                    if self.client is None:
+                        raise RuntimeError(
+                            f"Vision LLM API client is not configured for OCR model '{self.model}'. "
+                            f"Please verify API key and provider configuration."
+                        )
+
+                    content_parts = [{"type": "text", "text": system_prompt}]
+
+                    for idx in range(s_idx, e_idx):
+                        page_num = idx + 1
+                        content_parts.append(
+                            {
+                                "type": "text",
+                                "text": (
+                                    f"--- Document Page {page_num} ---\n"
+                                    f"{format_figure_inventory(page_figures[idx])}"
+                                ),
+                            }
+                        )
+                        content_parts.append(
+                            {
+                                "type": "image_url",
+                                "image_url": {"url": f"data:image/jpeg;base64,{page_images[idx]}"},
+                            }
+                        )
+
+                    messages = self.few_shot_messages + [{"role": "user", "content": content_parts}]
+                    response = self.client.chat.completions.create(
+                        model=self.model,
+                        messages=messages,
+                    )
+                    raw_result = response.choices[0].message.content
+
                 batch_result = prune_think_tags(raw_result)
                 batch_result = normalize_batch_metadata(batch_result, s_idx + 1)
                 batch_result = project_figures_to_llm_output(
@@ -583,7 +676,10 @@ def main():
         "--batch-size", type=int, default=OCR_BATCH_SIZE, help=f"Number of images per OCR batch request (default: {OCR_BATCH_SIZE})"
     )
     parser.add_argument(
-        "--concurrency", type=int, default=OCR_CONCURRENCY, help=f"Number of parallel OCR batch requests (default: {OCR_CONCURRENCY})"
+        "--provider", default=None, help="OCR Provider (e.g. codex, commandcode, xah, vilao, nvidia)"
+    )
+    parser.add_argument(
+        "--thinking", default=None, help="Thinking / reasoning effort level for OCR model"
     )
 
     args = parser.parse_args()
@@ -591,8 +687,10 @@ def main():
 
     converter = PDFOCRConverter(
         model=args.model,
+        provider=args.provider,
         batch_size=args.batch_size,
-        concurrency=args.concurrency
+        concurrency=args.concurrency,
+        thinking=args.thinking,
     )
 
     inp = Path(args.input)

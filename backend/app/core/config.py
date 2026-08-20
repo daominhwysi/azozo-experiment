@@ -60,6 +60,7 @@ OCR_MODEL = ocr_cfg.get("model_name")
 OCR_PROVIDER = ocr_cfg.get("provider")
 OCR_BATCH_SIZE = ocr_cfg.get("batch_size", 6)
 OCR_CONCURRENCY = ocr_cfg.get("concurrency", 5)
+OCR_THINKING = ocr_cfg.get("thinking")
 
 figure_cfg = ocr_cfg.get("figure_detection", {})
 FIGURE_DETECTION_ENABLED = figure_cfg.get("enabled", True)
