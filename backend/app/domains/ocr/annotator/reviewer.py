@@ -673,6 +673,8 @@ class DeterministicAuditor:
     ) -> Tuple[List[AuditIssue], float, Dict[str, Any]]:
         """
         Audits verbatim fidelity against raw OCR text if provided.
+        Distinguishes acceptable omission (e.g. extraneous lecture/info text omitted while questions remain complete)
+        from critical question loss.
         """
         issues: List[AuditIssue] = []
         deductions = 0.0
@@ -702,8 +704,8 @@ class DeterministicAuditor:
         retention_ratio = annotated_chars / raw_chars
         metrics["retention_ratio"] = round(retention_ratio, 3)
 
-        # If retention is very low (< 0.65) -> severe truncation / text dropped
-        if retention_ratio < 0.65:
+        # If retention is very low (< 0.25) -> severe truncation / empty output
+        if retention_ratio < 0.25:
             issues.append(
                 AuditIssue(
                     category="verbatim_fidelity",
@@ -712,15 +714,28 @@ class DeterministicAuditor:
                 )
             )
             deductions += 50.0
-        elif retention_ratio < 0.85:
+        elif retention_ratio < 0.65:
             issues.append(
                 AuditIssue(
                     category="verbatim_fidelity",
                     severity=IssueSeverity.MAJOR,
-                    message=f"Substantial text omission: Annotated output retained {retention_ratio*100:.1f}% of raw OCR text.",
+                    message=(
+                        f"Substantial text omission ({retention_ratio*100:.1f}% retention). "
+                        f"Acceptable if only extraneous lecture/info was omitted while all exam questions are intact, "
+                        f"subject to semantic verification."
+                    ),
                 )
             )
-            deductions += 20.0
+            deductions += 25.0
+        elif retention_ratio < 0.85:
+            issues.append(
+                AuditIssue(
+                    category="verbatim_fidelity",
+                    severity=IssueSeverity.MINOR,
+                    message=f"Moderate text omission: Annotated output retained {retention_ratio*100:.1f}% of raw OCR text.",
+                )
+            )
+            deductions += 10.0
         elif retention_ratio > 1.40:
             issues.append(
                 AuditIssue(
@@ -750,11 +765,11 @@ class DeterministicAuditor:
             issues.append(
                 AuditIssue(
                     category="verbatim_fidelity",
-                    severity=IssueSeverity.MAJOR,
-                    message=f"Low initial verbatim alignment similarity ({similarity*100:.1f}%). First tokens may have been altered or skipped.",
+                    severity=IssueSeverity.MINOR,
+                    message=f"Initial verbatim alignment variance ({similarity*100:.1f}% similarity). Early lecture/intro text may have been pruned.",
                 )
             )
-            deductions += 25.0
+            deductions += 10.0
 
         score = max(0.0, 100.0 - deductions)
         return issues, score, metrics
@@ -763,12 +778,12 @@ class DeterministicAuditor:
 class DeepSeekReviewer:
     """
     LLM-powered Semantic Reviewer using DeepSeek Client for in-depth quality analysis.
-    Informed by the complete original parser ground-truth prompt rules and constraints.
+    Informed by the complete original parser ground-truth prompt rules, constraints, and raw OCR source text.
     """
 
     SYSTEM_PROMPT = """# [System Config]
 Role: You are an expert AI Quality Assurance & Sequence Labelling Auditor for Exam Documents (TOEIC, SAT, High School National Exams).
-Your task is to critically inspect an annotated XML exam document against strict sequence labelling ground-truth specifications.
+Your task is to critically inspect an annotated XML exam document against strict sequence labelling ground-truth specifications and its original raw OCR source text.
 
 ## 🏷️ Complete Schema & Tag Dictionary:
 1. <section>...</section>: Section headers, part titles, exam directions, and subject block titles (e.g. "<section>PHẦN I. Câu trắc nghiệm...</section>", "<section>## PART 5</section>", "<section>## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517</section>"). Output full paired tags containing verbatim text. Never use anchor tags for section titles.
@@ -783,18 +798,19 @@ Your task is to critically inspect an annotated XML exam document against strict
 
 ## ⛔ Strict Rules & Evaluation Principles:
 - Rule 1 (100% Verbatim): Zero paraphrasing, zero rewriting. LaTeX math expressions ($...$, $$...$$), standard mathematical abbreviations (e.g. 'VT' = Vế Trái, 'VP' = Vế Phải, 'đpcm' = điều phải chứng minh), and comparison symbols (<, >) inside math text are VALID content, not broken XML tags.
-- Rule 2 (Table HTML): Standard HTML table markup (<table>, <tr>, <td>, <th>, <tbody>, <thead>, <tfoot>) is standard and valid for tabular questions and choices. In tabular True/False questions without explicit choice letters, statement cells are tagged as <td><option_text>...</option_text></td>. HTML table tags and headers are valid structure, NOT syntax errors.
-- Rule 3 (Figures Out of Scope): Figure tags (<figure ... />) are out of evaluation scope for now. Do NOT penalize or deduce points for missing, extra, malformed, or misplaced figure tags, nor if question stems do or do not mention figures.
-- Rule 4 (Error Rate vs. Document Scale): Assess error rate proportionally relative to total question count. A document with 30 questions and only 1 isolated mislabelled stem or minor glitch has >96% accuracy and must be rated favorably (e.g. 85-95 / PASS with minor notes), NOT failed or discarded.
-- Rule 5 (Severity Definitions):
-  * CRITICAL: Fatal structural failures (syntax cut off mid-tag at EOF, zero questions in document, unclosed/mismatched tags, unpruned page tags <pages>/<page>/<page_metadata>, stimulus wrapping system tags, retention <65% or >140%, infinite repetition loops). Must trigger decision: "DISCARD" and is_malfunctioned: true.
-  * MAJOR: Systemic, repetitive errors occurring across a large portion (>= 15-20%) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions a), b) across the entire paper, massive missing sections).
+- Rule 2 (Acceptable Text Omission): If the annotated XML omitted long extraneous lecture text, textbook theory chapters, study guides, or teacher info blurbs BUT annotated ALL exam questions, stems, choices, and answer keys fully and accurately without affecting the end exam result, this lost text is completely ACCEPTABLE. Do NOT penalize, fail, or discard the document for lower text retention when questions are intact.
+- Rule 3 (Table HTML): Standard HTML table markup (<table>, <tr>, <td>, <th>, <tbody>, <thead>, <tfoot>) is standard and valid for tabular questions and choices. In tabular True/False questions without explicit choice letters, statement cells are tagged as <td><option_text>...</option_text></td>. HTML table tags and headers are valid structure, NOT syntax errors.
+- Rule 4 (Figures Out of Scope): Figure tags (<figure ... />) are out of evaluation scope for now. Do NOT penalize or deduce points for missing, extra, malformed, or misplaced figure tags, nor if question stems do or do not mention figures.
+- Rule 5 (Error Rate vs. Document Scale): Assess error rate proportionally relative to total question count. A document with 30 questions and only 1 isolated mislabelled stem or minor glitch has >96% accuracy and must be rated favorably (e.g. 85-95 / PASS with minor notes), NOT failed or discarded.
+- Rule 6 (Severity Definitions):
+  * CRITICAL: Fatal structural failures (syntax cut off mid-tag at EOF, zero questions in document, unclosed/mismatched tags, unpruned page tags <pages>/<page>/<page_metadata>, stimulus wrapping system tags, retention <25% with lost questions, retention >140%, infinite repetition loops). Must trigger decision: "DISCARD" and is_malfunctioned: true.
+  * MAJOR: Systemic, repetitive errors occurring across a large portion (>= 15-20%) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions a), b) across the entire paper, dropped exam questions).
   * MINOR: Isolated, low-frequency, non-systemic anomalies or one-off glitches (1-2 isolated items in a 20-30+ question exam).
-  * INFO: Informative observations (mixed solved/unsolved problems, table layout).
-- Rule 6 (Stimulus Nesting Auto-Reject): Any <stimulus> tag that wraps or encloses other system tags (<stem>, <question_label>, <option_label>, <option_text>, <explanation>) is a fatal architectural violation and MUST immediately trigger decision: "DISCARD" and is_malfunctioned: true.
-- Rule 7 (Multi-Question Stimulus): <stimulus> is ONLY for shared context serving 2+ questions. Single-question context belongs in <stem>.
-- Rule 8 (Sub-Question Segmentation): Sub-items "a)", "b)" in essay/true-false questions must be tagged in <option_label> + <option_text>, not absorbed into <stem>.
-- Rule 9 (Page Tag Pruning): Page tags (<pages>, <page>, <page_metadata>) must be pruned. Continuous elements span seamlessly across page breaks.
+  * INFO: Informative observations (omitted non-question lecture notes, mixed solved/unsolved problems, table layout).
+- Rule 7 (Stimulus Nesting Auto-Reject): Any <stimulus> tag that wraps or encloses other system tags (<stem>, <question_label>, <option_label>, <option_text>, <explanation>) is a fatal architectural violation and MUST immediately trigger decision: "DISCARD" and is_malfunctioned: true.
+- Rule 8 (Multi-Question Stimulus): <stimulus> is ONLY for shared context serving 2+ questions. Single-question context belongs in <stem>.
+- Rule 9 (Sub-Question Segmentation): Sub-items "a)", "b)" in essay/true-false questions must be tagged in <option_label> + <option_text>, not absorbed into <stem>.
+- Rule 10 (Page Tag Pruning): Page tags (<pages>, <page>, <page_metadata>) must be pruned. Continuous elements span seamlessly across page breaks.
 
 ## Output Format:
 Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
@@ -877,34 +893,43 @@ Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
         xml_content: str,
         deterministic_metrics: Dict[str, Any],
         raw_ocr_text: Optional[str] = None,
-        max_xml_chars: int = 100000,
+        max_xml_chars: int = 80000,
     ) -> Optional[Dict[str, Any]]:
         """
         Calls DeepSeek / LLM to semantically rate annotation quality and detect subtle malfunctions.
+        Supplies raw OCR text for omission verification and pedagogical assessment.
         """
         xml_sample = self._sample_xml_safely(xml_content, max_chars=max_xml_chars)
 
+        raw_section = ""
+        if raw_ocr_text and raw_ocr_text.strip():
+            clean_raw = DeterministicAuditor.clean_raw_ocr_text(raw_ocr_text)
+            raw_sample = self._sample_xml_safely(clean_raw, max_chars=40000)
+            raw_section = f"\n\n### Original Raw OCR Source Text (for omission verification):\n```text\n{raw_sample}\n```\n"
+
         user_prompt = (
-            f"Review the following annotated XML exam document:\n\n"
+            f"Review the following annotated XML exam document against its raw OCR source:\n\n"
             f"### Document Metrics from Deterministic Pre-check:\n"
             f"- Total Questions: {deterministic_metrics.get('questions_count', 'N/A')}\n"
             f"- Total Option Labels: {deterministic_metrics.get('option_labels_count', 'N/A')}\n"
             f"- Total Option Texts: {deterministic_metrics.get('option_texts_count', 'N/A')}\n"
             f"- Total Stimuli: {deterministic_metrics.get('stimuli_count', 'N/A')}\n"
-            f"- Retention Ratio: {deterministic_metrics.get('retention_ratio', 'N/A')}\n\n"
+            f"- Retention Ratio: {deterministic_metrics.get('retention_ratio', 'N/A')}\n"
+            f"{raw_section}\n"
             f"### Target Annotated XML:\n"
             f"```xml\n{xml_sample}\n```\n\n"
             f"### Evaluation Guidelines & Context:\n"
-            f"1. Error Rate vs Document Size: Consider error frequency relative to total questions. If a document has 30 questions and only 1 isolated mislabelled stem or minor glitch (>96% accuracy), classify it as MINOR and score favorably (e.g. 85-95, PASS), do NOT discard.\n"
-            f"2. Figures Out of Scope: Do NOT evaluate or penalize figure tags (<figure ... />) or figure mentions.\n"
-            f"3. Table HTML: HTML table markup (<table>, <tr>, <td>, <th>) is valid. In tabular True/False questions, statement cells wrapped in <td><option_text>...</option_text></td> are valid.\n"
-            f"4. MAJOR vs MINOR: Reserve MAJOR for repetitive/systemic errors across a large portion of the document (>= 15-20%) that could poison the model.\n"
-            f"5. Auto-Reject Stimulus Nesting: If <stimulus> wraps <stem>, <option_label>, <question_label>, <option_text>, or <explanation>, immediately flag as CRITICAL with decision DISCARD.\n"
-            f"6. Mathematical '<' or '>' comparison symbols inside math formulas/LaTeX are valid content, not broken XML tags.\n"
-            f"7. Vietnamese mathematical abbreviations ('VT', 'VP', 'đpcm') are valid standard notation.\n"
-            f"8. Documents may legitimately mix solved examples (<stem> + <explanation>) and unsolved exercises (<stem> only).\n"
-            f"9. If an [AUDITOR_SAMPLING_WINDOW] comment is present, it was injected by the test auditor tool for large files; do not treat the sampling marker or jump across it as an omission or error.\n\n"
-            f"Evaluate the quality, rate each rubric dimension, detect any hallucinations or malfunctions, and return your audit JSON."
+            f"1. Acceptable Text Omission: If the annotated XML omitted long lecture notes, textbook theory, or info blurbs but annotated ALL exam questions and choices fully and accurately without affecting the end exam result, this lost text is completely ACCEPTABLE. Score the document favorably (PASS) and do NOT discard.\n"
+            f"2. Error Rate vs Document Size: Consider error frequency relative to total questions. If a document has 30 questions and only 1 isolated mislabelled stem or minor glitch (>96% accuracy), classify it as MINOR and score favorably (e.g. 85-95, PASS), do NOT discard.\n"
+            f"3. Figures Out of Scope: Do NOT evaluate or penalize figure tags (<figure ... />) or figure mentions.\n"
+            f"4. Table HTML: HTML table markup (<table>, <tr>, <td>, <th>) is valid. In tabular True/False questions, statement cells wrapped in <td><option_text>...</option_text></td> are valid.\n"
+            f"5. MAJOR vs MINOR: Reserve MAJOR for repetitive/systemic errors across a large portion of the document (>= 15-20%) that could poison the model.\n"
+            f"6. Auto-Reject Stimulus Nesting: If <stimulus> wraps <stem>, <option_label>, <question_label>, <option_text>, or <explanation>, immediately flag as CRITICAL with decision DISCARD.\n"
+            f"7. Mathematical '<' or '>' comparison symbols inside math formulas/LaTeX are valid content, not broken XML tags.\n"
+            f"8. Vietnamese mathematical abbreviations ('VT', 'VP', 'đpcm') are valid standard notation.\n"
+            f"9. Documents may legitimately mix solved examples (<stem> + <explanation>) and unsolved exercises (<stem> only).\n"
+            f"10. If an [AUDITOR_SAMPLING_WINDOW] comment is present, it was injected by the test auditor tool for large files; do not treat the sampling marker or jump across it as an omission or error.\n\n"
+            f"Evaluate the quality, verify if any omitted text affects exam completeness, rate each rubric dimension, and return your audit JSON."
         )
 
         try:

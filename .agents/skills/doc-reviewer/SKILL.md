@@ -27,12 +27,13 @@ The Reviewer Agent operates on a **2-Tier Hybrid Inspection Engine**:
 
 2. **Tier 2: DeepSeek Semantic Reviewer (LLM-Powered Pedagogical Audit)**
    - Uses `backend/app/domains/llm/deepseek_client.py` (multi-provider client supporting DeepSeek, Xah, NVIDIA).
-   - Informed by the complete ground-truth parser prompt rules and tag schema.
+   - Ingests both target annotated XML and original raw OCR source text for omission verification.
+   - **Acceptable Text Omission Rule**: Verifies if omitted text was merely extraneous non-question lecture notes, theory chapters, or intro blurbs. If all exam questions and choices are intact, lower retention is proven acceptable and scored favorably.
    - Audits math LaTeX expressions, sub-question absorption into stems, multi-question stimulus validity, and subtle educational nuances.
    - Generates rubric scores across 6 core dimensions and structured diagnostic feedback.
 
 3. **Tier 3: Automated Discard & Quarantine Manager**
-   - Documents with critical malfunctions (e.g. fatal syntax errors, stimulus nesting system tags, 0 questions, severe hallucinations, retention $< 65\%$, unpruned page tags, score below threshold) are tagged with decision `DISCARD`.
+   - Documents with critical malfunctions (e.g. fatal syntax errors, stimulus nesting system tags, 0 questions, severe hallucinations, unpruned page tags, score below threshold) are tagged with decision `DISCARD`.
    - Automatically moves corrupted document folders into a quarantine directory (e.g. `data/sequence_labelling_discarded/`) along with a full diagnostic `audit_report.json`.
 
 ---
@@ -46,11 +47,11 @@ The Reviewer Agent operates on a **2-Tier Hybrid Inspection Engine**:
   - Mismatched or unclosed tags
   - Unpruned `<pages>`, `<page>`, or `<page_metadata>`
   - `<stimulus>` illegally wrapping `<stem>`, `<question_label>`, `<option_label>`, `<option_text>`, or `<explanation>`
-  - Severe text loss (retention $< 65\%$) or severe hallucination (retention $> 140\%$)
+  - Severe text loss with dropped questions (retention $< 25\%$) or severe hallucination (retention $> 140\%$)
   - Infinite repetition loops ($\ge 4$ consecutive duplicates)
-- **`MAJOR` (Systemic Repetition)**: Repetitive errors occurring across a large portion ($\ge 15-20\%$) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions `a)`, `b)` into `<stem>` across multiple questions).
+- **`MAJOR` (Systemic Repetition)**: Repetitive errors occurring across a large portion ($\ge 15-20\%$) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions `a)`, `b)` into `<stem>` across multiple questions, dropped exam questions).
 - **`MINOR` (Isolated Glitches)**: One-off, low-frequency imperfections (1–2 isolated items in a 20–30+ question exam).
-- **`INFO` (Informational)**: Informative observations (mixed solved/unsolved problems, table layout).
+- **`INFO` (Informational)**: Informative observations (omitted non-question lecture notes, mixed solved/unsolved problems, table layout).
 
 ### Scoring Schema:
 Each document receives an overall score (0–100) and letter grade (`A`: 90–100, `B`: 80–89, `C`: 70–79, `D`: 60–69, `F`: <60):

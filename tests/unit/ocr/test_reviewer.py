@@ -182,6 +182,37 @@ def test_review_document_with_mocked_deepseek(mock_chat, valid_xml):
     assert "High-quality" in report.summary
 
 
+@patch("backend.app.domains.ocr.annotator.reviewer.chat")
+def test_review_semantic_includes_raw_ocr_source(mock_chat, valid_xml):
+    mock_chat.return_value = json.dumps({
+        "score": 92.0,
+        "decision": "PASS",
+        "is_malfunctioned": False,
+        "discard_reasons": [],
+        "rubric_scores": {
+            "xml_well_formedness": 100.0,
+            "schema_conformance": 100.0,
+            "verbatim_fidelity": 90.0,
+            "sequence_continuity": 100.0,
+            "question_option_completeness": 100.0,
+            "stimulus_accuracy": 90.0,
+        },
+        "issues": [],
+        "summary": "Omitted lecture text does not affect exam completeness."
+    })
+
+    raw_ocr = "### BÀI GIẢNG LÝ THUYẾT DÀI 100 TRANG...\n\n" + valid_xml
+    agent = AnnotationReviewerAgent(min_score=75)
+    report = agent.review_document(valid_xml, raw_ocr_text=raw_ocr, use_llm=True)
+
+    # Verify that raw_ocr_text was included in prompt to chat
+    call_args = mock_chat.call_args
+    prompt_sent = call_args.kwargs.get("prompt") or call_args[1].get("prompt")
+    assert "Original Raw OCR Source Text" in prompt_sent
+    assert "BÀI GIẢNG LÝ THUYẾT" in prompt_sent
+    assert report.decision == ReviewDecision.PASS
+
+
 def test_discard_document_and_quarantine(tmp_path, broken_xml_unclosed):
     # Setup test workspace
     input_exam_dir = tmp_path / "sequence_labelling_annotated" / "Math" / "exam_999"
