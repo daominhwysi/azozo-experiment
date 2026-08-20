@@ -1335,6 +1335,66 @@ class AnnotationReviewerAgent:
 
         return result
 
+    @staticmethod
+    def discover_review_targets(
+        annotated_dir: Union[str, Path],
+        max_merged_tokens: int = 500_000,
+    ) -> List[Path]:
+        """
+        Discovers XML files for review following the threshold rule:
+        - If a document is <= max_merged_tokens (~500k tokens), review the merged.xml version.
+        - If a document exceeds max_merged_tokens, fallback to chunk level (chunk_*.xml).
+        - Never review both merged and chunk versions for the same document.
+        - Standalone XML files are reviewed as-is.
+        """
+        base_dir = Path(annotated_dir)
+        if base_dir.is_file():
+            return [base_dir]
+
+        targets: List[Path] = []
+
+        # 1. Find all directories containing merged.xml
+        merged_files = sorted(base_dir.rglob("merged.xml"))
+        exam_dirs_with_merged = set()
+
+        for m_file in merged_files:
+            exam_dir = m_file.parent
+            exam_dirs_with_merged.add(exam_dir)
+
+            try:
+                content = m_file.read_text(encoding="utf-8", errors="replace")
+                # Estimate tokens: approx 3.5 chars per token
+                est_tokens = len(content) / 3.5
+            except Exception:
+                est_tokens = 0
+
+            chunks_dir = exam_dir / "chunks"
+            chunk_files = sorted(chunks_dir.glob("chunk_*.xml")) if chunks_dir.exists() else []
+
+            if est_tokens > max_merged_tokens and chunk_files:
+                # Fallback to chunk level if document exceeds 500k token threshold
+                targets.extend(chunk_files)
+            else:
+                # Process merged level
+                targets.append(m_file)
+
+        # 2. Find any chunk files in folders that DO NOT have merged.xml
+        all_chunks = sorted(base_dir.rglob("chunk_*.xml"))
+        for c_file in all_chunks:
+            exam_dir = c_file.parent.parent if c_file.parent.name == "chunks" else c_file.parent
+            if exam_dir not in exam_dirs_with_merged:
+                targets.append(c_file)
+
+        # 3. Find any standalone .xml files (not named merged.xml and not chunk_*.xml)
+        all_xml = sorted(base_dir.rglob("*.xml"))
+        for x_file in all_xml:
+            if x_file.name == "merged.xml" or x_file.name.startswith("chunk_"):
+                continue
+            targets.append(x_file)
+
+        targets.sort()
+        return targets
+
     def batch_review(
         self,
         annotated_dir: Union[str, Path],
@@ -1344,11 +1404,14 @@ class AnnotationReviewerAgent:
         save_audit_json: bool = True,
         use_llm: bool = True,
         concurrency: int = 4,
+        max_merged_tokens: int = 500_000,
         output_report_path: Optional[Union[str, Path]] = None,
         progress_callback=None,
     ) -> BatchReviewSummary:
         """
         Performs batch review across all XML documents in a directory.
+        Processes merged.xml by default if <= 500k tokens, falling back to chunk level if > 500k tokens.
+        Never processes both chunk and merged versions for the same document.
         Saves progress, Markdown report, and JSON summary on the fly as documents finish.
         """
         start_time = time.time()
@@ -1356,11 +1419,8 @@ class AnnotationReviewerAgent:
         if not base_dir.exists():
             raise FileNotFoundError(f"Annotated directory not found: {annotated_dir}")
 
-        # Gather target xml files
-        xml_files: List[Path] = []
-        for p in base_dir.rglob("*.xml"):
-            if p.is_file() and not p.name.startswith("."):
-                xml_files.append(p)
+        # Gather target xml files following 500k token merged-vs-chunk rule
+        xml_files = self.discover_review_targets(base_dir, max_merged_tokens=max_merged_tokens)
 
         xml_files.sort()
         total_docs = len(xml_files)

@@ -90,6 +90,12 @@ def parse_args():
         help="Output filepath for markdown audit report (default: backend/logs/review_report.md)",
     )
     parser.add_argument(
+        "--max-merged-tokens",
+        type=int,
+        default=500_000,
+        help="Token threshold above which documents fallback to chunk-level processing (default: 500,000)",
+    )
+    parser.add_argument(
         "--no-save-audit",
         action="store_true",
         help="Do not save audit_report.json inside individual document folders",
@@ -192,6 +198,7 @@ def main():
             save_audit_json=not args.no_save_audit,
             use_llm=use_llm,
             concurrency=args.concurrency,
+            max_merged_tokens=args.max_merged_tokens,
             output_report_path=args.report,
             progress_callback=progress_cb,
         )

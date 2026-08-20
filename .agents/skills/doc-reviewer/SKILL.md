@@ -38,6 +38,15 @@ The Reviewer Agent operates on a **2-Tier Hybrid Inspection Engine**:
 
 ---
 
+## ⚖️ Merged Level vs. Chunk Level Processing Strategy
+
+To ensure comprehensive audit coverage without duplicate processing:
+- **Default Policy ($\le 500\text{k}$ tokens)**: Process the **`merged.xml`** full document (representing the complete continuous exam paper from Question 1 to Question $N$).
+- **Large Document Fallback ($> 500\text{k}$ tokens)**: If an exam document exceeds 500k input tokens, automatically fallback to reviewing at the **chunk level** (`chunk_0.xml`, `chunk_1.xml`, ...).
+- **Core Invariant**: Never process both `merged.xml` and `chunk_*.xml` for the same document.
+
+---
+
 ## 🏷️ Severity Classification & Rubric Dimensions
 
 ### Issue Severity Definitions:

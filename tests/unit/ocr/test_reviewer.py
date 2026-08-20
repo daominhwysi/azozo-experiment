@@ -441,3 +441,42 @@ def test_figures_out_of_scope_no_penalties():
     assert report.overall_score >= 90.0
 
 
+def test_discover_review_targets_merged_vs_chunk_rule(tmp_path):
+    # Setup standard exam folder with merged.xml and chunks
+    exam1 = tmp_path / "exam_1"
+    exam1.mkdir()
+    (exam1 / "merged.xml").write_text("<stem>Standard exam</stem>", encoding="utf-8")
+    chunks1 = exam1 / "chunks"
+    chunks1.mkdir()
+    (chunks1 / "chunk_0.xml").write_text("<stem>Standard exam chunk 0</stem>", encoding="utf-8")
+    (chunks1 / "chunk_1.xml").write_text("<stem>Standard exam chunk 1</stem>", encoding="utf-8")
+
+    # Setup giant exam folder exceeding 500k tokens
+    exam2 = tmp_path / "exam_2"
+    exam2.mkdir()
+    # Write ~2MB content to exceed 500k tokens
+    giant_content = "<stem>" + ("giant text word " * 120_000) + "</stem>"
+    (exam2 / "merged.xml").write_text(giant_content, encoding="utf-8")
+    chunks2 = exam2 / "chunks"
+    chunks2.mkdir()
+    (chunks2 / "chunk_0.xml").write_text("<stem>Giant chunk 0</stem>", encoding="utf-8")
+    (chunks2 / "chunk_1.xml").write_text("<stem>Giant chunk 1</stem>", encoding="utf-8")
+
+    targets = AnnotationReviewerAgent.discover_review_targets(tmp_path, max_merged_tokens=500_000)
+    target_names = [t.name for t in targets]
+
+    # exam_1 is under 500k -> merged.xml selected, chunks ignored
+    assert exam1 / "merged.xml" in targets
+    assert exam1 / "chunks" / "chunk_0.xml" not in targets
+    assert exam1 / "chunks" / "chunk_1.xml" not in targets
+
+    # exam_2 is over 500k -> fallback to chunks, merged.xml ignored
+    assert exam2 / "merged.xml" not in targets
+    assert exam2 / "chunks" / "chunk_0.xml" in targets
+    assert exam2 / "chunks" / "chunk_1.xml" in targets
+
+    # Total targets = 1 (from exam1) + 2 (from exam2) = 3
+    assert len(targets) == 3
+
+
+
