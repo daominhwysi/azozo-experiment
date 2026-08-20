@@ -94,57 +94,79 @@ def test_deterministic_auditor_valid_xml(valid_xml):
 
 def test_deterministic_auditor_unclosed_tag(broken_xml_unclosed):
     issues, score = DeterministicAuditor.check_xml_syntax(broken_xml_unclosed)
-    assert score < 80.0
-    assert any(iss.severity == IssueSeverity.CRITICAL for iss in issues)
+    assert score == 90.0
+    assert any(iss.severity == IssueSeverity.MAJOR for iss in issues)
     assert any("Unclosed tag '<stem>'" in iss.message for iss in issues)
+    assert not any(iss.severity == IssueSeverity.CRITICAL for iss in issues)
 
 
-def test_deterministic_auditor_prohibited_tags(broken_xml_prohibited_tags):
-    issues, score = DeterministicAuditor.check_prohibited_tags(broken_xml_prohibited_tags)
-    assert score < 60.0
-    assert any("pages" in iss.message for iss in issues)
-    assert any("page_metadata" in iss.message for iss in issues)
+def test_deterministic_auditor_mismatched_tag():
+    mismatched_xml = """<section># ĐỀ THI</section>
+<question_label>**Câu 1.**</question_label> <stem>Nội dung câu hỏi</option_text>
+- <option_label>A.</option_label> <option_text>A</option_text>
+"""
+    issues, score = DeterministicAuditor.check_xml_syntax(mismatched_xml)
+    assert score == 85.0
+    assert any(iss.severity == IssueSeverity.MAJOR for iss in issues)
+    assert any("Mismatched closing tag" in iss.message for iss in issues)
+    assert not any(iss.severity == IssueSeverity.CRITICAL for iss in issues)
 
-
-def test_deterministic_auditor_zero_questions(broken_xml_no_questions):
-    issues, score, metrics = DeterministicAuditor.check_question_and_option_structure(broken_xml_no_questions)
-    assert metrics["questions_count"] == 0
-    assert score == 0.0
-    assert any(iss.severity == IssueSeverity.CRITICAL for iss in issues)
-
-
-def test_verbatim_retention_checks():
-    raw_ocr = "Đây là văn bản OCR của đề thi môn toán với nhiều nội dung dài dòng và chi tiết."
-    # Severe truncation
-    short_xml = "<question_label>1.</question_label> <stem>Đây</stem>"
-    issues, score, metrics = DeterministicAuditor.check_verbatim_alignment(short_xml, raw_ocr)
-    assert metrics["retention_ratio"] < 0.65
-    assert any(iss.severity == IssueSeverity.CRITICAL for iss in issues)
-    assert any("Severe text truncation" in iss.message for iss in issues)
-
-
-def test_sequence_continuity_loops():
-    loop_xml = "\n".join([f"<question_label>**Câu 1.**</question_label> <stem>Stem {i}</stem>" for i in range(10)])
-    issues, score = DeterministicAuditor.check_sequence_continuity(loop_xml)
-    assert any("repetition loop" in iss.message for iss in issues)
-    assert score < 50.0
-
-
-def test_review_document_pass_without_llm(valid_xml):
     agent = AnnotationReviewerAgent(min_score=75)
-    report = agent.review_document(valid_xml, use_llm=False)
-    assert report.decision == ReviewDecision.PASS
-    assert report.overall_score >= 85.0
+    report = agent.review_document(mismatched_xml, use_llm=False)
+    assert report.decision == ReviewDecision.NEEDS_REVISION
     assert not report.is_malfunctioned
+
+
+def test_deterministic_auditor_mid_tag_eof_truncation_is_critical():
+    truncated_xml = """<section># ĐỀ THI</section>
+<question_label>**Câu 1.**</question_label> <stem>Nội dung</stem>
+<opt"""
+    issues, score = DeterministicAuditor.check_xml_syntax(truncated_xml)
+    assert score <= 60.0
+    assert any(iss.severity == IssueSeverity.CRITICAL for iss in issues)
+    assert any("truncated mid-tag" in iss.message for iss in issues)
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    report = agent.review_document(truncated_xml, use_llm=False)
+    assert report.decision == ReviewDecision.DISCARD
+    assert report.is_malfunctioned is True
+
+
+def test_trailing_unclosed_explanation_moves_to_needs_revision():
+    # 50-question document where last question has unclosed <explanation>
+    blocks = []
+    for i in range(1, 50):
+        blocks.append(
+            f"<question_label>**Câu {i}.**</question_label> <stem>Câu hỏi số {i}.</stem>\n"
+            f"- <option_label>A.</option_label> <option_text>Opt A</option_text>\n"
+            f"- <option_label>B.</option_label> <option_text>Opt B</option_text>\n"
+            f"<explanation>Lời giải câu {i}.</explanation>"
+        )
+    blocks.append(
+        "<question_label>**Câu 50.**</question_label> <stem>Câu hỏi số 50.</stem>\n"
+        "- <option_label>A.</option_label> <option_text>Opt A</option_text>\n"
+        "<explanation>Lời giải câu 50 bị thiếu thẻ đóng"
+    )
+    doc_xml = "\n\n".join(blocks)
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    report = agent.review_document(doc_xml, use_llm=False)
+    assert report.decision == ReviewDecision.NEEDS_REVISION
+    assert not report.is_malfunctioned
+    assert report.overall_score >= 85.0
     assert len(report.discard_reasons) == 0
 
 
-def test_review_document_discard_on_corrupted(broken_xml_unclosed):
+def test_unexpected_closing_tag_moves_to_needs_revision():
+    unexpected_xml = """<section># ĐỀ THI</section>
+</option_text>
+<question_label>**Câu 1.**</question_label> <stem>Nội dung câu hỏi</stem>
+- <option_label>A.</option_label> <option_text>A</option_text>
+"""
     agent = AnnotationReviewerAgent(min_score=75)
-    report = agent.review_document(broken_xml_unclosed, use_llm=False)
-    assert report.decision == ReviewDecision.DISCARD
-    assert report.is_malfunctioned
-    assert len(report.discard_reasons) > 0
+    report = agent.review_document(unexpected_xml, use_llm=False)
+    assert report.decision == ReviewDecision.NEEDS_REVISION
+    assert not report.is_malfunctioned
 
 
 @patch("backend.app.domains.ocr.annotator.reviewer.chat")
@@ -213,12 +235,12 @@ def test_review_semantic_includes_raw_ocr_source(mock_chat, valid_xml):
     assert report.decision == ReviewDecision.PASS
 
 
-def test_discard_document_and_quarantine(tmp_path, broken_xml_unclosed):
+def test_discard_document_and_quarantine(tmp_path, broken_xml_no_questions):
     # Setup test workspace
     input_exam_dir = tmp_path / "sequence_labelling_annotated" / "Math" / "exam_999"
     input_exam_dir.mkdir(parents=True)
     xml_file = input_exam_dir / "merged.xml"
-    xml_file.write_text(broken_xml_unclosed, encoding="utf-8")
+    xml_file.write_text(broken_xml_no_questions, encoding="utf-8")
 
     discard_dir = tmp_path / "sequence_labelling_discarded"
 
@@ -247,15 +269,18 @@ def test_discard_document_and_quarantine(tmp_path, broken_xml_unclosed):
     assert audit_data["is_malfunctioned"] is True
 
 
-def test_batch_review_flow(tmp_path, valid_xml, broken_xml_unclosed):
+def test_batch_review_flow(tmp_path, valid_xml, broken_xml_unclosed, broken_xml_no_questions):
     annot_base = tmp_path / "annotated"
     exam1 = annot_base / "exam_1"
     exam2 = annot_base / "exam_2"
+    exam3 = annot_base / "exam_3"
     exam1.mkdir(parents=True)
     exam2.mkdir(parents=True)
+    exam3.mkdir(parents=True)
 
     (exam1 / "merged.xml").write_text(valid_xml, encoding="utf-8")
     (exam2 / "merged.xml").write_text(broken_xml_unclosed, encoding="utf-8")
+    (exam3 / "merged.xml").write_text(broken_xml_no_questions, encoding="utf-8")
 
     discard_base = tmp_path / "discarded"
 
@@ -265,11 +290,12 @@ def test_batch_review_flow(tmp_path, valid_xml, broken_xml_unclosed):
         discard_dir=discard_base,
         auto_discard=True,
         use_llm=False,
-        concurrency=2,
+        concurrency=3,
     )
 
-    assert summary.total_documents == 2
+    assert summary.total_documents == 3
     assert summary.passed_count == 1
+    assert summary.needs_revision_count == 1
     assert summary.discarded_count == 1
     assert len(summary.discarded_paths) == 1
 

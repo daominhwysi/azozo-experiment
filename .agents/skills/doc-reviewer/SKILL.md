@@ -53,12 +53,13 @@ To ensure comprehensive audit coverage without duplicate processing:
 - **`CRITICAL` (Immediate Auto-Discard)**: Fatal structural failures making the document unusable:
   - Truncated output mid-tag at EOF
   - Zero questions in document
-  - Mismatched or unclosed tags
   - Unpruned `<pages>`, `<page>`, or `<page_metadata>`
   - `<stimulus>` illegally wrapping `<stem>`, `<question_label>`, `<option_label>`, `<option_text>`, or `<explanation>`
   - Severe text loss with dropped questions (retention $< 25\%$) or severe hallucination (retention $> 140\%$)
   - Infinite repetition loops ($\ge 4$ consecutive duplicates)
-- **`MAJOR` (Systemic Repetition)**: Repetitive errors occurring across a large portion ($\ge 15-20\%$) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions `a)`, `b)` into `<stem>` across multiple questions, dropped exam questions).
+- **`MAJOR` (Repairable Syntax & Systemic Errors $\to$ `NEEDS_REVISION`)**:
+  - Mismatched closing tags or unclosed tags (repairable syntax issues)
+  - Repetitive errors occurring across a large portion ($\ge 15-20\%$) of the document (e.g., systematic absorption of sub-questions `a)`, `b)` into `<stem>` across multiple questions, dropped exam questions).
 - **`MINOR` (Isolated Glitches)**: One-off, low-frequency imperfections (1–2 isolated items in a 20–30+ question exam).
 - **`INFO` (Informational)**: Informative observations (omitted non-question lecture notes, mixed solved/unsolved problems, table layout).
 
@@ -67,7 +68,7 @@ Each document receives an overall score (0–100) and letter grade (`A`: 90–10
 
 | Rubric Dimension | Weight | Critical Failure Triggers (Immediate Discard) |
 | :--- | :--- | :--- |
-| **XML Well-Formedness** | 25% | Unclosed tags, truncated mid-tag at EOF, mismatched closing tags, zero tags found. |
+| **XML Well-Formedness** | 25% | Truncated mid-tag at EOF, zero tags found in document. *(Note: Unclosed / mismatched tags route to `NEEDS_REVISION`)*. |
 | **Schema Conformance** | 15% | Unpruned `<pages>`, `<page>`, or `<page_metadata>` tags present. |
 | **Question/Choice Completeness** | 25% | 0 questions detected, empty stems, orphaned choice labels without text. |
 | **Verbatim Fidelity** | 15% | Retention ratio $< 65\%$ (severe text loss) or $> 140\%$ (severe hallucination). |
@@ -75,9 +76,9 @@ Each document receives an overall score (0–100) and letter grade (`A`: 90–10
 | **Stimulus Accuracy** | 10% | Stimulus wrapping system tags, missing anchors, anchors not found in document text. |
 
 ### Decision Thresholds:
-- **`PASS`**: Overall Score $\ge 75$, zero critical malfunctions, no systemic major errors.
-- **`NEEDS_REVISION`**: Overall Score $60 - 74$, minor repairable warnings.
-- **`DISCARD`**: Overall Score $< 60$ OR any critical malfunction flag (e.g. stimulus nesting system tags).
+- **`PASS`**: Overall Score $\ge 80.0$, zero critical malfunctions, no unclosed/mismatched syntax tags.
+- **`NEEDS_REVISION`**: Overall Score $\ge 75.0$ with unclosed/mismatched tags or minor repairable warnings.
+- **`DISCARD`**: Overall Score $< 75.0$ OR any critical malfunction flag (e.g. stimulus nesting system tags, EOF truncation, zero questions).
 
 ---
 

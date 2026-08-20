@@ -60,8 +60,8 @@ models:
     description: "Passage-locked greedy chunker token budget"
 
   reviewer:
-    model_name: "phatchau036/gpt-5.6-luna"
-    provider: "deepseek"
+    model_name: "gpt-5.6-luna"
+    provider: "codex"
     thinking: medium
     min_score_threshold: 75
     description: "Reviewer agent for rating sequence labelling XML quality and discarding malfunctioned documents"

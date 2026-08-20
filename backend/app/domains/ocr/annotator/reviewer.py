@@ -229,39 +229,39 @@ class DeterministicAuditor:
                     issues.append(
                         AuditIssue(
                             category="xml_syntax",
-                            severity=IssueSeverity.CRITICAL,
+                            severity=IssueSeverity.MAJOR,
                             message=f"Unexpected closing tag '</{tag_name}>' with no matching open tag.",
                             line_number=current_line_num,
                             context_snippet=full_match,
                         )
                     )
-                    deductions += 25.0
+                    deductions += 10.0
                 else:
                     last_open, last_line, last_tag = tag_stack.pop()
                     if last_open != tag_name:
                         issues.append(
                             AuditIssue(
                                 category="xml_syntax",
-                                severity=IssueSeverity.CRITICAL,
+                                severity=IssueSeverity.MAJOR,
                                 message=f"Mismatched closing tag '</{tag_name}>' at line {current_line_num}, expected '</{last_open}>' (opened at line {last_line}).",
                                 line_number=current_line_num,
                                 context_snippet=f"{last_tag} ... {full_match}",
                             )
                         )
-                        deductions += 30.0
+                        deductions += 15.0
 
         # Any unclosed tags remaining in stack?
         for unclosed_name, unclosed_line, unclosed_tag in tag_stack:
             issues.append(
                 AuditIssue(
                     category="xml_syntax",
-                    severity=IssueSeverity.CRITICAL,
+                    severity=IssueSeverity.MAJOR,
                     message=f"Unclosed tag '<{unclosed_name}>' opened at line {unclosed_line} was never closed.",
                     line_number=unclosed_line,
                     context_snippet=unclosed_tag,
                 )
             )
-            deductions += 25.0
+            deductions += 10.0
 
         if all_tags_found == 0:
             issues.append(
@@ -805,8 +805,8 @@ Your task is to critically inspect an annotated XML exam document against strict
 - Rule 4 (Figures Out of Scope): Figure tags (<figure ... />) are out of evaluation scope for now. Do NOT penalize or deduce points for missing, extra, malformed, or misplaced figure tags, nor if question stems do or do not mention figures.
 - Rule 5 (Error Rate vs. Document Scale): Assess error rate proportionally relative to total question count. A document with 30 questions and only 1 isolated mislabelled stem or minor glitch has >96% accuracy and must be rated favorably (e.g. 85-95 / PASS with minor notes), NOT failed or discarded.
 - Rule 6 (Severity Definitions):
-  * CRITICAL: Fatal structural failures (syntax cut off mid-tag at EOF, zero questions in document, unclosed/mismatched tags, unpruned page tags <pages>/<page>/<page_metadata>, stimulus wrapping system tags, retention <25% with lost questions, retention >140%, infinite repetition loops). Must trigger decision: "DISCARD" and is_malfunctioned: true.
-  * MAJOR: Systemic, repetitive errors occurring across a large portion (>= 15-20%) of the document that could poison model training if retained (e.g., systematic absorption of sub-questions a), b) across the entire paper, dropped exam questions).
+  * CRITICAL: Fatal structural failures (syntax cut off mid-tag at EOF, zero questions in document, unpruned page tags <pages>/<page>/<page_metadata>, stimulus wrapping system tags, retention <25% with lost questions, retention >140%, infinite repetition loops). Must trigger decision: "DISCARD" and is_malfunctioned: true.
+  * MAJOR: Systemic errors or repairable syntax issues (e.g., unclosed tags, mismatched closing tags, systematic absorption of sub-questions a), b) across the entire paper, dropped exam questions). Documents with unclosed or mismatched tags are classified as NEEDS_REVISION, NOT discarded.
   * MINOR: Isolated, low-frequency, non-systemic anomalies or one-off glitches (1-2 isolated items in a 20-30+ question exam).
   * INFO: Informative observations (omitted non-question lecture notes, mixed solved/unsolved problems, table layout).
 - Rule 7 (Stimulus Nesting Auto-Reject): Any <stimulus> tag that wraps or encloses other system tags (<stem>, <question_label>, <option_label>, <option_text>, <explanation>) is a fatal architectural violation and MUST immediately trigger decision: "DISCARD" and is_malfunctioned: true.
@@ -1143,6 +1143,9 @@ class AnnotationReviewerAgent:
                 discard_reasons.append(
                     f"Overall score {overall_score:.1f}/100 is below minimum threshold {self.min_score}."
                 )
+        elif any(iss.category == "xml_syntax" and iss.severity == IssueSeverity.MAJOR for iss in issues):
+            # Mismatched or unclosed tags are repairable syntax issues -> automatically route to NEEDS_REVISION
+            decision = ReviewDecision.NEEDS_REVISION
         elif overall_score >= 80.0 and not any(iss.severity in [IssueSeverity.CRITICAL, IssueSeverity.MAJOR] for iss in issues):
             decision = ReviewDecision.PASS
         elif overall_score >= 85.0:
