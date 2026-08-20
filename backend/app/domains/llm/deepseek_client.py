@@ -120,15 +120,18 @@ def chat(
         user_prompt = prompt or ""
 
         if messages is not None:
-            user_parts = []
+            formatted_turns = []
             for msg in messages:
                 role = msg.get("role")
+                content = msg.get("content", "")
                 if role == "system":
-                    dev_instructions = msg.get("content", "")
+                    dev_instructions = content
                 elif role == "user":
-                    user_parts.append(msg.get("content", ""))
-            if user_parts:
-                user_prompt = "\n\n".join(user_parts)
+                    formatted_turns.append(content)
+                elif role == "assistant":
+                    formatted_turns.append(f"### Assistant Response:\n{content}\n")
+            if formatted_turns:
+                user_prompt = "\n\n".join(formatted_turns)
 
         base_instructions = (
             "You are a pure text processing engine. "
@@ -152,6 +155,15 @@ def chat(
                 effort_val = ReasoningEffort.high
             elif thinking is False or thinking == 0:
                 effort_val = ReasoningEffort.none
+            elif isinstance(thinking, (int, float)):
+                if thinking >= 3:
+                    effort_val = ReasoningEffort.high
+                elif thinking == 2:
+                    effort_val = ReasoningEffort.medium
+                elif thinking == 1:
+                    effort_val = ReasoningEffort.low
+                else:
+                    effort_val = ReasoningEffort.none
             else:
                 thinking_str = str(thinking).lower().strip()
                 effort_map = {
@@ -164,14 +176,17 @@ def chat(
                     "max": ReasoningEffort.xhigh,
                     "disabled": ReasoningEffort.none,
                 }
-                effort_val = effort_map.get(thinking_str)
+                effort_val = effort_map.get(thinking_str, ReasoningEffort.medium)
 
         import time
         start_time = time.time()
         codex_key = get_provider_api_key("codex")
         with Codex() as codex_session:
             if codex_key:
-                codex_session.login_api_key(codex_key)
+                try:
+                    codex_session.login_api_key(codex_key)
+                except Exception:
+                    pass
             thread = codex_session.thread_start(
                 model=codex_model,
                 base_instructions=base_instructions,

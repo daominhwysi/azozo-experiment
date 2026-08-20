@@ -49,7 +49,7 @@ def get_provider_api_key(provider_name: str) -> str:
     elif provider_name == "deepseek":
         return os.environ.get("DEEPSEEK_API_KEY") or ""
     elif provider_name in ["codex", "openai_codex"]:
-        return os.environ.get("OPENAI_API_KEY") or ""
+        return os.environ.get("CODEX_API_KEY") or os.environ.get("OPENAI_API_KEY") or ""
     return ""
 
 # Model Configurations (Strictly loaded from config.yaml as single source of truth)

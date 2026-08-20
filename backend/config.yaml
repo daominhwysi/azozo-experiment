@@ -36,15 +36,15 @@ models:
       included_class_ids: [1]
 
   parser:
-    model_name: "phatchau036/gpt-5.6-luna"
-    provider: "xah"
+    model_name: "gpt-5.6-luna"
+    provider: "codex"
     thinking: high
     max_tokens: 128000
     description: "Sequence labeling LLM model for question stem and option annotation"
 
   linker:
-    model_name: "levuphong2909/gpt-5.6-luna"
-    provider: "xah"
+    model_name: "gpt-5.6-luna"
+    provider: "codex"
     thinking: low
     description: "Graph resolver agent for entity resolution and passage linking"
 

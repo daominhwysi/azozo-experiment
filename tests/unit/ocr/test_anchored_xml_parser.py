@@ -91,3 +91,31 @@ DECISION: APPROVED"""
     assert len(res["questions"][0]["options"]) == 4
     assert res["questions"][0]["options"][1]["label"] == "B"
     assert res["method"] == "llm_two_pass_xml_anchored"
+
+
+def test_anchored_parser_with_codex_provider():
+    """Verify that AnchoredXMLLLMExamParser and ParserAgentWorker initialize and route correctly with provider='codex'."""
+    from backend.app.domains.ocr.parser.long_parser.parser_agent_worker import ParserAgentWorker
+    from backend.app.domains.ocr.annotator.annotate_ocr import OCRAnnotator
+    from unittest.mock import patch, MagicMock
+
+    parser = AnchoredXMLLLMExamParser(model="gpt-5.6-luna", provider="codex")
+    assert parser.provider == "codex"
+    assert parser.model == "gpt-5.6-luna"
+
+    worker = ParserAgentWorker(model="gpt-5.6-luna", provider="codex")
+    assert worker.provider == "codex"
+    assert worker.model == "gpt-5.6-luna"
+
+    annotator = OCRAnnotator(model="gpt-5.6-luna", provider="codex")
+    assert annotator.provider == "codex"
+    assert annotator.client is None
+
+    # Test annotate_text with codex mocked chat
+    mock_xml = """<question_label>Câu 1.</question_label> <stem>Test stem</stem>
+- <option_label>A.</option_label> <option_text>Opt A</option_text>
+<|END|>"""
+    with patch("backend.app.domains.ocr.annotator.annotate_ocr.chat", return_value=mock_xml):
+        res = annotator.annotate_text("Câu 1. Test stem\nA. Opt A")
+        assert res["annotated"] is True
+        assert len(res["spans"]) >= 3

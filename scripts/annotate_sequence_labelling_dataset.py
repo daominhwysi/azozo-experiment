@@ -298,6 +298,14 @@ def main():
         default=str(WORKSPACE_DIR / "data" / "sequence_labelling_annotated"),
         help="Path to save annotated JSON & XML outputs",
     )
+    parser.add_argument("--model", type=str, default=PARSER_MODEL, help=f"Parser model name (default: {PARSER_MODEL})")
+    parser.add_argument(
+        "--provider",
+        type=str,
+        default=PARSER_PROVIDER,
+        choices=["codex", "xah", "deepseek", "nvidia", "vilao", "commandcode"],
+        help=f"Parser provider (default: {PARSER_PROVIDER})",
+    )
     parser.add_argument("--target_tokens", type=int, default=CHUNKER_TARGET_TOKENS, help="Target chunk size in tokens")
     parser.add_argument("--max_tokens", type=int, default=CHUNKER_MAX_TOKENS, help="Maximum chunk size in tokens")
     parser.add_argument("--concurrency", type=int, default=4, help="Number of concurrent chunk worker threads")
@@ -305,6 +313,9 @@ def main():
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing output files")
     parser.add_argument("--skip-validator", action="store_true", help="Skip Role B Validator pass to run fast 1-pass Role A parsing")
     args = parser.parse_args()
+
+    target_model = args.model or PARSER_MODEL
+    target_provider = args.provider or PARSER_PROVIDER
 
     input_path = Path(args.input_dir)
     output_path = Path(args.output_dir)
@@ -329,7 +340,7 @@ def main():
         skipped_count = 0
 
     from backend.app.core.config import get_provider_base_url
-    parser_base_url = get_provider_base_url(PARSER_PROVIDER)
+    parser_base_url = get_provider_base_url(target_provider)
 
     print("==================================================================")
     print("=== Sequence Labeling Batch Annotation Pipeline (Linker Skipped) =")
@@ -338,8 +349,8 @@ def main():
     print(f"  Total Documents   : {total_files}")
     print(f"  Already Done      : {skipped_count} (skipped)")
     print(f"  To Process        : {len(md_files)}")
-    print(f"  Parser Provider   : {PARSER_PROVIDER}")
-    print(f"  Parser Model      : {PARSER_MODEL}")
+    print(f"  Parser Provider   : {target_provider}")
+    print(f"  Parser Model      : {target_model}")
     print(f"  Base URL          : {parser_base_url}")
     print(f"  Concurrency       : {args.concurrency} worker thread(s)")
     print(f"  Chunker Budget    : {args.target_tokens} - {args.max_tokens} tokens")
@@ -363,8 +374,8 @@ def main():
                 file_path=file_path,
                 rel_path=rel_path,
                 out_dir=output_path,
-                parser_model=PARSER_MODEL,
-                parser_provider=PARSER_PROVIDER,
+                parser_model=target_model,
+                parser_provider=target_provider,
                 target_tokens=args.target_tokens,
                 max_tokens=args.max_tokens,
                 concurrency=args.concurrency,

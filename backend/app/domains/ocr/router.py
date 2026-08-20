@@ -226,7 +226,7 @@ async def parse_exam_from_pdf_or_text_stream(
         def run_annotation():
             nonlocal annotation_res, structured_questions, annotation_error, stimuli
             try:
-                annotator = OCRAnnotator(model=PARSER_MODEL)
+                annotator = OCRAnnotator(model=PARSER_MODEL, provider=PARSER_PROVIDER)
                 request_id = uuid.uuid4().hex[:10]
                 try:
                     annotation_res = annotator.annotate_text_stream(

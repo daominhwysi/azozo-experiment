@@ -17,7 +17,14 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from tqdm import tqdm
 
-from backend.app.core.config import PARSER_MODEL, PARSER_PROVIDER, PARSER_THINKING, get_provider_base_url
+from backend.app.core.config import (
+    PARSER_MODEL,
+    PARSER_PROVIDER,
+    PARSER_THINKING,
+    PARSER_MAX_TOKENS,
+    get_provider_base_url,
+)
+from backend.app.domains.llm.deepseek_client import chat
 
 try:
     from src.token_tracker import log_response
@@ -421,9 +428,9 @@ def get_client_and_model(
     llm_key: Optional[str] = None,
     xah_key: Optional[str] = None,
     provider: Optional[str] = None,
-) -> Tuple[OpenAI, str]:
+) -> Tuple[Optional[OpenAI], str]:
     """
-    Initializes OpenAI client routed to the appropriate provider (Xah, NVIDIA, Vilao, DeepSeek) based on config.
+    Initializes OpenAI client routed to the appropriate provider (Codex, Xah, NVIDIA, Vilao, DeepSeek) based on config.
     """
     target_model = model_name or PARSER_MODEL
     target_provider = (provider or PARSER_PROVIDER or "xah").lower()
@@ -434,7 +441,10 @@ def get_client_and_model(
     xah_key = xah_key or os.environ.get("XAH_API_KEY") or os.environ.get("LLM_API_KEY")
     cmd_key = os.environ.get("CMD_API_KEY") or os.environ.get("COMMANDCODE_API_KEY") or deepseek_key
 
-    if target_provider == "nvidia":
+    if target_provider in ["codex", "openai_codex"]:
+        print(f"Routing to OpenAI Codex with model: {target_model}")
+        return None, target_model
+    elif target_provider == "nvidia":
         print(f"Routing to NVIDIA NIM with model: {target_model}")
         return OpenAI(
             api_key=nvidia_key, base_url="https://integrate.api.nvidia.com/v1"
@@ -597,63 +607,94 @@ class OCRAnnotator:
         total_completion_tokens = 0
         max_iterations = 5
 
-        for iteration in range(max_iterations):
-            iteration_request_id = (
-                f"{request_id}_iter_{iteration + 1}" if request_id else None
-            )
-            kwargs = dict(
-                model=self.model_name,
-                messages=messages,
-                temperature=0.3,
-                frequency_penalty=0.2,
-            )
-            extra_body = self._make_extra_body()
-            if extra_body:
-                kwargs["extra_body"] = extra_body
-
-            import time
-            start_time = time.time()
-            response = self.client.chat.completions.create(**kwargs)
-            duration_sec = time.time() - start_time
-
-            if hasattr(response, "usage") and response.usage:
-                usage_counts = _extract_usage_tokens(response.usage)
-                total_prompt_tokens += usage_counts["prompt_tokens"] or 0
-                total_completion_tokens += usage_counts["completion_tokens"] or 0
-
-            try:
-                from backend.app.domains.llm.llm_logger import log_llm_call
-                log_llm_call(
+        if self.provider in ["codex", "openai_codex"]:
+            for iteration in range(max_iterations):
+                iteration_request_id = (
+                    f"{request_id}_iter_{iteration + 1}" if request_id else None
+                )
+                raw_result = chat(
                     messages=messages,
-                    response=response,
                     model=self.model_name,
                     provider=self.provider,
-                    request_id=iteration_request_id,
-                    duration_sec=duration_sec,
+                    thinking=PARSER_THINKING,
+                    max_tokens=PARSER_MAX_TOKENS,
                 )
-            except Exception as e:
-                print(f"[LLM Logger Warning] Failed to log LLM request: {e}")
 
-            raw_result = response.choices[0].message.content or ""
+                if "<|END|>" in raw_result:
+                    all_raw_results.append(raw_result)
+                    break
 
-            if "<|END|>" in raw_result:
-                all_raw_results.append(raw_result)
-                break
+                raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
+                all_raw_results.append(raw_result_trimmed)
 
-            # Safely trim unclosed trailing XML tag if present, preserving literal OCR text
-            raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
-            all_raw_results.append(raw_result_trimmed)
+                messages.append({"role": "assistant", "content": raw_result_trimmed})
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": (
+                            "Continue from the very exact next token where you left off. "
+                            "Start outputting directly from the next character without repeating any previously generated content or tags."
+                        )
+                    }
+                )
+        else:
+            for iteration in range(max_iterations):
+                iteration_request_id = (
+                    f"{request_id}_iter_{iteration + 1}" if request_id else None
+                )
+                kwargs = dict(
+                    model=self.model_name,
+                    messages=messages,
+                    temperature=0.3,
+                    frequency_penalty=0.2,
+                )
+                extra_body = self._make_extra_body()
+                if extra_body:
+                    kwargs["extra_body"] = extra_body
 
-            messages.append({"role": "assistant", "content": raw_result_trimmed})
-            messages.append(
-                {
-                    "role": "user",
-                    "content": (
-                        "Continue from the very exact next token where you left off. "
-                        "Start outputting directly from the next character without repeating any previously generated content or tags."
+                import time
+                start_time = time.time()
+                response = self.client.chat.completions.create(**kwargs)
+                duration_sec = time.time() - start_time
+
+                if hasattr(response, "usage") and response.usage:
+                    usage_counts = _extract_usage_tokens(response.usage)
+                    total_prompt_tokens += usage_counts["prompt_tokens"] or 0
+                    total_completion_tokens += usage_counts["completion_tokens"] or 0
+
+                try:
+                    from backend.app.domains.llm.llm_logger import log_llm_call
+                    log_llm_call(
+                        messages=messages,
+                        response=response,
+                        model=self.model_name,
+                        provider=self.provider,
+                        request_id=iteration_request_id,
+                        duration_sec=duration_sec,
                     )
-                }
-            )
+                except Exception as e:
+                    print(f"[LLM Logger Warning] Failed to log LLM request: {e}")
+
+                raw_result = response.choices[0].message.content or ""
+
+                if "<|END|>" in raw_result:
+                    all_raw_results.append(raw_result)
+                    break
+
+                # Safely trim unclosed trailing XML tag if present, preserving literal OCR text
+                raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
+                all_raw_results.append(raw_result_trimmed)
+
+                messages.append({"role": "assistant", "content": raw_result_trimmed})
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": (
+                            "Continue from the very exact next token where you left off. "
+                            "Start outputting directly from the next character without repeating any previously generated content or tags."
+                        )
+                    }
+                )
 
         full_raw_response = "".join(all_raw_results)
         cleaned_tagged_text = clean_llm_response(full_raw_response)
@@ -721,129 +762,164 @@ class OCRAnnotator:
         total_prompt_tokens = 0
         max_iterations = 5
 
-        from backend.app.domains.llm.llm_logger import StreamingLLMLogger
-        import time
-
-        max_retries = 3
-        retry_delay = 2.0
-
-        for iteration in range(max_iterations):
-            iteration_request_id = (
-                f"{request_id}_iter_{iteration + 1}" if request_id else None
-            )
-
-            kwargs = dict(
-                model=self.model_name,
-                messages=messages,
-                temperature=0.3,
-                frequency_penalty=0.2,
-                stream=True,
-            )
-            extra_body = self._make_extra_body()
-            if extra_body:
-                kwargs["extra_body"] = extra_body
-
-            full_chunks = []
-            iteration_base_tokens = streamed_token_count
-
-            for attempt in range(max_retries):
-                attempt_request_id = (
-                    f"{iteration_request_id}_attempt_{attempt + 1}" if iteration_request_id else None
+        if self.provider in ["codex", "openai_codex"]:
+            for iteration in range(max_iterations):
+                iteration_request_id = (
+                    f"{request_id}_iter_{iteration + 1}" if request_id else None
                 )
-                stream_logger = StreamingLLMLogger(
+                raw_result = chat(
                     messages=messages,
                     model=self.model_name,
                     provider=self.provider,
-                    request_id=attempt_request_id,
-                    flush_interval_sec=5.0,
+                    thinking=PARSER_THINKING,
+                    max_tokens=PARSER_MAX_TOKENS,
+                )
+                chunk_tokens = max(1, len(raw_result.split()))
+                streamed_token_count += chunk_tokens
+                if callback:
+                    callback(streamed_token_count, estimated_total_tokens, raw_result)
+
+                if "<|END|>" in raw_result:
+                    all_raw_results.append(raw_result)
+                    break
+
+                raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
+                all_raw_results.append(raw_result_trimmed)
+
+                messages.append({"role": "assistant", "content": raw_result_trimmed})
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": (
+                            "Continue from the very exact next token where you left off. "
+                            "Start outputting directly from the next character without repeating any previously generated content or tags."
+                        )
+                    }
+                )
+        else:
+            from backend.app.domains.llm.llm_logger import StreamingLLMLogger
+            import time
+
+            max_retries = 3
+            retry_delay = 2.0
+
+            for iteration in range(max_iterations):
+                iteration_request_id = (
+                    f"{request_id}_iter_{iteration + 1}" if request_id else None
                 )
 
-                try:
-                    response = self.client.chat.completions.create(**kwargs)
-                    full_chunks = []
-                    current_attempt_tokens = iteration_base_tokens
-                    saw_any_chunk = False
-                    finish_reason = None
-                    for chunk in response:
-                        if chunk.choices and len(chunk.choices) > 0:
-                            saw_any_chunk = True
-                            choice = chunk.choices[0]
-                            delta = choice.delta
-                            chunk_finish = getattr(choice, "finish_reason", None)
-                            if chunk_finish:
-                                finish_reason = chunk_finish
-                            content = getattr(delta, "content", None) or ""
-                            reasoning = getattr(delta, "reasoning_content", None) or ""
-                            usage = getattr(chunk, "usage", None)
+                kwargs = dict(
+                    model=self.model_name,
+                    messages=messages,
+                    temperature=0.3,
+                    frequency_penalty=0.2,
+                    stream=True,
+                )
+                extra_body = self._make_extra_body()
+                if extra_body:
+                    kwargs["extra_body"] = extra_body
 
-                            if usage:
-                                usage_counts = _extract_usage_tokens(usage)
-                                if usage_counts["prompt_tokens"] is not None:
-                                    total_prompt_tokens = max(
-                                        total_prompt_tokens,
-                                        usage_counts["prompt_tokens"],
+                full_chunks = []
+                iteration_base_tokens = streamed_token_count
+
+                for attempt in range(max_retries):
+                    attempt_request_id = (
+                        f"{iteration_request_id}_attempt_{attempt + 1}" if iteration_request_id else None
+                    )
+                    stream_logger = StreamingLLMLogger(
+                        messages=messages,
+                        model=self.model_name,
+                        provider=self.provider,
+                        request_id=attempt_request_id,
+                        flush_interval_sec=5.0,
+                    )
+
+                    try:
+                        response = self.client.chat.completions.create(**kwargs)
+                        full_chunks = []
+                        current_attempt_tokens = iteration_base_tokens
+                        saw_any_chunk = False
+                        finish_reason = None
+                        for chunk in response:
+                            if chunk.choices and len(chunk.choices) > 0:
+                                saw_any_chunk = True
+                                choice = chunk.choices[0]
+                                delta = choice.delta
+                                chunk_finish = getattr(choice, "finish_reason", None)
+                                if chunk_finish:
+                                    finish_reason = chunk_finish
+                                content = getattr(delta, "content", None) or ""
+                                reasoning = getattr(delta, "reasoning_content", None) or ""
+                                usage = getattr(chunk, "usage", None)
+
+                                if usage:
+                                    usage_counts = _extract_usage_tokens(usage)
+                                    if usage_counts["prompt_tokens"] is not None:
+                                        total_prompt_tokens = max(
+                                            total_prompt_tokens,
+                                            usage_counts["prompt_tokens"],
+                                        )
+
+                                if content or reasoning or usage:
+                                    stream_logger.append_chunk(
+                                        content=content,
+                                        reasoning=reasoning,
+                                        usage=usage,
                                     )
 
-                            if content or reasoning or usage:
-                                stream_logger.append_chunk(
-                                    content=content,
-                                    reasoning=reasoning,
-                                    usage=usage,
-                                )
+                                if content:
+                                    full_chunks.append(content)
+                                    chunk_tokens = max(1, len(content.split()))
+                                    current_attempt_tokens += chunk_tokens
+                                    if callback:
+                                        callback(current_attempt_tokens, estimated_total_tokens, content)
 
-                            if content:
-                                full_chunks.append(content)
-                                chunk_tokens = max(1, len(content.split()))
-                                current_attempt_tokens += chunk_tokens
-                                if callback:
-                                    callback(current_attempt_tokens, estimated_total_tokens, content)
+                        if finish_reason in ("length", "max_tokens"):
+                            print(f"  [Notice] Stream reached max output token limit (finish_reason='{finish_reason}') on iteration {iteration + 1}. Preserving {len(full_chunks)} content chunks for continuation.")
 
-                    if finish_reason in ("length", "max_tokens"):
-                        print(f"  [Notice] Stream reached max output token limit (finish_reason='{finish_reason}') on iteration {iteration + 1}. Preserving {len(full_chunks)} content chunks for continuation.")
+                        if not full_chunks and saw_any_chunk:
+                            raise RuntimeError("LLM streaming response had no content chunks.")
+                        if not full_chunks:
+                            raise RuntimeError("LLM streaming response was empty (no chunks received).")
 
-                    if not full_chunks and saw_any_chunk:
-                        raise RuntimeError("LLM streaming response had no content chunks.")
-                    if not full_chunks:
-                        raise RuntimeError("LLM streaming response was empty (no chunks received).")
-
-                    streamed_token_count = current_attempt_tokens
-                    break
-                except Exception as e:
-                    # If content chunks were already accumulated before the stream error/limit drop,
-                    # preserve them so the continuation loop can resume generation seamlessly.
-                    if full_chunks:
-                        print(f"  [Notice] Stream interrupted mid-output on attempt {attempt + 1} ({len(full_chunks)} content chunks collected). Preserving output for continuation. Cause: {e}")
                         streamed_token_count = current_attempt_tokens
                         break
+                    except Exception as e:
+                        # If content chunks were already accumulated before the stream error/limit drop,
+                        # preserve them so the continuation loop can resume generation seamlessly.
+                        if full_chunks:
+                            print(f"  [Notice] Stream interrupted mid-output on attempt {attempt + 1} ({len(full_chunks)} content chunks collected). Preserving output for continuation. Cause: {e}")
+                            streamed_token_count = current_attempt_tokens
+                            break
 
-                    streamed_token_count = iteration_base_tokens
-                    print(f"  [Warning] OCR annotation stream error on attempt {attempt + 1}: {e}")
-                    if attempt == max_retries - 1:
-                        raise e
-                    time.sleep(retry_delay)
-                finally:
-                    stream_logger.finalize()
+                        streamed_token_count = iteration_base_tokens
+                        print(f"  [Warning] OCR annotation stream error on attempt {attempt + 1}: {e}")
+                        if attempt == max_retries - 1:
+                            raise e
+                        time.sleep(retry_delay)
+                    finally:
+                        stream_logger.finalize()
 
-            raw_result = "".join(full_chunks)
+                raw_result = "".join(full_chunks)
 
-            if "<|END|>" in raw_result:
-                all_raw_results.append(raw_result)
-                break
+                if "<|END|>" in raw_result:
+                    all_raw_results.append(raw_result)
+                    break
 
-            # Safely trim unclosed trailing XML tag if present, preserving literal OCR text
-            raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
-            all_raw_results.append(raw_result_trimmed)
+                # Safely trim unclosed trailing XML tag if present, preserving literal OCR text
+                raw_result_trimmed = trim_unclosed_annotation_tag(raw_result, raw_ocr_text)
+                all_raw_results.append(raw_result_trimmed)
 
-            messages.append({"role": "assistant", "content": raw_result_trimmed})
-            messages.append(
-                {
-                    "role": "user",
-                    "content": (
-                        "Continue from the very exact next token where you left off. "
-                        "Start outputting directly from the next character without repeating any previously generated content or tags."
-                    )
-                }
-            )
+                messages.append({"role": "assistant", "content": raw_result_trimmed})
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": (
+                            "Continue from the very exact next token where you left off. "
+                            "Start outputting directly from the next character without repeating any previously generated content or tags."
+                        )
+                    }
+                )
 
         full_raw_response = "".join(all_raw_results)
         cleaned_tagged_text = clean_llm_response(full_raw_response)
@@ -905,7 +981,7 @@ def main():
     )
     parser.add_argument("--model", default=None, help="Model identifier")
     parser.add_argument(
-        "--provider", choices=["deepseek", "nvidia", "vilao", "xah", "commandcode"], default=None
+        "--provider", choices=["deepseek", "nvidia", "vilao", "xah", "commandcode", "codex"], default=None
     )
 
     args = parser.parse_args()

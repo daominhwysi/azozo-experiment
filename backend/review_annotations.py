@@ -101,6 +101,28 @@ def parse_args():
         help="Do not save audit_report.json inside individual document folders",
     )
     parser.add_argument(
+        "--overwrite",
+        "-f",
+        "--force",
+        action="store_true",
+        help="Overwrite existing audit_report.json files and force full fresh re-evaluation",
+    )
+    parser.add_argument(
+        "--filter",
+        "--only",
+        dest="filter_decision",
+        type=str,
+        default="all",
+        choices=["all", "discards", "needs_revision", "pass"],
+        help="Filter re-evaluation to specific document status (all, discards, needs_revision, pass). Default: all",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Limit number of documents to review",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Simulate review and show discard actions without moving any files",
@@ -117,6 +139,14 @@ def main():
         print(f"❌ Error: Input path '{args.input}' does not exist.")
         sys.exit(1)
 
+    filter_decision_map = {
+        "all": None,
+        "discards": "DISCARD",
+        "needs_revision": "NEEDS_REVISION",
+        "pass": "PASS",
+    }
+    target_filter = filter_decision_map.get(args.filter_decision.lower())
+
     print("=" * 70)
     print("🔍 AZOZO ANNOTATION QUALITY REVIEWER & DISCARD AGENT")
     print("=" * 70)
@@ -125,6 +155,10 @@ def main():
     print(f"  Discard Target : {args.discard_dir}")
     print(f"  Auto-Discard   : {'ENABLED' if args.auto_discard else 'DISABLED (Report Only)'}")
     print(f"  Save Audit JSON: {'DISABLED' if args.no_save_audit else 'ENABLED (audit_report.json)'}")
+    print(f"  Overwrite Mode : {'ENABLED (Force full re-run)' if args.overwrite else 'DISABLED (Resume / Skip existing)'}")
+    print(f"  Filter Mode    : {args.filter_decision.upper()}")
+    if args.limit:
+        print(f"  Limit Targets  : {args.limit} document(s)")
     print(f"  Min Score      : {args.min_score} / 100")
     print(f"  LLM Semantic   : {'ENABLED (' + args.model + ' via ' + args.provider + ')' if use_llm else 'DISABLED'}")
     print(f"  Concurrency    : {args.concurrency}")
@@ -143,6 +177,7 @@ def main():
             input_path,
             use_llm=use_llm,
             save_audit_json=not args.no_save_audit,
+            overwrite=args.overwrite,
         )
 
         llm_str = f"{report.llm_score:.1f}" if report.llm_score is not None else "N/A"
@@ -201,6 +236,9 @@ def main():
             max_merged_tokens=args.max_merged_tokens,
             output_report_path=args.report,
             progress_callback=progress_cb,
+            overwrite=args.overwrite,
+            filter_decision=target_filter,
+            limit=args.limit,
         )
 
         print("\n" + "=" * 70)

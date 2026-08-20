@@ -505,4 +505,62 @@ def test_discover_review_targets_merged_vs_chunk_rule(tmp_path):
     assert len(targets) == 3
 
 
+def test_batch_review_scan_processed_and_resume(tmp_path):
+    exam1 = tmp_path / "exam_1"
+    exam1.mkdir()
+    (exam1 / "merged.xml").write_text("<section># EXAM 1</section><question_label>1.</question_label><stem>Stem 1</stem><option_label>A.</option_label><option_text>Opt 1</option_text>", encoding="utf-8")
+    
+    exam2 = tmp_path / "exam_2"
+    exam2.mkdir()
+    (exam2 / "merged.xml").write_text("<section># EXAM 2</section><question_label>1.</question_label><stem>Stem 2</stem><option_label>A.</option_label><option_text>Opt 2</option_text>", encoding="utf-8")
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    
+    # 1. Initial review: both are processed
+    summary1 = agent.batch_review(tmp_path, use_llm=False, overwrite=False)
+    assert summary1.total_documents == 2
+    assert summary1.passed_count == 2
+    assert (exam1 / "audit_report.json").exists()
+    assert (exam2 / "audit_report.json").exists()
+
+    # 2. Second review with overwrite=False (resume mode)
+    # Mock review_document to ensure it is NOT called for cached files
+    with patch.object(agent, "review_document") as mock_rev:
+        summary2 = agent.batch_review(tmp_path, use_llm=False, overwrite=False)
+        assert summary2.total_documents == 2
+        assert summary2.passed_count == 2
+        mock_rev.assert_not_called()
+
+    # 3. Third review with overwrite=True
+    with patch.object(agent, "review_document", wraps=agent.review_document) as mock_rev:
+        summary3 = agent.batch_review(tmp_path, use_llm=False, overwrite=True)
+        assert summary3.total_documents == 2
+        assert mock_rev.call_count == 2
+
+
+def test_batch_review_filter_decision(tmp_path):
+    exam1 = tmp_path / "exam_1"
+    exam1.mkdir()
+    (exam1 / "merged.xml").write_text("<section># EXAM 1</section><question_label>1.</question_label><stem>Stem 1</stem><option_label>A.</option_label><option_text>Opt 1</option_text>", encoding="utf-8")
+    
+    exam2 = tmp_path / "exam_2"
+    exam2.mkdir()
+    # Empty doc -> DISCARD
+    (exam2 / "merged.xml").write_text("", encoding="utf-8")
+
+    agent = AnnotationReviewerAgent(min_score=75)
+    summary1 = agent.batch_review(tmp_path, use_llm=False, overwrite=False)
+    assert summary1.passed_count == 1
+    assert summary1.discarded_count == 1
+
+    # Filter only DISCARD: only exam_2 is re-evaluated, exam_1 is cached
+    with patch.object(agent, "review_document", wraps=agent.review_document) as mock_rev:
+        summary2 = agent.batch_review(tmp_path, use_llm=False, overwrite=False, filter_decision="DISCARD")
+        assert summary2.total_documents == 2
+        assert summary2.discarded_count == 1
+        # Only exam_2 re-evaluated
+        assert mock_rev.call_count == 1
+
+
+
 

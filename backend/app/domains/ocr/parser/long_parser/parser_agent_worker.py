@@ -3,6 +3,7 @@ import time
 import uuid
 from typing import Dict, Any, List, Optional
 
+from backend.app.core.config import PARSER_MODEL, PARSER_PROVIDER, PARSER_THINKING
 from backend.app.domains.ocr.annotator.annotate_ocr import OCRAnnotator
 from backend.app.domains.ocr.parser.parser import parse_spans_into_structured_questions
 from backend.app.domains.ocr.parser.long_parser.anchored_xml_llm_parser import AnchoredXMLLLMExamParser
@@ -34,19 +35,20 @@ class ParserAgentWorker:
         max_attempts: int = 2,
         enable_validator: bool = True,
     ):
-        self.model = model
-        self.provider = provider
+        self.model = model or PARSER_MODEL
+        self.provider = provider or PARSER_PROVIDER
+        self.thinking = thinking or PARSER_THINKING
         self.max_attempts = max_attempts
         self.enable_validator = enable_validator
         self.anchored_parser = AnchoredXMLLLMExamParser(
-            model=model,
-            provider=provider,
-            thinking=thinking,
+            model=self.model,
+            provider=self.provider,
+            thinking=self.thinking,
         )
         self.annotator_ready = annotator_ready
         if self.annotator_ready:
             try:
-                self.annotator = OCRAnnotator(model=model, provider=provider)
+                self.annotator = OCRAnnotator(model=self.model, provider=self.provider)
             except Exception as e:
                 print(f"[ParserAgentWorker] OCRAnnotator init warning: {e}.")
                 self.annotator = None

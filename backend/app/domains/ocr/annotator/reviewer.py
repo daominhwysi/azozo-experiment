@@ -1156,7 +1156,8 @@ class AnnotationReviewerAgent:
         xml_path: Union[str, Path],
         raw_path: Optional[Union[str, Path]] = None,
         use_llm: bool = True,
-        save_audit_json: bool = False,
+        save_audit_json: bool = True,
+        overwrite: bool = False,
     ) -> ReviewReport:
         """
         Reviews a single XML file from disk against its raw markdown source if available.
@@ -1217,7 +1218,7 @@ class AnnotationReviewerAgent:
             if xml_p.name in ["merged.xml", "merged.json"]
             else xml_p.with_suffix(".audit.json")
         )
-        if not use_llm and audit_file_target.exists():
+        if not overwrite and not use_llm and audit_file_target.exists():
             try:
                 with open(audit_file_target, "r", encoding="utf-8") as f_prev:
                     prev_data = json.load(f_prev)
@@ -1415,11 +1416,15 @@ class AnnotationReviewerAgent:
         max_merged_tokens: int = 500_000,
         output_report_path: Optional[Union[str, Path]] = None,
         progress_callback=None,
+        overwrite: bool = False,
+        filter_decision: Optional[str] = None,
+        limit: Optional[int] = None,
     ) -> BatchReviewSummary:
         """
         Performs batch review across all XML documents in a directory.
         Processes merged.xml by default if <= 500k tokens, falling back to chunk level if > 500k tokens.
         Never processes both chunk and merged versions for the same document.
+        Scans and resumes from existing audit_report.json unless overwrite is True.
         Saves progress, Markdown report, and JSON summary on the fly as documents finish.
         """
         start_time = time.time()
@@ -1428,10 +1433,13 @@ class AnnotationReviewerAgent:
             raise FileNotFoundError(f"Annotated directory not found: {annotated_dir}")
 
         # Gather target xml files following 500k token merged-vs-chunk rule
-        xml_files = self.discover_review_targets(base_dir, max_merged_tokens=max_merged_tokens)
+        all_targets = self.discover_review_targets(base_dir, max_merged_tokens=max_merged_tokens)
+        all_targets.sort()
 
-        xml_files.sort()
-        total_docs = len(xml_files)
+        if limit is not None and limit > 0:
+            all_targets = all_targets[:limit]
+
+        total_docs = len(all_targets)
         reports: List[ReviewReport] = []
         discarded_paths: List[str] = []
         failure_reasons_distribution: Dict[str, int] = {}
@@ -1440,6 +1448,57 @@ class AnnotationReviewerAgent:
         needs_revision = 0
         discarded = 0
         total_score_sum = 0.0
+
+        # Scan targets for existing audits
+        to_process_files: List[Path] = []
+        cached_reports_map: Dict[Path, ReviewReport] = {}
+
+        for xml_p in all_targets:
+            audit_file = (
+                (xml_p.parent / "audit_report.json")
+                if xml_p.name in ["merged.xml", "merged.json"]
+                else xml_p.with_suffix(".audit.json")
+            )
+            is_done = False
+            cached_rep = None
+
+            if not overwrite and audit_file.exists():
+                try:
+                    with open(audit_file, "r", encoding="utf-8") as f_a:
+                        audit_data = json.load(f_a)
+                        has_required_llm = (not use_llm) or (audit_data.get("llm_score") is not None)
+                        if has_required_llm and "overall_score" in audit_data and "decision" in audit_data:
+                            cached_rep = ReviewReport.model_validate(audit_data)
+                            is_done = True
+                except Exception:
+                    is_done = False
+
+            if filter_decision and is_done and cached_rep:
+                target_decision_str = filter_decision.upper().strip()
+                if cached_rep.decision.value == target_decision_str or cached_rep.decision.name == target_decision_str:
+                    to_process_files.append(xml_p)
+                else:
+                    cached_reports_map[xml_p] = cached_rep
+            elif is_done and cached_rep:
+                cached_reports_map[xml_p] = cached_rep
+            else:
+                to_process_files.append(xml_p)
+
+        # Seed reports with loaded cached audits
+        for rep in cached_reports_map.values():
+            reports.append(rep)
+            total_score_sum += rep.overall_score
+            if rep.decision == ReviewDecision.PASS:
+                passed += 1
+            elif rep.decision == ReviewDecision.NEEDS_REVISION:
+                needs_revision += 1
+            else:
+                discarded += 1
+                if rep.file_path:
+                    discarded_paths.append(rep.file_path)
+                for r in rep.discard_reasons:
+                    cat = r.split("]")[0].lstrip("[") if "]" in r else "OTHER"
+                    failure_reasons_distribution[cat] = failure_reasons_distribution.get(cat, 0) + 1
 
         from concurrent.futures import ThreadPoolExecutor, as_completed
         import threading
@@ -1452,7 +1511,6 @@ class AnnotationReviewerAgent:
             if raw_dir:
                 try:
                     rel = xml_p.relative_to(base_dir)
-                    # Map exam_XXX/merged.xml -> exam_XXX.md
                     if rel.name in ["merged.xml", "merged.json"]:
                         if rel.parent == Path("."):
                             candidate = Path(raw_dir) / f"{base_dir.name}.md"
@@ -1470,6 +1528,7 @@ class AnnotationReviewerAgent:
                 raw_path=raw_file,
                 use_llm=use_llm,
                 save_audit_json=save_audit_json,
+                overwrite=overwrite,
             )
 
             discard_res = None
@@ -1484,93 +1543,128 @@ class AnnotationReviewerAgent:
 
             return report, discard_res
 
-        max_workers = max(1, min(concurrency, total_docs)) if total_docs > 0 else 1
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_file = {executor.submit(process_single, f): f for f in xml_files}
+        completed = len(cached_reports_map)
 
-            completed = 0
-            for future in as_completed(future_to_file):
-                f = future_to_file[future]
-                completed += 1
-                try:
-                    rep, disc_info = future.result()
-                    with report_lock:
-                        reports.append(rep)
-                        total_score_sum += rep.overall_score
+        if to_process_files:
+            max_workers = max(1, min(concurrency, len(to_process_files)))
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                future_to_file = {executor.submit(process_single, f): f for f in to_process_files}
 
-                        if rep.decision == ReviewDecision.PASS:
-                            passed += 1
-                        elif rep.decision == ReviewDecision.NEEDS_REVISION:
-                            needs_revision += 1
-                        else:
-                            discarded += 1
-                            discarded_paths.append(str(f))
-                            seen_cats_for_doc = set()
-                            for r in rep.discard_reasons:
-                                cat = r.split("]")[0].lstrip("[") if "]" in r else "OTHER"
-                                if cat not in seen_cats_for_doc:
-                                    failure_reasons_distribution[cat] = (
-                                        failure_reasons_distribution.get(cat, 0) + 1
-                                    )
-                                    seen_cats_for_doc.add(cat)
+                for future in as_completed(future_to_file):
+                    f = future_to_file[future]
+                    completed += 1
+                    try:
+                        rep, disc_info = future.result()
+                        with report_lock:
+                            reports.append(rep)
+                            total_score_sum += rep.overall_score
 
-                        curr_avg = round(total_score_sum / max(1, len(reports)), 1)
-                        curr_duration = round(time.time() - start_time, 2)
+                            if rep.decision == ReviewDecision.PASS:
+                                passed += 1
+                            elif rep.decision == ReviewDecision.NEEDS_REVISION:
+                                needs_revision += 1
+                            else:
+                                discarded += 1
+                                discarded_paths.append(str(f))
+                                seen_cats_for_doc = set()
+                                for r in rep.discard_reasons:
+                                    cat = r.split("]")[0].lstrip("[") if "]" in r else "OTHER"
+                                    if cat not in seen_cats_for_doc:
+                                        failure_reasons_distribution[cat] = (
+                                            failure_reasons_distribution.get(cat, 0) + 1
+                                        )
+                                        seen_cats_for_doc.add(cat)
 
-                        # On-the-fly report and progress export
-                        if output_report_path:
-                            partial_summary = BatchReviewSummary(
-                                total_documents=total_docs,
-                                passed_count=passed,
-                                needs_revision_count=needs_revision,
-                                discarded_count=discarded,
-                                discarded_paths=discarded_paths,
-                                average_score=curr_avg,
-                                duration_sec=curr_duration,
-                                reports=reports,
-                                failure_reasons_distribution=failure_reasons_distribution,
-                            )
-                            # 1. Update Markdown report on the fly
-                            self.export_markdown_report(partial_summary, output_report_path)
+                            curr_avg = round(total_score_sum / max(1, len(reports)), 1)
+                            curr_duration = round(time.time() - start_time, 2)
 
-                            # 2. Update JSON report on the fly
-                            out_p = Path(output_report_path)
-                            json_report_path = out_p.with_suffix(".json")
-                            with open(json_report_path, "w", encoding="utf-8") as f_j:
-                                json.dump(partial_summary.model_dump(), f_j, indent=2, ensure_ascii=False)
+                            # On-the-fly report and progress export
+                            if output_report_path:
+                                partial_summary = BatchReviewSummary(
+                                    total_documents=total_docs,
+                                    passed_count=passed,
+                                    needs_revision_count=needs_revision,
+                                    discarded_count=discarded,
+                                    discarded_paths=discarded_paths,
+                                    average_score=curr_avg,
+                                    duration_sec=curr_duration,
+                                    reports=reports,
+                                    failure_reasons_distribution=failure_reasons_distribution,
+                                )
+                                self.export_markdown_report(partial_summary, output_report_path)
+                                out_p = Path(output_report_path)
+                                json_report_path = out_p.with_suffix(".json")
+                                with open(json_report_path, "w", encoding="utf-8") as f_j:
+                                    json.dump(partial_summary.model_dump(), f_j, indent=2, ensure_ascii=False)
 
-                            # 3. Update review_progress.json on the fly
-                            progress_path = out_p.parent / "review_progress.json"
-                            pct = round((completed / max(1, total_docs)) * 100, 1)
-                            eta_sec = (
-                                round((curr_duration / completed) * (total_docs - completed), 1)
-                                if completed > 0
-                                else 0.0
-                            )
-                            prog_payload = {
-                                "status": "IN_PROGRESS" if completed < total_docs else "COMPLETED",
-                                "total_documents": total_docs,
-                                "completed_documents": completed,
-                                "progress_percent": pct,
-                                "passed_count": passed,
-                                "needs_revision_count": needs_revision,
-                                "discarded_count": discarded,
-                                "average_score": curr_avg,
-                                "elapsed_seconds": curr_duration,
-                                "eta_seconds": eta_sec,
-                                "last_completed_document": rep.doc_id,
-                                "last_decision": rep.decision.value,
-                                "last_overall_score": rep.overall_score,
-                                "updated_at": datetime.now().isoformat(),
-                            }
-                            with open(progress_path, "w", encoding="utf-8") as f_pr:
-                                json.dump(prog_payload, f_pr, indent=2, ensure_ascii=False)
+                                progress_path = out_p.parent / "review_progress.json"
+                                pct = round((completed / max(1, total_docs)) * 100, 1)
+                                eta_sec = (
+                                    round((curr_duration / completed) * (total_docs - completed), 1)
+                                    if completed > 0
+                                    else 0.0
+                                )
+                                prog_payload = {
+                                    "status": "IN_PROGRESS" if completed < total_docs else "COMPLETED",
+                                    "total_documents": total_docs,
+                                    "completed_documents": completed,
+                                    "progress_percent": pct,
+                                    "passed_count": passed,
+                                    "needs_revision_count": needs_revision,
+                                    "discarded_count": discarded,
+                                    "average_score": curr_avg,
+                                    "elapsed_seconds": curr_duration,
+                                    "eta_seconds": eta_sec,
+                                    "last_completed_document": rep.doc_id,
+                                    "last_decision": rep.decision.value,
+                                    "last_overall_score": rep.overall_score,
+                                    "updated_at": datetime.now().isoformat(),
+                                }
+                                with open(progress_path, "w", encoding="utf-8") as f_pr:
+                                    json.dump(prog_payload, f_pr, indent=2, ensure_ascii=False)
 
-                    if progress_callback:
-                        progress_callback(completed, total_docs, rep)
+                        if progress_callback:
+                            progress_callback(completed, total_docs, rep)
+                    except Exception as e:
+                        pass
+        else:
+            # All files were cached / done
+            curr_avg = round(total_score_sum / max(1, len(reports)), 1)
+            curr_duration = round(time.time() - start_time, 2)
+            if output_report_path:
+                summary = BatchReviewSummary(
+                    total_documents=total_docs,
+                    passed_count=passed,
+                    needs_revision_count=needs_revision,
+                    discarded_count=discarded,
+                    discarded_paths=discarded_paths,
+                    average_score=curr_avg,
+                    duration_sec=curr_duration,
+                    reports=reports,
+                    failure_reasons_distribution=failure_reasons_distribution,
+                )
+                self.export_markdown_report(summary, output_report_path)
+                out_p = Path(output_report_path)
+                json_report_path = out_p.with_suffix(".json")
+                with open(json_report_path, "w", encoding="utf-8") as f_j:
+                    json.dump(summary.model_dump(), f_j, indent=2, ensure_ascii=False)
 
-                except Exception as e:
-                    print(f"[Reviewer Error] Failed reviewing {f}: {e}")
+                progress_path = out_p.parent / "review_progress.json"
+                prog_payload = {
+                    "status": "COMPLETED",
+                    "total_documents": total_docs,
+                    "completed_documents": completed,
+                    "progress_percent": 100.0,
+                    "passed_count": passed,
+                    "needs_revision_count": needs_revision,
+                    "discarded_count": discarded,
+                    "average_score": curr_avg,
+                    "elapsed_seconds": curr_duration,
+                    "eta_seconds": 0.0,
+                    "updated_at": datetime.now().isoformat(),
+                }
+                with open(progress_path, "w", encoding="utf-8") as f_pr:
+                    json.dump(prog_payload, f_pr, indent=2, ensure_ascii=False)
 
         avg_score = round(total_score_sum / max(1, len(reports)), 1)
         duration = round(time.time() - start_time, 2)
