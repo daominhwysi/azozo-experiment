@@ -965,59 +965,62 @@ class AnnotationReviewerAgent:
         self,
         xml_content: str,
         raw_ocr_text: Optional[str] = None,
-        doc_id: Optional[str] = None,
+        doc_id: str = "doc_001",
         file_path: Optional[str] = None,
         raw_file_path: Optional[str] = None,
         use_llm: bool = True,
+        cached_llm_result: Optional[Dict[str, Any]] = None,
     ) -> ReviewReport:
         """
-        Executes a comprehensive review of an annotated XML document.
+        Runs the full hybrid review on an annotated XML document.
+        Combines deterministic rule checks with DeepSeek LLM semantic review.
         """
-        doc_id = doc_id or f"doc_{int(time.time()*1000)}"
         issues: List[AuditIssue] = []
         discard_reasons: List[str] = []
 
-        pure_text = DeterministicAuditor.strip_xml_tags(xml_content)
-
-        # 1. Deterministic XML syntax
+        # 1. XML Syntax
         syntax_issues, syntax_score = DeterministicAuditor.check_xml_syntax(xml_content)
         issues.extend(syntax_issues)
 
-        # 2. Prohibited tags
+        # 2. Prohibited Tags
         prohibited_issues, prohibited_score = DeterministicAuditor.check_prohibited_tags(
             xml_content
         )
         issues.extend(prohibited_issues)
 
-        # 3. Stimulus nesting check (CRITICAL AUTO-REJECT)
-        stim_nesting_issues, stim_nesting_score = (
+        # 3. Stimulus Nesting System Tags (Fatal Architectural Check)
+        stim_nest_issues, stim_nest_score = (
             DeterministicAuditor.check_stimulus_wrapping_system_tags(xml_content)
         )
-        issues.extend(stim_nesting_issues)
+        issues.extend(stim_nest_issues)
 
-        # 4. Question & option structure
-        q_issues, q_score, metrics = DeterministicAuditor.check_question_and_option_structure(
-            xml_content
+        # 4. Question and Option Structure
+        q_issues, q_score, metrics = (
+            DeterministicAuditor.check_question_and_option_structure(xml_content)
         )
         issues.extend(q_issues)
 
-        # 5. Sequence continuity
+        # 5. Stimulus Anchors
+        stim_issues, stim_score = DeterministicAuditor.check_stimulus_anchors(
+            xml_content=xml_content,
+            pure_text=DeterministicAuditor.strip_xml_tags(xml_content),
+            raw_ocr_text=raw_ocr_text,
+        )
+        issues.extend(stim_issues)
+        if stim_nest_score < 100.0:
+            stim_score = min(stim_score, stim_nest_score)
+
+        # 6. Sequence Continuity
         continuity_issues, continuity_score = DeterministicAuditor.check_sequence_continuity(
             xml_content
         )
         issues.extend(continuity_issues)
 
-        # 6. Stimulus anchors & validity
-        stim_anchor_issues, stim_anchor_score = DeterministicAuditor.check_stimulus_anchors(
-            xml_content, pure_text, raw_ocr_text
-        )
-        issues.extend(stim_anchor_issues)
-
-        stim_score = min(stim_nesting_score, stim_anchor_score)
-
-        # 7. Verbatim alignment
+        # 7. Verbatim Alignment
         verbatim_issues, verbatim_score, verbatim_metrics = (
-            DeterministicAuditor.check_verbatim_alignment(xml_content, raw_ocr_text)
+            DeterministicAuditor.check_verbatim_alignment(
+                xml_content=xml_content, raw_ocr_text=raw_ocr_text
+            )
         )
         issues.extend(verbatim_issues)
         metrics.update(verbatim_metrics)
@@ -1051,14 +1054,17 @@ class AnnotationReviewerAgent:
         llm_score_val = None
         summary_text = f"Deterministic audit: {len(issues)} issue(s), {len(critical_issues)} critical."
 
-        # 7. LLM Semantic Review (if enabled and no fatal syntax blocker)
+        # 8. LLM Semantic Review (or reuse cached LLM review if present)
         llm_result = None
         if use_llm and syntax_score > 20.0 and len(critical_issues) == 0:
-            llm_result = self.llm_reviewer.review_semantic(
-                xml_content=xml_content,
-                deterministic_metrics=metrics,
-                raw_ocr_text=raw_ocr_text,
-            )
+            if cached_llm_result:
+                llm_result = cached_llm_result
+            else:
+                llm_result = self.llm_reviewer.review_semantic(
+                    xml_content=xml_content,
+                    deterministic_metrics=metrics,
+                    raw_ocr_text=raw_ocr_text,
+                )
 
             if llm_result:
                 llm_score_val = float(llm_result.get("score", det_score))
@@ -1204,6 +1210,36 @@ class AnnotationReviewerAgent:
 
         doc_id = xml_p.parent.name if xml_p.name in ["merged.xml", "merged.json"] else xml_p.stem
 
+        # Check if existing audit report has cached LLM result to preserve
+        cached_llm = None
+        audit_file_target = (
+            (xml_p.parent / "audit_report.json")
+            if xml_p.name in ["merged.xml", "merged.json"]
+            else xml_p.with_suffix(".audit.json")
+        )
+        if not use_llm and audit_file_target.exists():
+            try:
+                with open(audit_file_target, "r", encoding="utf-8") as f_prev:
+                    prev_data = json.load(f_prev)
+                    if prev_data.get("llm_score") is not None:
+                        cached_llm = {
+                            "score": prev_data.get("llm_score"),
+                            "rubric_scores": prev_data.get("rubric_scores"),
+                            "issues": [
+                                iss for iss in prev_data.get("issues", [])
+                                if iss.get("category") == "llm_semantic"
+                            ],
+                            "summary": prev_data.get("summary", ""),
+                            "is_malfunctioned": prev_data.get("is_malfunctioned", False),
+                            "discard_reasons": [
+                                r.replace("[LLM_AUDIT] ", "")
+                                for r in prev_data.get("discard_reasons", [])
+                                if "[LLM_AUDIT]" in r
+                            ],
+                        }
+            except Exception:
+                pass
+
         report = self.review_document(
             xml_content=xml_content,
             raw_ocr_text=raw_content,
@@ -1211,17 +1247,13 @@ class AnnotationReviewerAgent:
             file_path=str(xml_p),
             raw_file_path=str(raw_p) if raw_p else None,
             use_llm=use_llm,
+            cached_llm_result=cached_llm,
         )
 
         if parser_info:
             report.parser_info = parser_info
 
         if save_audit_json:
-            audit_file_target = (
-                (xml_p.parent / "audit_report.json")
-                if xml_p.name in ["merged.xml", "merged.json"]
-                else xml_p.with_suffix(".audit.json")
-            )
             with open(audit_file_target, "w", encoding="utf-8") as f_out:
                 json.dump(report.model_dump(), f_out, indent=2, ensure_ascii=False)
 

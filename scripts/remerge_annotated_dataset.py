@@ -32,6 +32,16 @@ def _chunk_sort_key(p: Path) -> int:
     return int(m.group(1)) if m else 999
 
 
+def sanitize_prohibited_tags(xml_content: str) -> str:
+    cleaned = re.sub(r"</?page_metadata>\s*\{[\s\S]*?\}\s*</?page_metadata>", "", xml_content)
+    cleaned = re.sub(r"<page_metadata>[\s\S]*?</page_metadata>", "", cleaned)
+    cleaned = re.sub(r"</?pages?>", "", cleaned)
+    cleaned = re.sub(r"</?page_metadata>", "", cleaned)
+    cleaned = cleaned.replace("<|END|>", "").replace("<|endoftext|>", "").rstrip()
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned
+
+
 def remerge_exam_dir(exam_dir: Path, raw_base_dir: Optional[Path] = None) -> Dict[str, Any]:
     """
     Remerges an individual exam directory.
@@ -55,7 +65,7 @@ def remerge_exam_dir(exam_dir: Path, raw_base_dir: Optional[Path] = None) -> Dic
         merged_xml_path = exam_dir / "merged.xml"
         if merged_xml_path.exists():
             content = merged_xml_path.read_text(encoding="utf-8")
-            cleaned = content.replace("<|END|>", "").replace("<|endoftext|>", "").rstrip()
+            cleaned = sanitize_prohibited_tags(content)
             if cleaned != content.rstrip():
                 merged_xml_path.write_text(cleaned + "\n", encoding="utf-8")
                 return {"doc_id": exam_dir.name, "status": "cleaned_sentinel", "chunks_count": 0}
@@ -74,7 +84,7 @@ def remerge_exam_dir(exam_dir: Path, raw_base_dir: Optional[Path] = None) -> Dic
     if chunk_results:
         try:
             merge_result = reconcile_parser_chunk_results(chunk_results)
-            merged_xml = merge_result["merged_xml"]
+            merged_xml = sanitize_prohibited_tags(merge_result["merged_xml"])
             questions = merge_result["structured_questions"]
             stimuli = merge_result["structured_stimuli"]
             diag = merge_result["diagnostics"]

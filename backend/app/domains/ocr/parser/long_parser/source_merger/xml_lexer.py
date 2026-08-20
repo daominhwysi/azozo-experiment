@@ -36,9 +36,14 @@ def lex_annotations(parsed_xml: str) -> Tuple[str, List[LocalSpan], Dict[str, An
     if not parsed_xml:
         return "", [], {"errors": []}
 
-    # Clean out comments and terminal end sentinels
+    # Clean out comments, prohibited page metadata blocks, and terminal end sentinels
     cleaned_xml = re.sub(r"<!--.*?-->", "", parsed_xml, flags=re.DOTALL)
     cleaned_xml = re.sub(r"<\s*\|\s*END\s*\|\s*>", "", cleaned_xml)
+    cleaned_xml = re.sub(r"<\s*\|\s*endoftext\s*\|\s*>", "", cleaned_xml)
+    cleaned_xml = re.sub(r"</?page_metadata>\s*\{[\s\S]*?\}\s*</?page_metadata>", "", cleaned_xml)
+    cleaned_xml = re.sub(r"<page_metadata>[\s\S]*?</page_metadata>", "", cleaned_xml)
+    cleaned_xml = re.sub(r"</?pages?>", "", cleaned_xml)
+    cleaned_xml = re.sub(r"</?page_metadata>", "", cleaned_xml)
     
     parsed_chars = []
     events = []  # List of (p_offset, tag_name, event_type, raw_tag_str)
