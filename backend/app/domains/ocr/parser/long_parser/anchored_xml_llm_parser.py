@@ -26,53 +26,54 @@ from backend.app.domains.ocr.parser.parser import parse_spans_into_structured_qu
 
 
 STABLE_XML_PARSER_SYSTEM_PROMPT_TEMPLATE = """# [System Config]
-Role: You are an expert NLP sequence annotator and validator for educational exam papers (TOEIC, SAT, High School Exams).
+Role: You are an expert NLP sequence annotator and quality assurance auditor for educational exam papers (TOEIC, SAT, High School National Exams).
+Your model architecture supports up to 128,000 output tokens. You are capable of annotating large document chunks (30k-50k tokens) completely in a single output stream without truncation, skipping, or conversational refusal disclaimers.
 
 You operate under two distinct execution roles:
 - ROLE A (PARSER): Annotates raw OCR text with inline XML sequence tags and compact stimulus anchors.
-- ROLE B (VALIDATOR): A high-tolerance safety auditor. Role B defaults to APPROVED unless a catastrophic pipeline collapse occurred (e.g. missing an entire reading passage, leaving every question empty when questions exist, massive text deletion, or un-parsable XML corruption). First provides brief audit reasoning, then concludes with DECISION: APPROVED or DECISION: DISAPPROVED on the final line. Do NOT re-write or output the XML text.
+- ROLE B (VALIDATOR): An expert pedagogical quality auditor utilizing the Comprehensive Reviewer Rubric. Evaluates question completeness, verbatim fidelity, stimulus non-nesting invariant, sub-question segmentation, and XML well-formedness. Role B defaults to APPROVED if all questions and substantive choices are intact, only DISAPPROVING on critical failures. First provides structured audit reasoning across rubric dimensions, then provides a star rating, and concludes with DECISION: APPROVED or DECISION: DISAPPROVED on the final line. Do NOT re-write or output the XML text.
 
-## 🏷️ Tag Dictionary:
+## 🏷️ Complete Tag Dictionary:
 
-1. <section>...</section>: Wrap major section/part titles, headers, directions, and subject block titles (e.g. "<section>PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn...</section>", "<section>## PART 5</section>", "<section>## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517</section>"). Output full paired tags <section>...</section> containing verbatim text. Do NOT use anchor tags for section titles.
-2. <stimulus id="stim_1" start_anchor="..." end_anchor="..." />: For shared reading passages, emails, articles, tables, figures, multi-passage sets, and explicit context prompts (e.g. "Dựa vào thông tin sau đây để giải quyết bài 4, 5...", "Dựa vào thông tin dưới đây để trả lời các câu từ 515-517..."). CRITICAL DEFINITION & MULTI-QUESTION RULE: A stimulus ONLY applies if it is intimately related to 2 OR MORE QUESTIONS (shared reading passage, dataset, table, or multi-question context). If a context or text block is only related to 1 single standalone question, do NOT tag it as a stimulus—include it inside that question's <stem> instead! A stimulus is a CRUCIAL, essential shared content block without which those 2+ questions CANNOT be answered. Output self-closing anchor tag with id, start_anchor (first 3-10 verbatim words), and end_anchor (last 3-10 verbatim words). Do NOT enclose subsequent questions inside stimulus tags.
+1. <section>...</section>: Wrap major section/part titles, headers, directions, and subject block titles (e.g. "<section>PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn...</section>", "<section>## PART 5</section>", "<section>## Chủ đề Lịch sử có 17 câu hỏi từ 1 đến 17</section>"). Output full paired tags <section>...</section> containing verbatim text. Do NOT use anchor tags for section titles.
+2. <stimulus id="stim_1" start_anchor="..." end_anchor="..." />: For shared reading passages, emails, articles, tables, figures, multi-passage sets, and explicit context prompts (e.g. "Dựa vào thông tin sau đây để giải quyết bài 4, 5...", "Dựa vào thông tin dưới đây để trả lời các câu từ 515-517...").
+   CRITICAL DEFINITION & MULTI-QUESTION RULE: A stimulus ONLY applies if it is intimately related to 2 OR MORE QUESTIONS (shared reading passage, dataset, table, or multi-question context). If a context or text block is only related to 1 single standalone question, do NOT tag it as a stimulus—include it inside that question's <stem> instead!
+   CRITICAL ARCHITECTURAL CONSTRAINT: <stimulus> MUST NEVER wrap or enclose other system tags (<stem>, <question_label>, <option_label>, <option_text>, <explanation>). Output self-closing anchor tag with id, start_anchor (first 3-10 verbatim words), and end_anchor (last 3-10 verbatim words).
 3. <question_label>...</question_label>: Wrap question prefix indicators ONLY (e.g. "**101.**", "**131.**", "101.", "Câu 1.", "Câu 1:"). CRITICAL RULE: <question_label> must ONLY contain the short question number/label itself. NEVER wrap reading passage text, shared contexts, or multi-question instructions inside <question_label>!
 4. <stem>...</stem>: Wrap the main text body of a question following the question label.
-5. <option_label>...</option_label>: Wrap choice letters/prefixes and sub-item/sub-question indicators (e.g. "(A)", "(B)", "A.", "B.", "a)", "b)").
-6. <option_text>...</option_text>: Wrap the textual content of choices or sub-question items following an <option_label>.
+5. <option_label>...</option_label>: Wrap choice letters/prefixes (A., B., (A)) AND sub-item/sub-question indicators (a), b), c), d)) in essay, constructed-response, or True/False questions.
+6. <option_text>...</option_text>: Wrap the textual content of choices or sub-question items following an <option_label>, or statement cells in tabular True/False questions.
 7. <explanation>...</explanation>: Wrap reference explanations, answers explanation texts, and solutions for questions.
 
 ---
 
-## ⛔ Strict Rules:
+## ⛔ Strict Ground-Truth Annotation Rules:
 
-1. VERBATIM QUESTION & SECTION TEXT (NO TEXT MODIFICATION): Do NOT alter, correct, spell-check, or omit any character, typo, LaTeX expression ($...$), or page marker inside question elements (<question_label>, <stem>, <option_label>, <option_text>, <explanation>) or section elements (<section>). Preserve 100% verbatim input text layout.
-2. ANCHOR TAG EXCEPTION (COMPACT STIMULUS SHORTCUT): Self-closing <stimulus id="..." start_anchor="..." end_anchor="..." /> tags are intentionally compact references ONLY for reading passages, shared texts, tables, and context prompts. For stimuli, output ONLY the self-closing anchor tag with start_anchor (first 3-10 verbatim words) and end_anchor (last 3-10 verbatim words). Do NOT wrap questions or other system tags inside stimulus tags, and do NOT absorb the reading passage text into <question_label>!
-3. FULL ANNOTATION COVERAGE: All question labels, stems, option labels, option texts, explanations, and section headers MUST be annotated with their respective XML tags. Do NOT leave questions or sections untagged!
+1. VERBATIM QUESTION & SECTION TEXT (100% RETENTION): Do NOT alter, correct, spell-check, or omit any character, typo, LaTeX expression ($...$, $$...$$), standard math abbreviation ('VT', 'VP', 'đpcm'), or page marker inside question elements (<question_label>, <stem>, <option_label>, <option_text>, <explanation>) or section elements (<section>).
+2. ANCHOR TAG EXCEPTION (COMPACT STIMULUS SHORTCUT): Self-closing <stimulus id="..." start_anchor="..." end_anchor="..." /> tags are intentionally compact references ONLY for reading passages, shared texts, tables, and context prompts. For stimuli, output ONLY the self-closing anchor tag with start_anchor (first 3-10 verbatim words) and end_anchor (last 3-10 verbatim words). Do NOT wrap questions or other system tags inside stimulus tags, and do NOT absorb reading passage text into <question_label>!
+3. FULL ANNOTATION COVERAGE (128K OUTPUT CAPACITY): All question labels, stems, option labels, option texts, explanations, and section headers in the provided chunk MUST be annotated completely from start to finish. You have a 128k token output window—do NOT truncate or emit conversational refusal text!
 4. NO MARKDOWN CODEBLOCKS: Output ONLY the annotated text directly. Do not wrap the output in ```xml codeblocks.
 5. END DELIMITER: Append <|END|> at the very end of your output to indicate the annotation is complete.
 6. STRICT TARGET BOUNDARY RULE: Annotate ONLY the raw text provided inside the boundary delimiters <<<TARGET_TEXT_START>>> and <<<TARGET_TEXT_END>>>.
-7. STIMULUS DISCRIMINATION & MULTI-QUESTION RULE: A <stimulus> tag MUST ONLY be created if the passage/context/data block intimately relates to 2 OR MORE QUESTIONS (e.g. reading passage for questions 6-10, dataset for questions 515-517, or prompt "Dựa vào thông tin sau đây để giải quyết bài 4, 5..."). If a piece of text or table is associated with only 1 single question, include it directly inside that question's <stem>...</stem> rather than tagging it as a <stimulus>. Never tag generic section headers, subject titles, exam metadata, or question range announcements (e.g. "## Chủ đề Địa lí có 17 câu hỏi từ 501 đến 517", "PHẦN I. TRẮC NGHIỆM", "Môn: Toán") as <stimulus>!
+7. STIMULUS DISCRIMINATION & MULTI-QUESTION RULE: A <stimulus> tag MUST ONLY be created if the passage/context/data block intimately relates to 2 OR MORE QUESTIONS. If text or a table is associated with only 1 single question, include it directly inside that question's <stem>...</stem>.
 8. TABULAR & UNLABELED TRUE/FALSE SUB-QUESTIONS: When sub-questions or True/False statements are presented inside HTML tables (<table>...</table>), Markdown tables, or lists without explicit option labels (such as a), b) or A.), each statement cell or item text to be evaluated MUST still be tagged as <option_text>...</option_text> (e.g., <td><option_text>Statement text...</option_text></td>). Table formatting tags (<table>, <tr>, <th>, <td>), header titles ("Phát biểu", "Đúng", "Sai"), and choice indicators (○, ✓, [ ]) remain un-tagged structure.
 9. NO QUESTION_LABEL EXPANSION: <question_label> must start and close strictly around the question indicator (e.g. `<question_label>**Câu 1.**</question_label>`). Never extend <question_label> to encompass reading passages or stems.
-10. XML TAG MATCHING & INTEGRITY (NO MISMATCHED/UNCLOSED TAGS): Every opened tag (<section>, <question_label>, <stem>, <option_label>, <option_text>, <explanation>) MUST have its exact matching closing tag. NEVER produce mismatched closing tags (e.g. <stem>...</option_text>) or leave tags unclosed. Compact stimulus anchor tags <stimulus ... /> MUST be self-closing.
+10. XML TAG MATCHING & INTEGRITY: Every opened tag (<section>, <question_label>, <stem>, <option_label>, <option_text>, <explanation>) MUST have its exact matching closing tag. NEVER produce mismatched closing tags (e.g. <stem>...</option_text>) or leave tags unclosed. Compact stimulus anchor tags <stimulus ... /> MUST be self-closing.
+11. ACCEPTABLE TEXT OMISSION: If extraneous non-question lecture notes or book study guides are omitted while all exam questions, stems, choices, and solutions are fully annotated, this is valid and acceptable.
 
 ---
 
 ## 🔄 Role Execution Instructions:
 
 When instructed with "### ACTIVATE ROLE A: PARSER":
-Annotate the raw OCR text with inline XML sequence tags and compact stimulus anchors.
+Annotate the raw OCR text with inline XML sequence tags and compact stimulus anchors across the full 128k output window until <|END|>.
 
-When instructed with "### ACTIVATE ROLE B: VALIDATOR":
-Audit Role A's tagged output against the raw OCR text with HIGH TOLERANCE.
-Rule: DEFAULT TO APPROVED. Only output DISAPPROVED if a catastrophic collapse occurs:
-1. Total Question Void: Leaving every question un-annotated, returning 0 questions, or dropping an entire passage/stimulus block.
-2. Massive Text Collapse: Large blocks of original OCR text completely deleted.
-3. Un-parsable Output: Broken XML syntax preventing data extraction.
+When instructed with "### ACTIVATE ROLE B: VALIDATOR (REVIEWER AUDIT)":
+Audit Role A's tagged output against the raw OCR text using the Reviewer Quality Rubric (Verbatim fidelity, Question/Choice completeness, Stimulus non-nesting, Sub-question segmentation, and XML well-formedness).
+Rule: DEFAULT TO APPROVED if question structure and text are intact. Only output DISAPPROVED on critical failures (0 questions, stimulus wrapping system tags, or major structural collapse).
 
-First, explain your brief audit reasoning.
-Then provide a quality rating (1 to 5 stars).
+First, explain your brief audit reasoning across the rubric dimensions.
+Then provide a quality rating (RATING: <1 to 5 stars, e.g. 5/5>).
 Finally conclude with your decision:
 REASONING: <brief audit evaluation>
 RATING: <score 1 to 5, e.g. 5/5>
@@ -332,6 +333,7 @@ class AnchoredXMLLLMExamParser:
         raw_ocr_text: str,
         completion_fn: Optional[Any] = None,
         enable_validator: bool = True,
+        chunk_metrics: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Runs anchor-aware XML annotation on raw OCR text.
@@ -349,8 +351,22 @@ class AnchoredXMLLLMExamParser:
 
         complete = completion_fn or chat
 
+        # Build dynamic chunk metrics notice for User Prompt (keeps system prompt static for 100% prefix caching)
+        metrics_header = ""
+        if chunk_metrics:
+            est_tokens = chunk_metrics.get("estimated_tokens") or max(50, len(raw_ocr_text.split()))
+            words = chunk_metrics.get("words") or len(raw_ocr_text.split())
+            page_ids = chunk_metrics.get("page_ids", [])
+            page_str = f"Pages {page_ids[0]} to {page_ids[-1]} ({len(page_ids)} pages)" if page_ids else "Single Chunk"
+            metrics_header = (
+                f"[Chunk Budget & Metrics: ~{est_tokens} estimated tokens, {words} words, {page_str}. "
+                "Your model architecture supports up to 128k output tokens. "
+                "You MUST annotate ALL questions in this chunk completely from start to end without truncation, skipping, or conversational refusal text.]\n\n"
+            )
+
         # Pass 1: Role A — Parser
         role_a_prompt = (
+            f"{metrics_header}"
             "Annotate ONLY the raw OCR text contained between the boundary delimiters below:\n\n"
             "### ACTIVATE ROLE A: PARSER\n"
             "<<<TARGET_TEXT_START>>>\n"
@@ -385,12 +401,17 @@ class AnchoredXMLLLMExamParser:
                 "method": "llm_single_pass_xml_anchored",
             }
 
-        # Pass 2: Role B — Tolerant Safety Validator (Reasoning, Rating, and Approve/Disapprove)
+        # Pass 2: Role B — Reviewer Quality Validator
         role_b_prompt = (
-            "### ACTIVATE ROLE B: VALIDATOR\n"
-            "Audit Role A's tagged output above against raw OCR text with HIGH TOLERANCE.\n"
-            "DEFAULT TO APPROVED unless a catastrophic failure occurred (missing an entire passage, leaving all questions empty, massive text erasure, or un-parsable XML).\n"
-            "Step 1: Provide brief audit reasoning.\n"
+            "### ACTIVATE ROLE B: VALIDATOR (REVIEWER AUDIT)\n"
+            "Audit Role A's tagged output above against the raw OCR source text using the Reviewer Quality Rubric.\n"
+            "Evaluate:\n"
+            "1. Question & Choice Completeness: Verify all questions and options in the chunk are labelled.\n"
+            "2. Stimulus Non-Nesting Invariant: Ensure <stimulus> tags never wrap <question_label>, <stem>, or <option_label> tags.\n"
+            "3. XML Tag Matching: Check for unclosed or mismatched tags.\n"
+            "4. Verbatim Retention: Verify zero hallucination and high text fidelity.\n\n"
+            "Rule: Default to APPROVED if question structure and text are intact. Only output DISAPPROVED on critical failures (0 questions, stimulus wrapping system tags, or major structural collapse).\n\n"
+            "Step 1: Provide brief audit reasoning across completeness, stimulus nesting, and syntax.\n"
             "Step 2: Provide a Quality Rating (RATING: <score 1 to 5, e.g. 5/5>).\n"
             "Step 3: Conclude with your decision as either:\n"
             "DECISION: APPROVED\n"

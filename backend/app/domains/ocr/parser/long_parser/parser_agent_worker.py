@@ -104,11 +104,20 @@ class ParserAgentWorker:
         attempts_used = 0
         method = "llm_two_pass_anchored"
 
+        # Compute chunk-level metrics for LLM prompt awareness
+        chunk_metrics = {
+            "estimated_tokens": max(50, len(raw_chunk_text.split())),
+            "words": len(raw_chunk_text.split()),
+            "page_ids": page_ids or [],
+        }
+
         # Attempt 1: Two-Pass Multi-Role Anchored LLM Parsing
         try:
             attempts_used = 1
             anchored_res = self.anchored_parser.parse_exam_chunk(
-                raw_chunk_text, enable_validator=self.enable_validator
+                raw_chunk_text,
+                enable_validator=self.enable_validator,
+                chunk_metrics=chunk_metrics,
             )
             structured_questions = anchored_res.get("questions") or []
             stimuli = anchored_res.get("stimuli") or {}

@@ -91,7 +91,11 @@ def chat(
     Supports either single prompt string or multi-turn messages list.
     """
     target_model = model or PARSER_MODEL
-    target_provider = (provider or PARSER_PROVIDER or "xah").lower()
+    if isinstance(target_model, str):
+        target_model = target_model.strip()
+    target_provider = provider or PARSER_PROVIDER or "xah"
+    if isinstance(target_provider, str):
+        target_provider = target_provider.strip().lower()
     target_max_tokens = max_tokens or PARSER_MAX_TOKENS
 
     if messages is not None:
@@ -143,8 +147,10 @@ def chat(
 
         # Normalize model name for Codex (e.g. phatchau036/gpt-5.6-luna -> gpt-5.6-luna)
         codex_model = target_model or "gpt-5.6-luna"
+        if isinstance(codex_model, str):
+            codex_model = codex_model.strip()
         if "/" in codex_model:
-            codex_model = codex_model.split("/")[-1]
+            codex_model = codex_model.split("/")[-1].strip()
 
         # Map thinking parameter to Codex ReasoningEffort
         effort_val = None

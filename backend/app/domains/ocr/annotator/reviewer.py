@@ -318,8 +318,8 @@ class DeterministicAuditor:
         if not xml_content:
             return issues, 100.0
 
-        # 1. Check paired <stimulus ...>...</stimulus>
-        for m in re.finditer(r"<stimulus\b([^>]*)>(.*?)</stimulus>", xml_content, re.DOTALL | re.IGNORECASE):
+        # 1. Check paired <stimulus ...>...</stimulus> (ensuring opening tag is not self-closing)
+        for m in re.finditer(r"<stimulus\b(?![^>]*/>)([^>]*)>(.*?)</stimulus>", xml_content, re.DOTALL | re.IGNORECASE):
             inner_content = m.group(2)
             start_pos = m.start()
             line_num = xml_content.count("\n", 0, start_pos) + 1
@@ -821,8 +821,8 @@ Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
         provider: Optional[str] = None,
         thinking: Optional[str] = None,
     ):
-        self.model = model or REVIEWER_MODEL or PARSER_MODEL
-        self.provider = provider or REVIEWER_PROVIDER or PARSER_PROVIDER
+        self.model = model.strip() if model else (REVIEWER_MODEL or PARSER_MODEL)
+        self.provider = provider.strip() if provider else (REVIEWER_PROVIDER or PARSER_PROVIDER)
         self.thinking = thinking or REVIEWER_THINKING or "medium"
 
     @staticmethod
@@ -932,9 +932,16 @@ Respond ONLY with a valid JSON object with NO markdown codeblocks or extra text:
 
             # Find json block
             json_match = re.search(r"\{.*\}", cleaned, re.DOTALL)
-            if json_match:
-                return json.loads(json_match.group(0))
-            return json.loads(cleaned)
+            target_json = json_match.group(0) if json_match else cleaned
+
+            # Sanitize LLM JSON quirks (trailing commas, LaTeX backslashes like \alpha, \frac, \underline)
+            sanitized = re.sub(r",\s*([\]}])", r"\1", target_json)
+            sanitized = re.sub(r"\\u(?![0-9a-fA-F]{4})", r"\\\\u", sanitized)
+            sanitized = re.sub(r"\\(?![\"\\/bfnrtu])", r"\\\\", sanitized)
+            try:
+                return json.loads(sanitized, strict=False)
+            except Exception:
+                return json.loads(target_json, strict=False)
         except Exception as e:
             print(f"[Reviewer Warning] DeepSeek LLM evaluation call failed: {e}")
             return None
@@ -955,8 +962,8 @@ class AnnotationReviewerAgent:
         thinking: Optional[str] = None,
     ):
         self.min_score = min_score
-        self.model = model or REVIEWER_MODEL
-        self.provider = provider or REVIEWER_PROVIDER
+        self.model = model.strip() if model else REVIEWER_MODEL
+        self.provider = provider.strip() if provider else REVIEWER_PROVIDER
         self.llm_reviewer = DeepSeekReviewer(
             model=self.model, provider=self.provider, thinking=thinking
         )

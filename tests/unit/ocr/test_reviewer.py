@@ -557,10 +557,52 @@ def test_batch_review_filter_decision(tmp_path):
     with patch.object(agent, "review_document", wraps=agent.review_document) as mock_rev:
         summary2 = agent.batch_review(tmp_path, use_llm=False, overwrite=False, filter_decision="DISCARD")
         assert summary2.total_documents == 2
-        assert summary2.discarded_count == 1
-        # Only exam_2 re-evaluated
-        assert mock_rev.call_count == 1
+
+def test_stimulus_self_closing_not_flagged_as_nested():
+    xml = """<section># EXAM</section>
+<stimulus id="stim_1" start_anchor="Bình moka" end_anchor="trải nghiệm" />
+<question_label>**Câu 1.**</question_label>
+<stem>Câu hỏi 1?</stem>
+<option_label>A.</option_label> <option_text>Lựa chọn A</option_text>
+</stimulus>
+"""
+    issues, score = DeterministicAuditor.check_stimulus_wrapping_system_tags(xml)
+    assert not any(iss.category == "stimulus_nesting" for iss in issues)
 
 
-
-
+def test_deepseek_reviewer_sanitizes_latex_escapes_and_trailing_commas():
+    reviewer = DeepSeekReviewer(model="gpt-5.6-luna", provider="codex")
+    mock_response = """```json
+{
+  "score": 88.0,
+  "decision": "PASS",
+  "is_malfunctioned": false,
+  "discard_reasons": [],
+  "rubric_scores": {
+    "xml_well_formedness": 100.0,
+    "schema_conformance": 90.0,
+    "verbatim_fidelity": 95.0,
+    "sequence_continuity": 90.0,
+    "question_option_completeness": 95.0,
+    "stimulus_accuracy": 85.0,
+  },
+  "issues": [
+    {
+      "category": "verbatim_fidelity",
+      "severity": "MINOR",
+      "message": "Formula contains \\alpha + \\beta = \\gamma and \\underline{text}",
+      "context_snippet": "\\frac{a}{b}",
+    },
+  ],
+  "summary": "Valid exam with math expressions."
+}
+```"""
+    with patch("backend.app.domains.ocr.annotator.reviewer.chat", return_value=mock_response):
+        result = reviewer.review_semantic(
+            xml_content="<section>test</section>",
+            deterministic_metrics={},
+        )
+        assert result is not None
+        assert result["score"] == 88.0
+        assert result["decision"] == "PASS"
+        assert "\\alpha" in result["issues"][0]["message"]

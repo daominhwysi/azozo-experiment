@@ -102,3 +102,49 @@ def test_clean_file_in_place(tmp_path: Path):
     content_after = file_p.read_text(encoding="utf-8")
     assert "<page_metadata>" not in content_after
     assert "<0>" not in content_after
+
+
+def test_clean_unclosed_stem_before_option_label():
+    broken_xml = """<section># ĐỀ THI</section>
+<question_label>**Câu 1.**</question_label> <stem>Câu hỏi không đóng thẻ stem
+- <option_label>A.</option_label> <option_text>Đáp án A</option_text>
+- <option_label>B.</option_label> <option_text>Đáp án B</option_text>
+"""
+    res = XMLCleaner.clean(broken_xml)
+    assert res.is_valid_after is True
+    assert "</stem>" in res.cleaned_xml
+
+
+def test_clean_unclosed_option_text_before_next_option():
+    broken_xml = """<section># ĐỀ THI</section>
+<question_label>**Câu 1.**</question_label> <stem>Câu hỏi 1.</stem>
+- <option_label>A.</option_label> <option_text>Đáp án A không đóng
+- <option_label>B.</option_label> <option_text>Đáp án B</option_text>
+"""
+    res = XMLCleaner.clean(broken_xml)
+    assert res.is_valid_after is True
+    assert "</option_text>" in res.cleaned_xml
+
+
+def test_clean_unsupported_tags_t_and_aside():
+    broken_xml = """<section># ĐỀ THI</section>
+<question_label>**Câu 1.**</question_label> <stem><t>Nội dung câu 1</t> <aside>Ghi chú</aside></stem>
+- <option_label>A.</option_label> <option_text>Đáp án A</option_text>
+"""
+    res = XMLCleaner.clean(broken_xml)
+    assert res.is_valid_after is True
+    assert "<t>" not in res.cleaned_xml
+    assert "<aside>" not in res.cleaned_xml
+    assert "Nội dung câu 1" in res.cleaned_xml
+
+
+def test_clean_negative_and_float_math_inequalities():
+    broken_xml = """<section># TOÁN</section>
+<question_label>**Câu 1.**</question_label> <stem>Khi $x <-5>$ hoặc $y <0.5>$</stem>
+- <option_label>A.</option_label> <option_text>Đúng</option_text>
+"""
+    res = XMLCleaner.clean(broken_xml)
+    assert res.is_valid_after is True
+    assert "<-5>" not in res.cleaned_xml
+    assert "<0.5>" not in res.cleaned_xml
+

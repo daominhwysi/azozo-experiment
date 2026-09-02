@@ -88,15 +88,20 @@ ANSWER_MAPPER_MODEL = mapper_cfg.get("model_name")
 ANSWER_MAPPER_PROVIDER = mapper_cfg.get("provider")
 
 chunker_cfg = models_cfg.get("chunker", {})
-CHUNKER_TARGET_TOKENS = int(chunker_cfg.get("target_tokens", 48000))
-CHUNKER_MAX_TOKENS = int(chunker_cfg.get("max_tokens", 64000))
-CHUNKER_OVERLAP_PAGES = int(chunker_cfg.get("overlap_pages", 1))
+CHUNKER_TARGET_TOKENS = int(chunker_cfg.get("target_tokens", 35000))
+CHUNKER_MAX_TOKENS = int(chunker_cfg.get("max_tokens", 50000))
+CHUNKER_OVERLAP_PAGES = int(chunker_cfg.get("overlap_pages", 0))
 
 reviewer_cfg = models_cfg.get("reviewer", {})
 REVIEWER_MODEL = reviewer_cfg.get("model_name") or PARSER_MODEL
 REVIEWER_PROVIDER = reviewer_cfg.get("provider") or "deepseek"
 REVIEWER_THINKING = reviewer_cfg.get("thinking") or "medium"
 REVIEWER_MIN_SCORE = int(reviewer_cfg.get("min_score_threshold", 75))
+
+editor_cfg = models_cfg.get("editor", {})
+EDITOR_MODEL = editor_cfg.get("model_name") or PARSER_MODEL
+EDITOR_PROVIDER = editor_cfg.get("provider") or PARSER_PROVIDER
+EDITOR_THINKING = editor_cfg.get("thinking") or "low"
 
 # Logs Directory (Strictly inside backend/logs/)
 LOGS_DIR = BACKEND_DIR / "logs" / "ocr_logs"

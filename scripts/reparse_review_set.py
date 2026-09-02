@@ -155,6 +155,21 @@ def parse_args():
         action="store_true",
         help="Skip Role B Validator pass to run fast 1-pass Role A parsing",
     )
+    parser.add_argument(
+        "--doc-id",
+        "--target-doc",
+        dest="target_doc",
+        type=str,
+        default=None,
+        help="Filter re-parsing to a specific document ID or substring (e.g. exam_424 or Other/Lich_su/exam_424)",
+    )
+    parser.add_argument(
+        "--exclude",
+        dest="exclude_docs",
+        type=str,
+        default=None,
+        help="Comma-separated list of document IDs or filenames to exclude from re-parsing (e.g. exam_424)",
+    )
     return parser.parse_args()
 
 
@@ -193,6 +208,25 @@ def main():
     filter_decisions = filter_map[args.filter_mode]
 
     targets = load_reparse_targets(report_path, raw_dir, output_dir, filter_decisions)
+
+    # Filter by specific target_doc if provided
+    if args.target_doc:
+        doc_query = args.target_doc.strip()
+        targets = [
+            t for t in targets
+            if doc_query in str(t.get("doc_id", "")) or doc_query in str(t.get("rel_path", ""))
+        ]
+
+    # Exclude documents if specified
+    if args.exclude_docs:
+        exclude_list = [e.strip() for e in args.exclude_docs.split(",") if e.strip()]
+        targets = [
+            t for t in targets
+            if not any(
+                ex in str(t.get("doc_id", "")) or ex in str(t.get("rel_path", ""))
+                for ex in exclude_list
+            )
+        ]
 
     if args.limit:
         targets = targets[: args.limit]

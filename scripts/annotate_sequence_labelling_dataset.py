@@ -36,6 +36,7 @@ from backend.app.domains.ocr.parser.long_parser.greedy_chunker import (
 )
 from backend.app.domains.ocr.parser.long_parser.parser_agent_worker import ParserAgentWorker
 from backend.app.domains.ocr.annotator.xml_checker import XMLChecker
+from backend.app.domains.ocr.annotator.xml_cleaner import XMLCleaner
 
 
 def extract_pages_from_markdown(full_markdown: str) -> List[str]:
@@ -179,8 +180,9 @@ def process_single_document(
             json.dumps(cres, ensure_ascii=False, indent=2),
             encoding="utf-8"
         )
+        clean_chunk = XMLCleaner.clean(cres.get("raw_xml", ""))
         chunk_xml_path.write_text(
-            cres.get("raw_xml", ""),
+            clean_chunk.cleaned_xml,
             encoding="utf-8"
         )
         chunk_file_info.append({
@@ -251,8 +253,11 @@ def process_single_document(
 
     duration = time.time() - start_time
 
-    # Validate merged XML output with XMLChecker
-    merged_xml_check = XMLChecker.check(merge_result.get("merged_xml", ""))
+    # Clean and validate merged XML output
+    raw_merged_xml = merge_result.get("merged_xml", "")
+    clean_merged = XMLCleaner.clean(raw_merged_xml)
+    merged_xml_content = clean_merged.cleaned_xml
+    merged_xml_check = XMLChecker.check(merged_xml_content)
     if not merged_xml_check.is_valid:
         tqdm.write(f"  ❌ [MERGED XML TAG ISSUE] '{rel_path}': {len(merged_xml_check.issues)} issue(s) found in merged.xml")
 
@@ -275,10 +280,11 @@ def process_single_document(
             "issues": [str(i) for i in merged_xml_check.issues],
             "has_mismatched_tags": merged_xml_check.has_mismatched_tags,
             "has_unclosed_tags": merged_xml_check.has_unclosed_tags,
+            "fixes_applied": clean_merged.fixes_applied,
         },
         "questions": merge_result["structured_questions"],
         "stimuli": merge_result["structured_stimuli"],
-        "merged_xml": merge_result["merged_xml"],
+        "merged_xml": merged_xml_content,
         "chunks_summary": chunk_file_info,
     }
 
@@ -290,7 +296,7 @@ def process_single_document(
         encoding="utf-8"
     )
     merged_xml_path.write_text(
-        merge_result["merged_xml"],
+        merged_xml_content,
         encoding="utf-8"
     )
 

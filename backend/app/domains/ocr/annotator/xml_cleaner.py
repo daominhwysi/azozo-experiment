@@ -2,13 +2,13 @@
 Deterministic XML Cleaner & Tag Auto-Repairer for OCR Sequence Labeling Outputs.
 
 Repairs:
-1. False-positive math inequality tags (e.g. `<0>`, `<1>`, `<24>`, `$x < 0$`).
-2. HTML table tag hierarchies (auto-closes unclosed `<td>`/`<th>` before `</tr>`, and `</tr>` before `</table>`, with full nested table scope support).
-3. Obsolete HTML presentation tags (`<center>`, `<font>`, `<footer>`, `<header>`).
-4. Prohibited page boundary and metadata tags (`<pages>`, `<page>`, `<page_metadata>`, `<think>`).
-5. Dangling unclosed sequence tags at question and section boundaries.
-6. Normalizes self-closing tags (`<stimulus ... />`, `<figure ... />`, `<br />`).
-7. Removes orphaned/unexpected closing tags.
+1. False-positive math inequality tags (e.g. `<0>`, `<1>`, `<24>`, `<-5>`, `$x < 0$`).
+2. Prohibited page boundary and metadata tags (`<pages>`, `<page>`, `<page_metadata>`, `<think>`).
+3. Obsolete / unsupported presentation and non-schema tags (`<center>`, `<font>`, `<footer>`, `<header>`, `<t>`, `<aside>`, `<nav>`, `<mark>`, `<marquee>`, `<strike>`, `<s>`, `<del>`, `<ins>`).
+4. Scope-aware boundary tag auto-closing across sequence elements (`question_label`, `stem`, `option_label`, `option_text`, `explanation`, `section`).
+5. Scope-aware HTML table tag hierarchies (auto-closes `<td>`/`<th>` before `</tr>`, and `</tr>` before `</table>`, with nested table scope support).
+6. Normalizes self-closing tags (`<stimulus ... />`, `<figure ... />`, `<br />`, `<hr />`, `<img>`).
+7. Corrects mismatched paired tags and removes orphaned unexpected closing tags.
 """
 
 import os
@@ -20,7 +20,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Set, Any, Union
 
 # Ensure workspace root is in sys.path
-_repo_root = Path(__file__).resolve().parents[5]
+_current_file = Path(__file__).resolve()
+_repo_root = _current_file.parents[5] if len(_current_file.parents) >= 6 else _current_file.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
 
@@ -47,7 +48,11 @@ class CleanResult:
     file_path: Optional[str] = None
 
     def summary(self) -> str:
-        status = "🟢 FIXED (Valid)" if self.is_valid_after else ("🟡 MODIFIED (Remaining Issues)" if self.is_modified else "⚪ UNMODIFIED")
+        status = (
+            "🟢 FIXED (Valid)"
+            if self.is_valid_after
+            else ("🟡 MODIFIED (Remaining Issues)" if self.is_modified else "⚪ UNMODIFIED")
+        )
         lines = [f"{status} {self.file_path or ''}"]
         for fix in self.fixes_applied:
             lines.append(f"  ✓ {fix}")
@@ -62,8 +67,50 @@ class XMLCleaner:
     Uses multi-stage regex pre-processing followed by scope-aware stack-based tag rebalancing.
     """
 
-    BOUNDARY_START_TAGS = {"question_label", "section", "stimulus"}
-    QUESTION_CONTAINER_TAGS = {"stem", "option_label", "option_text", "explanation", "section"}
+    # Precedence closures: when tag T opens, any open tag in TAG_PRECEDENCE_CLOSURES[T] must be auto-closed
+    TAG_PRECEDENCE_CLOSURES: Dict[str, Set[str]] = {
+        "question_label": {"question_label", "stem", "option_label", "option_text", "explanation"},
+        "stem": {"question_label", "stem", "option_label", "option_text", "explanation"},
+        "option_label": {"question_label", "stem", "option_label", "option_text", "explanation"},
+        "option_text": {"option_label", "option_text", "question_label", "stem"},
+        "explanation": {"question_label", "stem", "option_label", "option_text", "explanation"},
+        "section": {"question_label", "stem", "option_label", "option_text", "explanation", "section"},
+    }
+
+    # Formatting tags that can be auto-closed when boundary tags switch
+    INLINE_FORMATTING_TAGS: Set[str] = {
+        "b",
+        "i",
+        "u",
+        "strong",
+        "em",
+        "sub",
+        "sup",
+        "span",
+        "div",
+        "p",
+        "code",
+        "pre",
+    }
+
+    # Unsupported non-schema tags to strip while preserving inner content
+    UNSUPPORTED_TAGS: List[str] = [
+        "center",
+        "font",
+        "footer",
+        "header",
+        "t",
+        "aside",
+        "nav",
+        "mark",
+        "marquee",
+        "strike",
+        "s",
+        "del",
+        "ins",
+        "small",
+        "big",
+    ]
 
     @classmethod
     def clean(
@@ -91,8 +138,8 @@ class XMLCleaner:
 
         # Initial validation state
         val_before = XMLChecker.check(text, file_path=file_path)
-        if val_before.is_valid:
-            # Already valid, return untouched
+        if val_before.is_valid and not val_before.issues:
+            # Already valid and completely issue-free, return untouched
             return CleanResult(
                 original_xml=xml_content,
                 cleaned_xml=xml_content,
@@ -104,15 +151,15 @@ class XMLCleaner:
                 file_path=file_path,
             )
 
-        # Stage 1: Strip prohibited page and metadata tags
+        # Stage 1: Strip prohibited page and metadata tags (<page_metadata>, <pages>, <page>, <think>)
         text, p_fixes = cls._strip_prohibited_tags(text)
         fixes.extend(p_fixes)
 
-        # Stage 2: Strip obsolete presentation tags (<center>, <font>, <footer>)
+        # Stage 2: Strip obsolete presentation and unknown HTML tags (<center>, <font>, <t>, etc.)
         text, pres_fixes = cls._strip_presentation_tags(text)
         fixes.extend(pres_fixes)
 
-        # Stage 3: Repair false math inequality tags (<0>, <1>, <24>, etc.)
+        # Stage 3: Repair false math inequality tags (<0>, <1>, <24>, <-5>, etc.)
         text, math_fixes = cls._fix_math_inequalities(text)
         fixes.extend(math_fixes)
 
@@ -159,21 +206,20 @@ class XMLCleaner:
     @classmethod
     def _strip_presentation_tags(cls, text: str) -> Tuple[str, List[str]]:
         fixes = []
-        presentation_tags = ["center", "font", "footer", "header"]
-        for tag in presentation_tags:
+        for tag in cls.UNSUPPORTED_TAGS:
             pattern = re.compile(rf"</?{tag}(?:\s+[^>]*)?>", flags=re.IGNORECASE)
             if pattern.search(text):
                 text = pattern.sub("", text)
-                fixes.append(f"Stripped presentation tag <{tag}>")
+                fixes.append(f"Stripped unsupported / presentation tag <{tag}>")
         return text, fixes
 
     @classmethod
     def _fix_math_inequalities(cls, text: str) -> Tuple[str, List[str]]:
         fixes = []
-        # Match angle brackets around pure numbers like <0>, <1>, <24>, </0>, </1>
-        numeric_tag_pattern = re.compile(r"<(/)?\s*(-?\d+(?:\.\d+)?)\s*(/?)>")
+        # Match angle brackets around pure numbers or simple expressions: <0>, <1>, <24>, <-5>, <0.5>, </0>
+        numeric_tag_pattern = re.compile(r"<(/)?\s*(-?\+?\d+(?:\.\d+)?)\s*(/?)>")
         if numeric_tag_pattern.search(text):
-            def repl_num(m):
+            def repl_num(m: re.Match) -> str:
                 is_close = m.group(1)
                 num = m.group(2)
                 if is_close:
@@ -194,8 +240,8 @@ class XMLCleaner:
             text = pattern.sub(r"<\1\2 />", text)
             fixes.append("Normalized self-closing <stimulus /> and <figure /> tags")
 
-        # Normalize void html tags like <br>, <hr>, <img>
-        for void_tag in ["br", "hr", "img", "col", "wbr"]:
+        # Normalize void html tags like <br>, <hr>, <img>, <col>, <wbr>
+        for void_tag in ["br", "hr", "img", "col", "wbr", "input"]:
             void_pattern = re.compile(rf"<({void_tag})(\s*[^>]*?)(?<!/)>", flags=re.IGNORECASE)
             if void_pattern.search(text):
                 text = void_pattern.sub(r"<\1\2 />", text)
@@ -252,21 +298,36 @@ class XMLCleaner:
             if not is_closing:
                 # ── OPENING TAG HANDLING ──
 
-                # 1. Question Boundary: Close any open question item when a new boundary starts
-                if tag_name in cls.BOUNDARY_START_TAGS:
-                    while tag_stack and tag_stack[-1] in cls.QUESTION_CONTAINER_TAGS:
-                        dangling = tag_stack.pop()
-                        tokens.append(f"</{dangling}>\n")
-                        fixes.append(f"Auto-closed unclosed <{dangling}> before <{tag_name}> boundary")
+                # 1. Sequence Boundary Precedence Closure
+                if tag_name in cls.TAG_PRECEDENCE_CLOSURES:
+                    to_close_set = cls.TAG_PRECEDENCE_CLOSURES[tag_name]
+                    table_idx = cls._get_current_table_scope_index(tag_stack)
+
+                    # Only close tags above the current table (or everything if tag_name is 'section')
+                    limit_idx = table_idx if (table_idx is not None and tag_name != "section") else -1
+
+                    while len(tag_stack) - 1 > limit_idx:
+                        top = tag_stack[-1]
+                        if top in to_close_set or top in cls.INLINE_FORMATTING_TAGS:
+                            popped = tag_stack.pop()
+                            sep = "\n" if popped in to_close_set else ""
+                            tokens.append(f"</{popped}>{sep}")
+                            fixes.append(f"Auto-closed unclosed <{popped}> before <{tag_name}> boundary")
+                        else:
+                            break
 
                 # 2. Scope-Aware Table Formatting
                 table_idx = cls._get_current_table_scope_index(tag_stack)
 
                 if tag_name == "tr" and table_idx is not None:
-                    # In current table scope: close any open td/th and previous tr
+                    # In current table scope: close any open td/th, formatting, and previous tr
                     while len(tag_stack) > table_idx + 1:
                         top = tag_stack[-1]
-                        if top in ["td", "th", "tr"] or top in cls.QUESTION_CONTAINER_TAGS or top in ["b", "i", "u", "span"]:
+                        if (
+                            top in ["td", "th", "tr"]
+                            or top in cls.INLINE_FORMATTING_TAGS
+                            or top in SEQUENCE_PAIRED_TAGS
+                        ):
                             tokens.append(f"</{top}>")
                             tag_stack.pop()
                             fixes.append(f"Auto-closed <{top}> before next <tr>")
@@ -325,23 +386,29 @@ class XMLCleaner:
                 # Case C: Tag does not exist in stack
                 else:
                     # Check for direct pair mismatch between sequence tags
-                    if tag_stack and tag_stack[-1] == "stem" and tag_name == "option_text":
-                        tag_stack.pop()
-                        tokens.append("</stem>")
-                        fixes.append("Corrected mismatched closing tag </option_text> to </stem>")
-                    elif tag_stack and tag_stack[-1] == "option_text" and tag_name == "stem":
-                        tag_stack.pop()
-                        tokens.append("</option_text>")
-                        fixes.append("Corrected mismatched closing tag </stem> to </option_text>")
-                    elif tag_stack and tag_stack[-1] == "option_label" and tag_name == "option_text":
-                        tag_stack.pop()
-                        tokens.append("</option_label>")
-                        fixes.append("Corrected mismatched closing tag </option_text> to </option_label>")
-                    elif tag_stack and tag_stack[-1] == "option_text" and tag_name == "option_label":
-                        tag_stack.pop()
-                        tokens.append("</option_text>")
-                        fixes.append("Corrected mismatched closing tag </option_label> to </option_text>")
-                    else:
+                    mismatch_pairs = {
+                        ("stem", "option_text"): ("stem", "</stem>"),
+                        ("option_text", "stem"): ("option_text", "</option_text>"),
+                        ("option_label", "option_text"): ("option_label", "</option_label>"),
+                        ("option_text", "option_label"): ("option_text", "</option_text>"),
+                        ("question_label", "stem"): ("question_label", "</question_label>"),
+                        ("stem", "question_label"): ("stem", "</stem>"),
+                        ("stem", "explanation"): ("stem", "</stem>"),
+                        ("option_text", "explanation"): ("option_text", "</option_text>"),
+                    }
+
+                    matched = False
+                    if tag_stack:
+                        top_stack = tag_stack[-1]
+                        pair_key = (top_stack, tag_name)
+                        if pair_key in mismatch_pairs:
+                            popped_tag, replacement_str = mismatch_pairs[pair_key]
+                            tag_stack.pop()
+                            tokens.append(replacement_str)
+                            fixes.append(f"Corrected mismatched closing tag </{tag_name}> to {replacement_str}")
+                            matched = True
+
+                    if not matched:
                         # Orphaned closing tag without open tag -> drop it safely
                         fixes.append(f"Removed orphaned unexpected closing tag </{tag_name}>")
 
@@ -518,3 +585,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

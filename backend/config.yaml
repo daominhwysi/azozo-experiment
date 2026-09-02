@@ -23,9 +23,8 @@ providers:
 models:
   ocr:
     model_name: "gpt-5.6-luna"
-    provider: "commandcode"
-    batch_size: 10
-    thinking: medium
+    provider: "codex"
+    batch_size: 5
     concurrency: 1
     description: "Vision LLM model for converting PDF pages to markdown text"
     figure_detection:
@@ -54,10 +53,10 @@ models:
     description: "LLM model for mapping unstructured answer keys to questions"
 
   chunker:
-    target_tokens: 30000
-    max_tokens: 45000
-    overlap_pages: 1
-    description: "Passage-locked greedy chunker token budget"
+    target_tokens: 35000
+    max_tokens: 50000
+    overlap_pages: 0
+    description: "Passage-locked greedy chunker token budget (30k-50k tokens per chunk)"
 
   reviewer:
     model_name: "gpt-5.6-luna"
@@ -65,6 +64,12 @@ models:
     thinking: medium
     min_score_threshold: 75
     description: "Reviewer agent for rating sequence labelling XML quality and discarding malfunctioned documents"
+
+  editor:
+    model_name: "gpt-5.6-luna"
+    provider: "codex"
+    thinking: low
+    description: "Precision surgical editor agent using Search/Replace diff blocks"
 
 logging:
   dir: "backend/logs/ocr_logs"
