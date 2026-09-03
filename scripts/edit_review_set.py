@@ -11,6 +11,7 @@ import argparse
 import json
 import sys
 import time
+import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List, Set
@@ -228,6 +229,23 @@ def parse_args():
         default="backend/logs/revision_resolution_report.json",
         help="Path to output resolution report JSON (default: backend/logs/revision_resolution_report.json)",
     )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=180,
+        help="Timeout in seconds per document repair (default: 180s)",
+    )
+    parser.add_argument(
+        "--max-doc-size",
+        type=int,
+        default=300000,
+        help="Maximum XML file size in bytes to process (default: 300000 / 300KB)",
+    )
+    parser.add_argument(
+        "--force-large",
+        action="store_true",
+        help="Force processing documents exceeding --max-doc-size",
+    )
     return parser.parse_args()
 
 
@@ -356,6 +374,20 @@ def main():
             if query in t["doc_id"] or query in str(t["rel_path"])
         ]
 
+    if args.max_doc_size and not args.force_large:
+        normal_targets = []
+        for t in targets:
+            size = t["xml_path"].stat().st_size
+            if size > args.max_doc_size:
+                print(
+                    f"⚠️  Skipping oversized document {t['doc_id']} "
+                    f"({size/1024:.1f} KB > {args.max_doc_size/1024:.1f} KB). "
+                    f"Use --force-large to include."
+                )
+            else:
+                normal_targets.append(t)
+        targets = normal_targets
+
     if args.limit:
         targets = targets[: args.limit]
 
@@ -375,6 +407,8 @@ def main():
     print(f"  Reviewer Provider: {args.reviewer_provider}")
     print(f"  Base URL        : {base_url if base_url else '(Codex / SDK Native)'}")
     print(f"  Concurrency     : {args.concurrency} worker thread(s)")
+    print(f"  Per-Doc Timeout : {args.timeout}s")
+    print(f"  Max Doc Size    : {args.max_doc_size / 1024:.0f} KB")
     print(f"  Auto-Save       : {'ENABLED' if args.auto_save else 'DISABLED (Report Only)'}")
     print(f"  Mode            : {'DRY RUN (In-Memory)' if args.dry_run else 'LIVE REPAIR'}")
     print("=" * 70)
@@ -400,40 +434,79 @@ def main():
     pbar = tqdm(total=len(targets), desc="Resolving Revisions", unit="doc")
 
     max_workers = max(1, min(args.concurrency, len(targets)))
+    start_times = {}
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = {
-            executor.submit(
+        futures = {}
+        for target in targets:
+            fut = executor.submit(
                 process_single_revision,
                 target,
                 revision_loop,
                 args.auto_save,
                 args.dry_run,
-            ): target
-            for target in targets
-        }
+            )
+            futures[fut] = target
+            start_times[fut] = time.time()
 
-        for future in as_completed(futures):
-            target = futures[future]
-            doc_id = target["doc_id"]
-            try:
-                res = future.result()
-                results.append(res)
-                if res["success"]:
-                    success_count += 1
-                    tqdm.write(
-                        f"  ✅ [Repaired] {doc_id}: {res['initial_score']:.1f} ({res['initial_decision']}) -> {res['final_score']:.1f} ({res['final_decision']}) [{res['applied_patches']} patches in {res['duration_seconds']:.1f}s]"
-                    )
-                else:
+        pending = set(futures.keys())
+        while pending:
+            done, pending = concurrent.futures.wait(
+                pending, timeout=2.0, return_when=concurrent.futures.FIRST_COMPLETED
+            )
+            for future in done:
+                target = futures[future]
+                doc_id = target["doc_id"]
+                try:
+                    res = future.result()
+                    results.append(res)
+                    if res["success"]:
+                        success_count += 1
+                        tqdm.write(
+                            f"  ✅ [Repaired] {doc_id}: {res['initial_score']:.1f} ({res['initial_decision']}) -> {res['final_score']:.1f} ({res['final_decision']}) [{res['applied_patches']} patches in {res['duration_seconds']:.1f}s]"
+                        )
+                    else:
+                        fail_count += 1
+                        tqdm.write(
+                            f"  ⚠️ [Partial/Unresolved] {doc_id}: {res['initial_score']:.1f} -> {res['final_score']:.1f} ({res['final_decision']})"
+                        )
+                except Exception as e:
+                    fail_count += 1
+                    tqdm.write(f"\n❌ [Error] Failed repairing {doc_id}: {e}")
+
+                pbar.update(1)
+                pbar.set_postfix({"ok": success_count, "fail": fail_count})
+
+            # Check for timed out pending tasks
+            now = time.time()
+            for f in list(pending):
+                elapsed = now - start_times[f]
+                if elapsed > args.timeout:
+                    target = futures[f]
+                    doc_id = target["doc_id"]
                     fail_count += 1
                     tqdm.write(
-                        f"  ⚠️ [Partial/Unresolved] {doc_id}: {res['initial_score']:.1f} -> {res['final_score']:.1f} ({res['final_decision']})"
+                        f"\n⏱️  [Timeout] {doc_id} exceeded {args.timeout}s limit ({elapsed:.1f}s). Skipping to avoid stalling queue."
                     )
-            except Exception as e:
-                fail_count += 1
-                tqdm.write(f"\n❌ [Error] Failed repairing {doc_id}: {e}")
-
-            pbar.update(1)
-            pbar.set_postfix({"ok": success_count, "fail": fail_count})
+                    results.append({
+                        "doc_id": doc_id,
+                        "source_decision": target["source_decision"],
+                        "rel_path": str(target["rel_path"]),
+                        "initial_score": target.get("initial_score", 0.0),
+                        "final_score": target.get("initial_score", 0.0),
+                        "initial_decision": target["source_decision"],
+                        "final_decision": "TIMEOUT",
+                        "success": False,
+                        "applied_patches": 0,
+                        "failed_patches": 0,
+                        "rounds_completed": 0,
+                        "rounds": [],
+                        "saved_to_disk": False,
+                        "duration_seconds": elapsed,
+                        "diff_summary": f"Exceeded {args.timeout}s timeout limit",
+                    })
+                    pbar.update(1)
+                    pbar.set_postfix({"ok": success_count, "fail": fail_count})
+                    pending.remove(f)
 
     pbar.close()
 

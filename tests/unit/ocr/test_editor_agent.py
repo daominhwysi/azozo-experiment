@@ -228,3 +228,33 @@ def test_editor_agent_stimulus_anchor_repair_mock():
 
     assert 'start_anchor="Dựa vào thông tin sau đây"' in res.repaired_xml
     assert 'end_anchor="thí nghiệm hóa học."' in res.repaired_xml
+
+
+def test_fuzzy_replace_large_doc_does_not_hang():
+    """Verify that SearchReplacePatcher fuzzy matching does not hang on large 500KB documents."""
+    import time
+    from backend.app.domains.ocr.annotator.editor import SearchReplaceBlock, SearchReplacePatcher
+
+    big_doc = ("<question_label>## Câu 91</question_label> <stem>Nội dung câu 91</stem>\n" * 5000)
+    big_doc += "<question_label>## Câu 92</question_label>\n<stem>Các từ “du mục” và “di cư” trong bài thơ?</stem>\n"
+    big_doc += ("<question_label>## Câu 93</question_label> <stem>Nội dung câu 93</stem>\n" * 5000)
+
+    block_match = SearchReplaceBlock(
+        search_text='<question_label>## Câu 92</question_label> <stem>Các từ “du mục” và “di cư” trong bài thơ?</stem>',
+        replace_text='<question_label>## Câu 92</question_label> <stem>REPLACED</stem>',
+    )
+    block_mismatch = SearchReplaceBlock(
+        search_text='<question_label>## Câu 999</question_label> <stem>MISMATCH NEVER IN DOC</stem>',
+        replace_text='NEVER',
+    )
+
+    t0 = time.time()
+    patched, count, fails = SearchReplacePatcher.apply_blocks(big_doc, [block_match, block_mismatch])
+    elapsed = time.time() - t0
+
+    assert count == 1
+    assert "REPLACED" in patched
+    assert len(fails) == 1
+    # Must complete in under 1 second (previously hung for 5+ hours)
+    assert elapsed < 1.0, f"Search took too long: {elapsed:.2f}s"
+

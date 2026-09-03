@@ -176,25 +176,27 @@ class SearchReplacePatcher:
     def _apply_fuzzy_whitespace_replace(
         doc_text: str, search_str: str, replace_str: str
     ) -> Optional[str]:
-        """Replaces flexible whitespace occurrences using precise token-level regex matching."""
-        tokens = [t for t in re.findall(r"\w+|[^\w\s]|\s+", search_str.strip()) if t]
-        if not tokens:
+        """
+        Replaces flexible whitespace occurrences using linear-time, non-backtracking token matching.
+        Eliminates adjacent whitespace quantifiers to prevent ReDoS on large documents.
+        """
+        if not search_str or not search_str.strip():
             return None
 
-        pattern_parts = []
-        for idx, t in enumerate(tokens):
-            if t.isspace():
-                pattern_parts.append(r"\s+")
-            elif t in ["<", ">", "/", "=", '"', "'"]:
-                prefix = r"\s*" if idx > 0 else ""
-                suffix = r"\s*" if idx < len(tokens) - 1 else ""
-                pattern_parts.append(prefix + re.escape(t) + suffix)
-            else:
-                pattern_parts.append(re.escape(t))
+        # Guard against excessively large search blocks that could degrade regex performance
+        if len(search_str) > 2500:
+            return None
 
-        regex_str = "".join(pattern_parts)
+        tokens = [re.escape(t) for t in re.findall(r"\w+|[^\w\s]", search_str.strip()) if t]
+        if not tokens or len(tokens) > 300:
+            return None
+
+        # Join tokens with flexible whitespace, ensuring NO adjacent or duplicate quantifiers
+        pattern = r"\s*".join(tokens)
+        pattern = re.sub(r"(\\s[*+])+", r"\\s*", pattern)
+
         try:
-            match = re.search(regex_str, doc_text)
+            match = re.search(pattern, doc_text)
             if match:
                 return doc_text[: match.start()] + replace_str + doc_text[match.end() :]
         except Exception:
